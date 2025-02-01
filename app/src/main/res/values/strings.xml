@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DicodingEventAplication</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="back">Back</string>
+    <string name="img">IMG</string>
+    <string name="faforit">Faforit</string>
+    <string name="finished">Finished</string>
+</resources>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="22dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/img_item_hori"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:contentDescription="@string/img"
+            android:src="@drawable/img"
+            android:background="@drawable/img_radius_bottom_right16"
+            android:clipToOutline="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.00" />
+
+        <ImageButton
+            style="@style/Button.Back"
+            android:background="@drawable/rip_white_trans_white_dark1"
+            android:contentDescription="@string/faforit"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_favorit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.999"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.00"
+            app:tint="@color/biru_tua" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white_trans_60"
+            android:background="@drawable/img_btn_radius"
+            android:clipToOutline="true"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="12dp"
+            android:layout_margin="16dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.000"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.00"
+            app:tint="@color/kuning"
+            >
+            <TextView
+                android:id="@+id/home.tv_tgl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/biru_tua"
+                android:text="14"
+                android:textStyle="bold"
+                style="@style/Text.JudulBerita18"/>
+            <TextView
+                android:id="@+id/home.tv_bulan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/biru_tua"
+                android:text="JUN"
+                android:textStyle="bold"
+                style="@style/Text.Subjudul16"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_header_item"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="Elevate ai diconing idcamp bejaya selalujaya dan sukse selalu"
+            android:ellipsize="end"
+            android:maxLines="2"
+            style="@style/Text.Subjudul16"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/tv_des1_item"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.00"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_item_hori"
+            app:layout_constraintVertical_bias="0.00" />
+        <TextView
+            android:id="@+id/tv_des1_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="elevate ai dickdjfkajkjakfdjajdfffffffffkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjjjjjjjjjjjjjjjjjjjjjjjjjjjodj "
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:gravity="center_vertical"
+            style="@style/Text.Metadata12"
+            android:layout_marginHorizontal="16dp"
+            android:textColor="@color/abu_abu"
+            app:layout_constraintBottom_toTopOf="@id/tv_owner_item"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.00"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_header_item" />
+        <TextView
+            android:id="@+id/tv_owner_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Decoding Event"
+            android:ellipsize="end"
+            android:maxLines="1"
+            style="@style/Text.Metadata12"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="12dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.00"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_header_item"
+            app:layout_constraintVertical_bias="0.99" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

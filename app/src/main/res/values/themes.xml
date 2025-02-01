@@ -1,0 +1,75 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.DicodingEventAplication" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/biru_tua</item>
+        <item name="colorPrimaryVariant">@color/biru_tua</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/tranparant</item>
+        <!-- Customize your theme here. -->
+        <item name="elevationOverlayEnabled">true</item>
+
+    </style>
+
+    <style name="ToolBarWithNavigationBack">
+        <item name="navigationIcon">@drawable/img</item>
+    </style>
+
+    <style name="Text.Header24" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Text.Header38" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">38sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="Text.JudulBerita20" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="Text.JudulBerita18" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="Text.Subjudul16" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="Text.Konten14" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="Text.Konten15" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">15sp</item>
+    </style>
+    <style name="Text.Metadata12" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="Text.TombolCTA16" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Button.Back" parent="Theme.DicodingEventAplication">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:backgroundTint">@color/white_trans</item>
+    </style>
+    <style name="Button.Back.Nobg" parent="Theme.DicodingEventAplication">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:textAppearance">@style/SearchViewTextApperance</item>
+    </style>
+    <style name="SearchViewTextApperance" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+</resources>
