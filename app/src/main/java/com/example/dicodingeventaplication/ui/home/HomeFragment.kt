@@ -19,12 +19,9 @@ import com.example.dicodingeventaplication.ui.search.SearchActivity
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
-
     private val homeViewModel: HomeViewModel by viewModels()
-    private var _binding: FragmentHomeBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(

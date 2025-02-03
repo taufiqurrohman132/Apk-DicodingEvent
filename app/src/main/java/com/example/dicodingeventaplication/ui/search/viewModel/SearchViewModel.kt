@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.ui.search.SearchItem
@@ -18,6 +19,12 @@ class SearchViewModel(private val repository: SearchRepository) : ViewModel() {
 
     private val _listHistory = MutableLiveData<List<EventItem>>()
     val listhHistory: LiveData<List<EventItem>> get() = _listHistory
+
+    private val _selectButton = MutableLiveData<Int?>() // menyimpan id tombol yang di pilih
+    val selectButton: LiveData<Int?> get() = _selectButton
+
+    private val _activeQuery = MutableLiveData<Int>().apply { value = -1 } // default
+    val activeQuery: LiveData<Int> get() =  _activeQuery
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -50,12 +57,13 @@ class SearchViewModel(private val repository: SearchRepository) : ViewModel() {
     }
 
     // hapus satu item dari history
-//    fun removeFromHistory(eventItem: EventItem){//item: SearchItem.History
-//        val historyList = repository.getSearchHistory().toMutableList()
-//        historyList.remove(eventItem)
+    fun removeFromHistory(eventItem: EventItem){//item: SearchItem.History
+        val historyList = repository.getSearchHistory().toMutableList()
+        historyList.remove(eventItem)
+//        historyList.toList()
 //        repository.saveSearchHistory(historyList)
-//        loadSearchHistory()
-//    }
+        loadSearchHistory()
+    }
 
     // hapus semua history
     fun clearHistory(){
@@ -64,7 +72,7 @@ class SearchViewModel(private val repository: SearchRepository) : ViewModel() {
 //        loadSearchHistory()
     }
 
-    fun searchEvent(query: String){
+    fun searchEvent(query: String, active: Int){
         if (query.isBlank()){
             _searchResultEvenItem.value = Resource.Success(emptyList()) // kosongkan hasil pencarian
             // panggile eror data tidak ditemukan
@@ -80,7 +88,7 @@ class SearchViewModel(private val repository: SearchRepository) : ViewModel() {
 //        lastQuery = query
 //        _searchResultEvenItem.value = Resource.Loading()
 
-        repository.searchEvent(query) { result ->
+        repository.searchEvent(query, active) { result ->
 //            if (result is Resource.Success ){
 //                cacheResult = result.data
 //            }
@@ -112,6 +120,15 @@ class SearchViewModel(private val repository: SearchRepository) : ViewModel() {
 //            }
 //        })
 
+    }
+
+    fun selectButton(buttonId: Int){
+        _selectButton.value = buttonId
+        _activeQuery.value = when(buttonId){
+            R.id.btn_state_finish -> FINISHED
+            R.id.btn_state_upcone -> UPCOMING
+            else -> ALL
+        }
     }
 
 

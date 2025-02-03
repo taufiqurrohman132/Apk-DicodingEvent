@@ -16,7 +16,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -63,6 +62,7 @@ dependencies {
 
     // simmer
     implementation(libs.shimmer)
+    implementation(libs.shimmer.recyclerview.x)
 
     // bottom nav
     implementation("com.exyte:animated-navigation-bar:1.0.0")

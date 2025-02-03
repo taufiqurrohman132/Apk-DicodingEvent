@@ -14,7 +14,13 @@ sealed class SearchItem {
         val id get() = eventItem.id
     }
     object Header : SearchItem(){
-        val id = -1
+        const val id = -1
     }
+
+//    object HeaderResult: SearchItem() {
+//        const val status =
+//    }
+//    class HeaderResult(val status: String) : SearchItem() {
+//    }
 
 }

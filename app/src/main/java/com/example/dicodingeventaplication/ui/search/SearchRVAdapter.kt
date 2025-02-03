@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,12 +12,16 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.respons.EventItem
+import com.example.dicodingeventaplication.ui.search.viewModel.SearchViewModel
 
 class SearchRVAdapter(
     private val context: Context,
     private val onItemClick: (EventItem) -> Unit,
-//    private val onDeleteClickItem: (SearchItem.History) -> Unit,
+//    private val statusHeaderResult: String,
+//    private val onSelectFilter: (Int) -> Unit,
+    private val onDeleteClickItem: (EventItem) -> Unit,
     private val onClearHistory: () -> Unit
+
 ) : ListAdapter<SearchItem, ViewHolder>(DIFF_CALLBACK) {
     inner class ResultViewHolder(private val item: View) : ViewHolder(item){
         fun bind(eventItem: EventItem, onClick: (EventItem) -> Unit){
@@ -40,9 +45,11 @@ class SearchRVAdapter(
     inner class HistoryViewHolder(private val item: View) : ViewHolder(item) {
         fun bind(eventItem: EventItem, onClick: (EventItem) -> Unit ){//onDeleteClickItem: (EventItem) -> Unit
             item.findViewById<TextView>(R.id.history_tv_judul).text = eventItem.name
-//            item.findViewById<ImageView>(R.id.btn_delete).setOnClickListener {
-//                onDeleteClickItem(eventItem)
-//            }
+            item.findViewById<ImageView>(R.id.btn_delete).setOnClickListener {
+                onDeleteClickItem(eventItem)
+
+
+            }
             itemView.setOnClickListener {
                 onClick(eventItem)
             }
@@ -52,6 +59,10 @@ class SearchRVAdapter(
         }
     }
 
+//    inner class HeaderResultViewHolder(private val item: View) : ViewHolder(item){
+//        val status = item.findViewById<TextView>(R.id.search_tv_status_active)
+//    }
+
 
 
 
@@ -60,6 +71,7 @@ class SearchRVAdapter(
             is SearchItem.HistoryItem -> TYPE_HISTORY// 0
             is SearchItem.ResultItem -> TYPE_RESULT// 1
             is SearchItem.Header -> TYPE_HEADER// 2
+//            is SearchItem.HeaderResult -> TYPE_HEADER_RESULT//3
         }
     }
 
@@ -70,6 +82,7 @@ class SearchRVAdapter(
             TYPE_HEADER -> HeaderViewHolder(inflater.inflate(R.layout.item_search_header, parent, false))
             TYPE_HISTORY -> HistoryViewHolder(inflater.inflate(R.layout.item_search_history, parent, false))
             else -> ResultViewHolder(inflater.inflate(R.layout.item_search_result, parent, false))
+//            else -> HeaderResultViewHolder(inflater.inflate(R.layout.item_search_result_header, parent, false))
         }
 
 //        return ResultViewHolder(itemHolder)
@@ -77,25 +90,15 @@ class SearchRVAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-////        holder.bind(event)
-//        when(holder){
-//            is HistoryViewHolder -> {
-//                val historyItem = event as SearchItem.History
-//                holder.bind(historyItem, onDeleteClickItem)
-//            }
-//            is HeaderViewHolder -> {
-//                holder.bind(onClearHistory)
-//            }
-//            is ResultViewHolder -> {
-//                val resultItem = event as SearchItem.Result
-//                holder.bind(resultItem)
-//            }
-//        }
+        val status = ""
         when(item){
             is SearchItem.HistoryItem -> (holder as HistoryViewHolder).bind(item.eventItem, onItemClick)
             is SearchItem.ResultItem -> (holder as ResultViewHolder).bind(item.eventItem, onItemClick)
             is SearchItem.Header -> (holder as HeaderViewHolder).bind(onClearHistory) // di triger dan main
+//            is SearchItem.HeaderResult -> (holder as HeaderResultViewHolder).status.text = item.status
         }
+
+//        onSelectFilter(holder.adapterPosition)
         // klik
 //        holder.itemView.setOnClickListener { onItemClick(event) }
     }
@@ -118,9 +121,13 @@ class SearchRVAdapter(
 
         }
 
+        private const val ALL = "All"
+        private const val UPCOMING = "Upcoming"
+        private const val FINISHED = "Finished"
         private const val TYPE_HISTORY = 0
         private const val TYPE_RESULT = 1
         private const val TYPE_HEADER = 2
+//        private const val TYPE_HEADER_RESULT = 3
     }
 
 }

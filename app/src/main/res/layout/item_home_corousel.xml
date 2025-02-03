@@ -11,14 +11,13 @@
         android:layout_height="270dp"
         android:background="@color/white">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/img_item_hori"
             android:layout_width="match_parent"
             android:layout_height="170dp"
             android:contentDescription="@string/img"
             android:src="@drawable/img"
-            android:background="@drawable/img_radius_bottom_right16"
-            android:clipToOutline="true"
+            app:shapeAppearanceOverlay="@style/RadiusBottomRight16"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -41,42 +40,55 @@
             app:layout_constraintVertical_bias="0.00"
             app:tint="@color/biru_tua" />
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white_trans_60"
-            android:background="@drawable/img_btn_radius"
-            android:clipToOutline="true"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="12dp"
             android:layout_margin="16dp"
-            android:orientation="vertical"
-            android:gravity="center"
+            android:backgroundTint="@color/tranparant"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.000"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.00"
-            app:tint="@color/kuning"
-            >
-            <TextView
-                android:id="@+id/home.tv_tgl"
+            app:cardCornerRadius="16dp">
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/biru_tua"
-                android:text="14"
-                android:textStyle="bold"
-                style="@style/Text.JudulBerita18"/>
-            <TextView
-                android:id="@+id/home.tv_bulan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/biru_tua"
-                android:text="JUN"
-                android:textStyle="bold"
-                style="@style/Text.Subjudul16"/>
-        </LinearLayout>
+                android:backgroundTint="@color/white_trans_60"
+                android:background="@drawable/img_btn_radius"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="12dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.000"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.00"
+                app:tint="@color/kuning"
+                >
+                <TextView
+                    android:id="@+id/home.tv_tgl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/biru_tua"
+                    android:text="14"
+                    android:textStyle="bold"
+                    style="@style/Text.JudulBerita18"/>
+                <TextView
+                    android:id="@+id/home.tv_bulan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/biru_tua"
+                    android:text="JUN"
+                    android:textStyle="bold"
+                    style="@style/Text.Subjudul16"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
 
         <TextView
             android:id="@+id/tv_header_item"

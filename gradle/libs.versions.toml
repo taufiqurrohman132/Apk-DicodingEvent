@@ -18,6 +18,9 @@ navigationFragmentKtx = "2.8.5"
 navigationUiKtx = "2.8.5"
 retrofit = "2.9.0"
 shimmer = "0.5.0"
+shimmerrecyclerview = "v1.3"
+shimmerRecyclerviewVersion = "0.4.1"
+shimmerRecyclerviewX = "2.0.0"
 viewpager2 = "1.1.0"
 activity = "1.10.0"
 
@@ -42,6 +45,9 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
+shimmer-recyclerview = { module = "com.todkars:shimmer-recyclerview", version.ref = "shimmerRecyclerviewVersion" }
+shimmer-recyclerview-x = { module = "com.github.mikekpl:shimmer-recyclerview-x", version.ref = "shimmerRecyclerviewX" }
+shimmerrecyclerview = { module = "com.github.sharish:ShimmerRecyclerView", version.ref = "shimmerrecyclerview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

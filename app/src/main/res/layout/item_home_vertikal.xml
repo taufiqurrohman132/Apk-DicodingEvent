@@ -12,13 +12,12 @@
         android:layout_height="wrap_content"
         android:background="@color/white">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/img_item_ver"
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:scaleType="centerCrop"
-            android:background="@drawable/img_radius_top_right16"
-            android:clipToOutline="true"
+            app:shapeAppearanceOverlay="@style/RadiusTopRight16"
             android:src="@drawable/img"
             app:layout_constraintHorizontal_bias="0.00"
             app:layout_constraintBottom_toBottomOf="parent"

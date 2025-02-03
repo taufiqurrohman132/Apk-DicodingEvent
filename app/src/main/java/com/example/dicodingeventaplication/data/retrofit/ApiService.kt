@@ -23,7 +23,7 @@ interface ApiService {
     // search event
     @GET("events")
     fun searchEvent(
-        @Query("active") active: Int,
+        @Query("active") active: Int = -1,
         @Query("q") query: String
     ): Call<EventResponse>
 }

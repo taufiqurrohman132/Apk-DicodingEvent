@@ -7,7 +7,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Terbaru"
+        android:text="Pencarian Terbaru"
         style="@style/Text.Subjudul16"
         android:textColor="@color/black"
         android:textStyle="bold"/>

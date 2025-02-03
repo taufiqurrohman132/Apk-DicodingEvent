@@ -3,15 +3,19 @@ package com.example.dicodingeventaplication.ui.search
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
+import com.example.dicodingeventaplication.ui.DialogUtils
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
+import com.example.dicodingeventaplication.ui.search.filterDialog.FilterDialogFragment
 import com.example.dicodingeventaplication.ui.search.viewModel.SearchViewModel
 import com.example.dicodingeventaplication.ui.search.viewModel.SearchViewModelFactory
 
@@ -20,21 +24,28 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var searchRepository: SearchRepository
     private lateinit var adapter: SearchRVAdapter
+    private lateinit var ststusHeaderResult: String
+//    private var activeQuery: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        var activeQuery: Int = -1
+        var searching = ""
+        var queryIsSubmit = false
         val linearLayout = LinearLayoutManager(this)
         binding.rvSearch.layoutManager = linearLayout
 
         binding.searchView.isIconified = false // menampilkan keyboard langsung
 
+        // searching
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    searchViewModel.searchEvent(it)
+                    queryIsSubmit = true
+                    searchViewModel.searchEvent(it, 0)
                     binding.searchView.clearFocus()// menurunkan keyboard ketika di pencet search
                 }
                 Log.d("actsc", "query Data: onsucces")
@@ -43,10 +54,16 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrBlank()){
+                    binding.searchCvStatus.visibility = View.GONE
                     updateList(searchViewModel.listhHistory.value ?: emptyList(), emptyList())
                     Log.d(TAG, "onQueryTextChange: null")
                 }else{
-                    searchViewModel.searchEvent(newText)
+                    queryIsSubmit = false
+                    searchViewModel.searchEvent(newText, activeQuery)
+//                    updateList(emptyList(), emptyList())
+                    binding.searchCvStatus.visibility = View.VISIBLE
+                    // coba
+                    searching = newText
                 }
                 Log.d("actsc", "query Data: onsucces")
                 return true
@@ -56,9 +73,6 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchBtnBack.setOnClickListener{ finish() }
 
-//        searchViewModel.searchResultEventItem.observe(this){ event ->
-//            setEventData(event)
-//        }
         getEventData()
 
         // inisialisasi repositori
@@ -77,6 +91,29 @@ class SearchActivity : AppCompatActivity() {
             updateList(historyList, searchViewModel.searchResultEventItem.value?.data ?: emptyList())
         }
 
+        searchViewModel.activeQuery.observe(this){ activeValue->
+            activeQuery = activeValue
+
+            // update search
+            searchViewModel.searchEvent(searching, activeQuery)
+        }
+
+        // filter
+        binding.btnFilter.setOnClickListener {
+            val dialog = FilterDialogFragment()
+//            { selectedId ->
+//                searchViewModel.selectButton(selectedId)
+//            }
+            dialog.show(supportFragmentManager, "Filter Dialog")
+        }
+
+        searchViewModel.selectButton.observe(this){ selectId ->
+            binding.searchTvStatusActive.text = when(selectId){
+                R.id.btn_state_upcone -> "Upcoming"
+                R.id.btn_state_finish -> "Finished"
+                else -> "All"
+            }
+        }
 
         searchViewModel.searchResultEventItem.observe(this) { event ->
             when(event){
@@ -87,7 +124,11 @@ class SearchActivity : AppCompatActivity() {
                     updateList(searchViewModel.listhHistory.value ?: emptyList(), event.data ?: emptyList())
                 }
                 is Resource.Error -> {
-
+                    updateList(emptyList(), emptyList())
+                    if (queryIsSubmit) {
+                        DialogUtils.showPopUpErrorDialog(this, event.message)
+                        queryIsSubmit = false
+                    }
                 }
                 is Resource.Empty -> {
 
@@ -98,17 +139,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun getEventData(){ //eventData: List<EventItem>?
-//        val searchAdapter = SearchRVAdapter(this){ event ->
-//            val intent = Intent(this@SearchActivity, DetailEventActivity::class.java)
-//            intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-//            startActivity(intent)
-//            Log.d("actsc", "setEvent Data: onsucces")
-//        }
-//        searchAdapter.submitList(eventData)
-//        binding.rvSearch.adapter = searchAdapter
-
         adapter = SearchRVAdapter(
-//            onDeleteClickItem = { item -> searchViewModel.removeFromHistory(item)},
+            onDeleteClickItem = { item -> searchViewModel.removeFromHistory(item)},
             onClearHistory = { searchViewModel.clearHistory() },
             onItemClick = { event ->
                 val intent = Intent(this@SearchActivity, DetailEventActivity::class.java)
@@ -120,43 +152,24 @@ class SearchActivity : AppCompatActivity() {
             context = this
         )
         binding.rvSearch.adapter = adapter
-
-//        // observe history
-//        searchViewModel.listhHistory.observe(this){ historyList ->
-//            updateList(historyList, searchViewModel.searchResultEventItem.value?.data ?: emptyList())
-//        }
-
-        // observe result
-//        searchViewModel.searchResultEventItem.observe(this){ result ->
-//            updateList(searchViewModel.listhHistory.value ?: emptyList(), result.data ?: emptyList())
-//        }
-
-//        // result
-//        searchViewModel.searchResultEventItem.observe(this){ resultList ->
-//            if (binding.searchView.query.isNotEmpty()){
-//                adapter.submitList(resultList)
-//            }
-//        }
     }
 
     private fun updateList(history: List<EventItem>, result: List<EventItem>){
         val list = mutableListOf<SearchItem>()
-
-//        if ( binding.searchView.query.isBlank()){
-//            // tampilkan histori dengan header
-//
-//        } else
         if (binding.searchView.query.isBlank()){
+            binding.searchCvStatus.visibility = View.GONE
             if (history.isNotEmpty()){
                 list.add(SearchItem.Header)
             }
             list.addAll(history.map { SearchItem.HistoryItem(it) })
         }else {
+//            binding.searchCvStatus.visibility = View.VISIBLE
             list.addAll(result.map { SearchItem.ResultItem(it) })
         }
 
-        Log.d(TAG, "updateList: list size ${list.size}")
         adapter.submitList(list)
+
+        Log.d(TAG, "updateList: list size ${list.size}")
         Log.d(TAG, "updateList: histori size ${history.size}")
         Log.d(TAG, "updateList: histori result $result")
     }

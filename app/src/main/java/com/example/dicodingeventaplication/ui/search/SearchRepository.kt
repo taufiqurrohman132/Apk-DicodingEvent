@@ -3,12 +3,14 @@ package com.example.dicodingeventaplication.ui.search
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.respons.EventResponse
 import com.example.dicodingeventaplication.data.retrofit.ApiService
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import okio.IOException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -55,11 +57,11 @@ class SearchRepository(private val apiService: ApiService, private val context: 
 //    }
 
     // mencari event
-    fun searchEvent(query: String, callback: (Resource<List<EventItem>>) -> Unit) {
+    fun searchEvent(query: String, active: Int, callback: (Resource<List<EventItem>>) -> Unit) {
         callback(Resource.Loading()) // tampilkan loding dulu
 
 //        val clientEventSearch = ApiConfig.getApiService().searchEvent(FINISHED, query)
-        apiService.searchEvent(FINISHED, query).enqueue(object : Callback<EventResponse> {
+        apiService.searchEvent(active, query).enqueue(object : Callback<EventResponse> {
             override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
                 if (response.isSuccessful) {
                     val responsBody = response.body()
@@ -76,13 +78,26 @@ class SearchRepository(private val apiService: ApiService, private val context: 
                 } else {
                     Log.e(TAG, "onResponse: onfailure ${response.message()}")
 //                    _listEvenItem.value = emptyList()
-                    callback(Resource.Error("Gagal Terhubung ${response.message()}"))
+                    val erroMessage = when(response.code()){
+                        400 -> context.resources.getString(R.string.error_400)
+                        403 -> context.resources.getString(R.string.error_403)
+                        404 -> context.resources.getString(R.string.error_404)
+                        408 -> context.resources.getString(R.string.error_408)
+                        500 -> context.resources.getString(R.string.error_500)
+                        503 -> context.resources.getString(R.string.error_503)
+                        else -> "Terjadi kesalahan (${response.code()})"
+                    }
+                    callback(Resource.Error(erroMessage))
                 }
             }
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 Log.e(TAG, "onResponse: onfailure ${t.message}")
-                callback(Resource.Error("Terjadi Kesalahan ${t.message}"))
+                if (t is IOException){
+                    callback(Resource.Error(context.resources.getString(R.string.error_koneksi)))
+                }else{
+                    callback(Resource.Error(context.resources.getString(R.string.error_takterduga)))
+                }
             }
         })
     }
