@@ -82,7 +82,6 @@ class SearchRVAdapter(
             TYPE_HEADER -> HeaderViewHolder(inflater.inflate(R.layout.item_search_header, parent, false))
             TYPE_HISTORY -> HistoryViewHolder(inflater.inflate(R.layout.item_search_history, parent, false))
             else -> ResultViewHolder(inflater.inflate(R.layout.item_search_result, parent, false))
-//            else -> HeaderResultViewHolder(inflater.inflate(R.layout.item_search_result_header, parent, false))
         }
 
 //        return ResultViewHolder(itemHolder)
@@ -90,12 +89,10 @@ class SearchRVAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        val status = ""
         when(item){
             is SearchItem.HistoryItem -> (holder as HistoryViewHolder).bind(item.eventItem, onItemClick)
             is SearchItem.ResultItem -> (holder as ResultViewHolder).bind(item.eventItem, onItemClick)
             is SearchItem.Header -> (holder as HeaderViewHolder).bind(onClearHistory) // di triger dan main
-//            is SearchItem.HeaderResult -> (holder as HeaderResultViewHolder).status.text = item.status
         }
 
 //        onSelectFilter(holder.adapterPosition)

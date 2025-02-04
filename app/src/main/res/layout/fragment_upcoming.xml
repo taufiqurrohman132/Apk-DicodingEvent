@@ -59,6 +59,109 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/upcoming.simmmer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:shimmer_auto_start="true"
+        app:shimmer_duration="1500"
+        app:shimmer_repeat_count="3"
+        app:shimmer_direction="left_to_right">
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp">
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:layout_marginTop="8dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:layout_marginEnd="80dp"
+                    android:layout_marginTop="8dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:layout_marginTop="8dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:layout_marginEnd="80dp"
+                    android:layout_marginTop="8dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:layout_marginTop="8dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:layout_marginEnd="80dp"
+                    android:layout_marginTop="8dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:shapeAppearanceOverlay="@style/Radius8"
+                    android:background="@color/abu_abu_terang"/>
+
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_upcoming"
         android:layout_width="match_parent"

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
+import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
@@ -22,10 +23,8 @@ import com.example.dicodingeventaplication.ui.search.viewModel.SearchViewModelFa
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var searchViewModel: SearchViewModel
-    private lateinit var searchRepository: SearchRepository
+    private lateinit var searchRepository: DicodingEventRepository
     private lateinit var adapter: SearchRVAdapter
-    private lateinit var ststusHeaderResult: String
-//    private var activeQuery: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +76,7 @@ class SearchActivity : AppCompatActivity() {
 
         // inisialisasi repositori
         val apiService = ApiConfig.getApiService()
-        searchRepository = SearchRepository(apiService, this)
+        searchRepository = DicodingEventRepository(apiService, this)
 
         // pakai view model factory
         val viewModelFactory = SearchViewModelFactory(searchRepository)

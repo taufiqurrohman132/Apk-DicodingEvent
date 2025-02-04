@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="22dp"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="16dp"
     android:backgroundTint="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,50 +15,65 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/upcoming.imgitem"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="280dp"
             app:shapeAppearanceOverlay="@style/RadiusBottomRight16"
             android:background="@drawable/img_radius_bottom_right16"
             android:clipToOutline="true"
             android:scaleType="centerCrop"
             android:src="@drawable/img"
+            android:foreground="@drawable/gradient_img_bottom13"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.00" />
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white_trans_60"
-            android:background="@drawable/img_btn_radius"
-            android:clipToOutline="true"
-            android:padding="12dp"
             android:layout_margin="16dp"
-            android:orientation="vertical"
-            android:gravity="center"
+            android:backgroundTint="@color/tranparant"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.000"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.00"
-            app:tint="@color/kuning"
-            >
-            <TextView
+            app:cardCornerRadius="16dp">
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/biru_tua"
-                android:text="14"
-                android:textStyle="bold"
-                style="@style/Text.JudulBerita18"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/biru_tua"
-                android:text="JUNE"
-                android:textStyle="bold"
-                style="@style/Text.Metadata12"/>
-        </LinearLayout>
+                android:background="@color/white_trans_60"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="12dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.000"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.00"
+                app:tint="@color/kuning"
+                >
+                <TextView
+                    android:id="@+id/upcome.tv_tgl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/biru_tua"
+                    android:text="14"
+                    android:textStyle="bold"
+                    style="@style/Text.JudulBerita18"/>
+                <TextView
+                    android:id="@+id/upcome.tv_bulan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/biru_tua"
+                    android:text="JUN"
+                    android:textStyle="bold"
+                    style="@style/Text.Subjudul16"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <ImageButton
             android:id="@+id/upcoming.btn_favorit"
@@ -81,18 +96,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="kajkjfj kjdfjk jkdjfjd jdkdjfk kdfkkjkdfkjakjkjafkj kdjfjdjfkjdakjkjdj jkdfk kjdfkjd"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:ellipsize="end"
-            android:maxLines="2"
-            android:layout_marginTop="10dp"
+            android:maxLines="3"
+            android:layout_marginBottom="14dp"
             android:layout_marginHorizontal="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/upcoming.imgitem"
-            app:layout_constraintVertical_bias="0.00" />
+            app:layout_constraintBottom_toBottomOf="@id/upcoming.imgitem"
+            app:layout_constraintVertical_bias="0.999" />
 
         <TextView
             android:id="@+id/upcoming.tv_summary_item"
@@ -100,16 +115,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="kajkjfj kjdfjk jkdjfjd jdkdjfk kdfkjdj jkdfk kjdfkjd"
-            android:textColor="@color/abu_abu"
+            android:textColor="@color/abu_abu_terang2"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:layout_marginHorizontal="12dp"
             android:layout_marginVertical="4dp"
-            app:layout_constraintBottom_toTopOf="@id/upcoming.tv_owner_item"
+            app:layout_constraintBottom_toBottomOf="@id/upcoming.tv_owner_item"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/upcoming.tv_judul_item"
+            app:layout_constraintBottom_toTopOf="@id/upcoming.tv_judul_item"
             app:layout_constraintVertical_bias="0.00" />
         <TextView
             android:id="@+id/upcoming.tv_owner_item"
@@ -117,16 +132,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Dicoding Event"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_marginHorizontal="12dp"
-            android:layout_marginBottom="14dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/upcoming.tv_sisakuota_item"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/upcoming.tv_summary_item"
+            app:layout_constraintBottom_toTopOf="@id/upcoming.tv_summary_item"
             app:layout_constraintVertical_bias="0.999" />
         <TextView
             android:id="@+id/upcoming.tv_sisakuota_item"
@@ -134,7 +148,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Remaining Quota 2773"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:layout_marginHorizontal="12dp"
             app:layout_constraintBottom_toBottomOf="@id/upcoming.tv_owner_item"

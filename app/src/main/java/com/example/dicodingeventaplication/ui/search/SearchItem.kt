@@ -16,10 +16,8 @@ sealed class SearchItem {
     object Header : SearchItem(){
         const val id = -1
     }
-
-//    object HeaderResult: SearchItem() {
-//        const val status =
-//    }
+//
+//    object LoadingItem: SearchItem()
 //    class HeaderResult(val status: String) : SearchItem() {
 //    }
 

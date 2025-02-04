@@ -10,8 +10,10 @@ import com.bumptech.glide.Glide
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.databinding.ItemHomeCorouselBinding
 
-class HomeCorouselRVAdaptor(private val context: Context) :
-ListAdapter<EventItem, HomeCorouselRVAdaptor.ItemViewHolder>(DIFF_CALLBACK){
+class HomeCorouselRVAdaptor(
+    private val context: Context,
+    private val onItemClick: (EventItem) -> Unit
+) : ListAdapter<EventItem, HomeCorouselRVAdaptor.ItemViewHolder>(DIFF_CALLBACK){
     inner class ItemViewHolder(private val item: ItemHomeCorouselBinding) : ViewHolder(item.root) {
         // inisialisasi data
         fun bind(eventsItem: EventItem){
@@ -29,6 +31,10 @@ ListAdapter<EventItem, HomeCorouselRVAdaptor.ItemViewHolder>(DIFF_CALLBACK){
             Glide.with(context)
                 .load(eventsItem.imageLogo)
                 .into(item.imgItemHori)
+
+            itemView.setOnClickListener {
+                onItemClick(eventsItem)
+            }
         }
     }
 

@@ -8,18 +8,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.ViewModelFactoryDsl
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
+import com.example.dicodingeventaplication.Resource
+import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.respons.EventItem
+import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.FragmentHomeBinding
+import com.example.dicodingeventaplication.ui.DialogUtils
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.SearchActivity
+import com.example.dicodingeventaplication.ui.search.viewModel.SearchViewModel
+import com.example.dicodingeventaplication.ui.search.viewModel.SearchViewModelFactory
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
-    private val homeViewModel: HomeViewModel by viewModels()
+    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var homeRepository: DicodingEventRepository
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -85,15 +94,68 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // list finished
+        // repositori
+        val apiService = ApiConfig.getApiService()
+        homeRepository = DicodingEventRepository(apiService, requireContext())
+
+        // view model factory
+        val viewModelFactory = SearchViewModelFactory(homeRepository)
+        homeViewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]// pengganti get
+
+        // finished
         val linearLayout = LinearLayoutManager(requireActivity())
         binding.rvImgVertikalHome.layoutManager = linearLayout
         binding.rvImgVertikalHome.isScrollContainer = false
 
+//        homeViewModel.findEventFinished()
+//        homeViewModel.findEventUpcome()
         // akses dari view model dan meng observe
         // tiap data di observe
-        homeViewModel.listEventData.observe(viewLifecycleOwner){ listEventItem ->
-            setEventData(listEventItem)// memperbarui ketika ada perubahan
+        homeViewModel.resultEventItemFinished.observe(viewLifecycleOwner){ event ->
+           // memperbarui ketika ada perubahan
+            when(event){
+                is Resource.Loading -> {
+
+                }
+                is Resource.Success -> {
+                    updateEventFinished(event.data?.take(5))
+                }
+                is Resource.Error -> {
+                    updateEventFinished(emptyList())
+//                    updateList(emptyList(), emptyList())
+                    DialogUtils.showPopUpErrorDialog(requireContext(), event.message)
+//                    if (queryIsSubmit) {
+//                        queryIsSubmit = false
+//                    }
+                }
+                is Resource.Empty -> {
+
+                }
+
+            }
+        }
+        homeViewModel.resultEventItemUpcome.observe(viewLifecycleOwner){ event ->
+            // memperbarui ketika ada perubahan
+            when(event){
+                is Resource.Loading -> {
+
+                }
+                is Resource.Success -> {
+                    updateEventUpcome(event.data?.take(5))
+                }
+                is Resource.Error -> {
+                    updateEventUpcome(emptyList())
+//                    updateList(emptyList(), emptyList())
+                    DialogUtils.showPopUpErrorDialog(requireContext(), event.message)
+//                    if (queryIsSubmit) {
+//                        queryIsSubmit = false
+//                    }
+                }
+                is Resource.Empty -> {
+
+                }
+
+            }
         }
         binding.sbHome.setOnClickListener {
             val intent = Intent(requireActivity(), SearchActivity()::class.java)
@@ -106,7 +168,7 @@ class HomeFragment : Fragment() {
     }
 
     // inisialize ui
-    private fun setEventData(eventData: List<EventItem>){
+    private fun updateEventFinished(eventData: List<EventItem>?){
         // inisialize adapter n click
         val adapter = HomeFinishedRVAdapter(requireContext()){ event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
@@ -115,8 +177,15 @@ class HomeFragment : Fragment() {
         }
         adapter.submitList(eventData)
         binding.rvImgVertikalHome.adapter = adapter
+    }
 
-        val adapterCorousel = HomeCorouselRVAdaptor(requireContext())
+    private fun updateEventUpcome(eventData: List<EventItem>?){
+        // inisialize adapter
+        val adapterCorousel = HomeCorouselRVAdaptor(requireContext()){ event ->
+            val intent = Intent(requireContext(), DetailEventActivity::class.java)
+            intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+            startActivity(intent)
+        }
         adapterCorousel.submitList(eventData)
         binding.vpItemCorousel.adapter = adapterCorousel
     }
@@ -129,5 +198,10 @@ class HomeFragment : Fragment() {
 //            binding.progressBar.visibility = View.GONE
 //        }
 //    }
+
+    companion object{
+        const val FINISHED = 0
+        const val UPCOMING = 1
+    }
 
 }

@@ -7,10 +7,9 @@ import androidx.lifecycle.ViewModel
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
 import com.example.dicodingeventaplication.data.respons.EventItem
-import com.example.dicodingeventaplication.ui.search.SearchItem
-import com.example.dicodingeventaplication.ui.search.SearchRepository
+import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 
-class SearchViewModel(private val repository: SearchRepository) : ViewModel() {
+class SearchViewModel(private val repository: DicodingEventRepository) : ViewModel() {
 //    private var cacheResult: List<EventItem>? = null
 //    private var lastQuery: String? = null
 
