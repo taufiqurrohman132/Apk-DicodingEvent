@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.ViewModelFactoryDsl
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -22,8 +20,7 @@ import com.example.dicodingeventaplication.databinding.FragmentHomeBinding
 import com.example.dicodingeventaplication.ui.DialogUtils
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.SearchActivity
-import com.example.dicodingeventaplication.ui.search.viewModel.SearchViewModel
-import com.example.dicodingeventaplication.ui.search.viewModel.SearchViewModelFactory
+import com.example.dicodingeventaplication.EventViewModelFactory
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
@@ -99,7 +96,7 @@ class HomeFragment : Fragment() {
         homeRepository = DicodingEventRepository(apiService, requireContext())
 
         // view model factory
-        val viewModelFactory = SearchViewModelFactory(homeRepository)
+        val viewModelFactory = EventViewModelFactory(homeRepository)
         homeViewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]// pengganti get
 
         // finished

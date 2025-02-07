@@ -4,18 +4,14 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.databinding.FragmentFilterDialogBinding
-import com.example.dicodingeventaplication.databinding.FragmentHomeBinding
-import com.example.dicodingeventaplication.ui.search.viewModel.SearchViewModel
-import com.google.android.material.button.MaterialButton
+import com.example.dicodingeventaplication.ui.search.SearchViewModel
 
 class FilterDialogFragment : DialogFragment() {//private val onBtnClick: (Int) -> Unit // tidak di sarankan pakai construktor
     private var _binding: FragmentFilterDialogBinding? = null

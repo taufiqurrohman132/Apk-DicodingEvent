@@ -27,7 +27,7 @@
             android:id="@+id/btn_notification"
             style="@style/Button.Back"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/rip_white_trens_white"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_notification"
@@ -42,7 +42,7 @@
         <ImageButton
             android:id="@+id/btn_favorit"
             style="@style/Button.Back"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="40dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/rip_white_trens_white"
             android:contentDescription="@string/back"
@@ -169,7 +169,8 @@
                 android:id="@+id/imgpop_header_home"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
-                android:contentDescription="IMG Header"
+                android:background="@color/abu_abu_terang"
+                android:contentDescription="@string/img_header"
                 android:scaleType="centerCrop"
                 android:src="@drawable/img" />
         </androidx.cardview.widget.CardView>

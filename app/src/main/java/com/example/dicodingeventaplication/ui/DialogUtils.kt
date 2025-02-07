@@ -9,6 +9,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.widget.TextView
 import com.example.dicodingeventaplication.R
+import kotlinx.coroutines.CoroutineScope
 
 object DialogUtils {
 

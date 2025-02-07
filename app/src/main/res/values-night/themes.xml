@@ -34,6 +34,16 @@
     <style name="Text.Metadata12" parent="Theme.DicodingEventAplication">
         <item name="android:textSize">12sp</item>
     </style>
+    <style name="Text.Header38_appbar" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">38sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="Text.Header22_appbar" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
     <style name="Text.TombolCTA16" parent="Theme.DicodingEventAplication">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>

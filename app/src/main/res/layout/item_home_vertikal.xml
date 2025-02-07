@@ -17,6 +17,7 @@
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:scaleType="centerCrop"
+            android:background="@color/abu_abu_terang"
             app:shapeAppearanceOverlay="@style/RadiusTopRight16"
             android:src="@drawable/img"
             app:layout_constraintHorizontal_bias="0.00"

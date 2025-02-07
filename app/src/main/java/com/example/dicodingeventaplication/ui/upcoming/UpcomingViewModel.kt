@@ -42,25 +42,25 @@ class UpcomingViewModel(private val repository: DicodingEventRepository) : ViewM
         }
     }
 
-    fun findEventUpcomeWithLoading(eventResource: Resource<List<EventItem>>): List<UpcomingItem> {
-        return when(eventResource) {
-            is Resource.Success ->{
-                val eventItem = eventResource.data?.map { UpcomingItem.ResultItem(it) } ?: emptyList()
-                eventItem// + UpcomingItem.Loading
-            }
-            is Resource.Loading ->{
-                val eventItem = eventResource.data?.map { UpcomingItem.ResultItem(it) } ?: emptyList()
-                eventItem + UpcomingItem.Loading
-//                listOf(UpcomingItem.Loading)
-            }
-            is Resource.Error -> {
-                emptyList()
-            }
-            is Resource.Empty -> {
-                emptyList()
-            }
-        }
-    }
+//    fun findEventUpcomeWithLoading(eventResource: Resource<List<EventItem>>): List<UpcomingItem> {
+//        return when(eventResource) {
+//            is Resource.Success ->{
+//                val eventItem = eventResource.data?.map { UpcomingItem.ResultItem(it) } ?: emptyList()
+//                eventItem// + UpcomingItem.Loading
+//            }
+//            is Resource.Loading ->{
+//                val eventItem = eventResource.data?.map { UpcomingItem.ResultItem(it) } ?: emptyList()
+//                eventItem + UpcomingItem.Loading
+////                listOf(UpcomingItem.Loading)
+//            }
+//            is Resource.Error -> {
+//                emptyList()
+//            }
+//            is Resource.Empty -> {
+//                emptyList()
+//            }
+//        }
+//    }
 
 //    fun removeLoading(){
 //        val currentList = _resultEvenItemUpcome.value?.data?.toMutableList() ?: mutableListOf()

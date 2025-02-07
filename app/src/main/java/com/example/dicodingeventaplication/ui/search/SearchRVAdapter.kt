@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.respons.EventItem
-import com.example.dicodingeventaplication.ui.search.viewModel.SearchViewModel
 
 class SearchRVAdapter(
     private val context: Context,

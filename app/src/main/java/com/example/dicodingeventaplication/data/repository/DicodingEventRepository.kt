@@ -88,36 +88,36 @@ class DicodingEventRepository(private val apiService: ApiService, private val co
         callback(Resource.Loading())
 
         // finished
-            apiService.getEventActive(active).enqueue(object : Callback<EventResponse> { // enqueue otomatis berjalan di bg treaad
-                override fun onResponse(
-                    call: Call<EventResponse>,
-                    response: Response<EventResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val responsBody = response.body()
-                        if (responsBody != null) {
-                            val limitEvent = responsBody.listEvents//.take(5)
+        apiService.getEventActive(active).enqueue(object : Callback<EventResponse> { // enqueue otomatis berjalan di bg treaad
+            override fun onResponse(
+                call: Call<EventResponse>,
+                response: Response<EventResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val responsBody = response.body()
+                    if (responsBody != null) {
+                        val limitEvent = responsBody.listEvents//.take(5)
 //                        _listEventData.value = limitEvent
-                            callback(Resource.Success(limitEvent))
-                        } else {
-                            callback(Resource.Empty(emptyList())) // data kosong
-                        }
+                        callback(Resource.Success(limitEvent))
                     } else {
-                        Log.e(TAG, "onResponse: onfailure ${response.message()}")
-                        val erroMessage = errorHandling(response.code())
-                        callback(Resource.Error(erroMessage))
+                        callback(Resource.Empty(emptyList())) // data kosong
                     }
+                } else {
+                    Log.e(TAG, "onResponse: onfailure ${response.message()}")
+                    val erroMessage = errorHandling(response.code())
+                    callback(Resource.Error(erroMessage))
                 }
+            }
 
-                override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-                    Log.e(TAG, "onResponse: onfailure ${t.message}")
-                    if (t is IOException) {
-                        callback(Resource.Error(context.resources.getString(R.string.error_koneksi)))
-                    } else {
-                        callback(Resource.Error(context.resources.getString(R.string.error_takterduga)))
-                    }
+            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
+                Log.e(TAG, "onResponse: onfailure ${t.message}")
+                if (t is IOException) {
+                    callback(Resource.Error(context.resources.getString(R.string.error_koneksi)))
+                } else {
+                    callback(Resource.Error(context.resources.getString(R.string.error_takterduga)))
                 }
-            })
+            }
+        })
 
         // upcoming
 //        val clientEventUpcoming = ApiConfig.getApiService().getEventActive(HomeViewModel.FINISHED)

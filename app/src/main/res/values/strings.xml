@@ -19,5 +19,7 @@
     <string name="error_else">Oops! Ada kesalahan saat meminta data. Coba periksa kembali.</string>
     <string name="error_koneksi">No internet connection. Please check your network.</string>
     <string name="error_takterduga">Terjadi kesalahan tak terduga. Coba lagi nanti.</string>
+    <string name="search">Search</string>
+    <string name="img_header">IMG Header</string>
 
 </resources>

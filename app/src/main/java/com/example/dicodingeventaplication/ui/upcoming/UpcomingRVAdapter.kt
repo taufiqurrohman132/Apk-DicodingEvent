@@ -7,21 +7,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.databinding.ItemUpcomingBinding
-import com.example.dicodingeventaplication.ui.search.SearchRVAdapter
-import okhttp3.internal.isSensitiveHeader
 
 class UpcomingRVAdapter(
     private val context: Context,
     private val onItemClick: (EventItem) -> Unit
-) :
-    ListAdapter<UpcomingItem, ViewHolder>(DIFF_CALLBACK) {
-    inner class ResultViewHolder(item: View) : ViewHolder(item) {
+) : ListAdapter<EventItem, UpcomingRVAdapter.ItemViewHolder>(DIFF_CALLBACK) {
+    inner class ItemViewHolder(item: ItemUpcomingBinding) : ViewHolder(item.root) {
         // inisialize data
         fun bind(eventItem: EventItem){
             val dataTime = eventItem.beginTime
@@ -51,48 +47,31 @@ class UpcomingRVAdapter(
         }
     }
 
-    class LoadingViewHolder(item: View) : ViewHolder(item)
-
-    override fun getItemViewType(position: Int): Int {
-        return when(getItem(position)) {
-            is UpcomingItem.ResultItem -> RESULT_ITEM
-            is UpcomingItem.Loading -> LOADING
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
+        val itemHolder = ItemUpcomingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return  ItemViewHolder(itemHolder)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return when(viewType){
-            LOADING -> LoadingViewHolder(inflater.inflate(R.layout.item_upcoming_loading, parent, false))
-            else -> ResultViewHolder(inflater.inflate(R.layout.item_upcoming, parent, false))
-        }
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        when (val item = getItem(position)){
-            is UpcomingItem.ResultItem -> (holder as ResultViewHolder).bind(item.eventItem)
-            is UpcomingItem.Loading -> {}
-        }
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+        val event = getItem(position)
+        holder.bind(event)
     }
 
     companion object{
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<UpcomingItem>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EventItem>() {
             override fun areItemsTheSame(
-                oldItem: UpcomingItem,
-                newItem: UpcomingItem
+                oldItem: EventItem,
+                newItem: EventItem
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: UpcomingItem,
-                newItem: UpcomingItem
+                oldItem: EventItem,
+                newItem: EventItem
             ): Boolean {
                 return oldItem == newItem
             }
         }
-
-        private val RESULT_ITEM = 0
-        private val LOADING = 1
     }
 }

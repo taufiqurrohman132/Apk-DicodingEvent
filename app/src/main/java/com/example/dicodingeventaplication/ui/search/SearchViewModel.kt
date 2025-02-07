@@ -1,20 +1,30 @@
-package com.example.dicodingeventaplication.ui.search.viewModel
+package com.example.dicodingeventaplication.ui.search
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 class SearchViewModel(private val repository: DicodingEventRepository) : ViewModel() {
 //    private var cacheResult: List<EventItem>? = null
 //    private var lastQuery: String? = null
 
-    private val _searchResultEvenItem = MutableLiveData<Resource<List<EventItem>>>()
-    val searchResultEventItem: LiveData<Resource<List<EventItem>>> = _searchResultEvenItem
+    private val _searchResultEvenItem = MutableStateFlow<Resource<List<EventItem>>>(Resource.Success(
+        emptyList()
+    ))
+    val searchResultEventItem: StateFlow<Resource<List<EventItem>>> = _searchResultEvenItem
 
     private val _listHistory = MutableLiveData<List<EventItem>>()
     val listhHistory: LiveData<List<EventItem>> get() = _listHistory
@@ -25,8 +35,7 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
     private val _activeQuery = MutableLiveData<Int>().apply { value = -1 } // default
     val activeQuery: LiveData<Int> get() =  _activeQuery
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
+    private var job: Job? = null
 
     init {
         loadSearchHistory()
@@ -72,11 +81,44 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
     }
 
     fun searchEvent(query: String, active: Int){
+        job?.cancel() // batalkan proses sebwelum nyua jika ada
+
         if (query.isBlank()){
             _searchResultEvenItem.value = Resource.Success(emptyList()) // kosongkan hasil pencarian
-            // panggile eror data tidak ditemukan
             return
         }
+
+            _searchResultEvenItem.value = Resource.Loading()
+
+
+        job = viewModelScope.launch {
+//            if (query.isBlank()){
+//                _searchResultEvenItem.value = Resource.Success(emptyList()) // kosongkan hasil pencarian
+////                return@launch
+//            }//else{
+//            if (query.isNotBlank()){
+//
+//            }
+            delay(500)
+//            else{
+//            }
+            if (!isActive || query.isBlank()) return@launch // tidak lanjut jika job dibatalkan
+            repository.searchEvent(query, active) { result ->
+//            if (result is Resource.Success ){
+//                cacheResult = result.data
+//            }
+//            _searchResultEvenItem.postValue(result)
+                _searchResultEvenItem.value = result
+            }
+//            }
+
+//            if (query.length > 1) {
+////                _searchResultEvenItem.postValue(Resource.Loading())
+//            }
+//            if(!isActive) return@launch //stop jika job dibatalkan
+
+        }
+}
 
         // jika query samadengan sebelumnya dan sudah ada di chace, maka pakai
 //        if (query == lastQuery && cacheResult != null){
@@ -87,13 +129,6 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
 //        lastQuery = query
 //        _searchResultEvenItem.value = Resource.Loading()
 
-        repository.searchEvent(query, active) { result ->
-//            if (result is Resource.Success ){
-//                cacheResult = result.data
-//            }
-//            _searchResultEvenItem.postValue(result)
-            _searchResultEvenItem.value = result
-        }
 
 
 //        val clientEventSearch = ApiConfig.getApiService().searchEvent(FINISHED, query)
@@ -119,7 +154,7 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
 //            }
 //        })
 
-    }
+
 
     fun selectButton(buttonId: Int){
         _selectButton.value = buttonId

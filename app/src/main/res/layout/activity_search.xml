@@ -144,12 +144,43 @@
             </FrameLayout>
 
         </androidx.cardview.widget.CardView>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_search"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            />
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_search"
+                android:elevation="1dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                />
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/search.simmer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:shimmer_auto_start="true"
+                app:shimmer_direction="left_to_right">
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <include layout="@layout/simmer_search_result"/>
+                        <include layout="@layout/simmer_search_result"/>
+                        <include layout="@layout/simmer_search_result"/>
+                        <include layout="@layout/simmer_search_result"/>
+                        <include layout="@layout/simmer_search_result"/>
+                        <include layout="@layout/simmer_search_result"/>
+                        <include layout="@layout/simmer_search_result"/>
+                        <include layout="@layout/simmer_search_result"/>
+                    </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+        </FrameLayout>
 
     </LinearLayout>
 
