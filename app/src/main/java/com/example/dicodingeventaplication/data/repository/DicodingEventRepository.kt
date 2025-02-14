@@ -4,12 +4,12 @@ import android.content.Context
 import android.util.Log
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
+import com.example.dicodingeventaplication.Utils.NetworkUtils
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.respons.EventResponse
 import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.data.retrofit.ApiService
 import com.example.dicodingeventaplication.ui.home.HomeViewModel
-import com.example.dicodingeventaplication.ui.home.HomeViewModel.Companion
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okio.IOException
@@ -17,9 +17,16 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DicodingEventRepository(private val apiService: ApiService, private val context: Context) {
+class DicodingEventRepository(
+    private val apiService: ApiService,
+    private val context: Context
+) {
     private val sharedPref = context.getSharedPreferences(SEARCH_HISTORY, Context.MODE_PRIVATE)
     private val gson = Gson()
+
+    // variable chache
+    private var  cacheDataUpcoming: EventResponse? = null
+    private var  cacheDataFinished: EventResponse? = null
 
     // ambil history dari shered
     fun getSearchHistory(): List<EventItem> {
@@ -84,10 +91,9 @@ class DicodingEventRepository(private val apiService: ApiService, private val co
         })
     }
 
-    fun findEvent(active: Int, callback: (Resource<List<EventItem>>) -> Unit) {
+    fun findEvent(active: Int, callback: (Resource<List<EventItem?>>) -> Unit) {
         callback(Resource.Loading())
 
-        // finished
         apiService.getEventActive(active).enqueue(object : Callback<EventResponse> { // enqueue otomatis berjalan di bg treaad
             override fun onResponse(
                 call: Call<EventResponse>,
@@ -95,50 +101,52 @@ class DicodingEventRepository(private val apiService: ApiService, private val co
             ) {
                 if (response.isSuccessful) {
                     val responsBody = response.body()
-                    if (responsBody != null) {
+                    if (responsBody?.listEvents?.isNotEmpty() == true) {
+                        when(active){
+                            FINISHED -> cacheDataFinished = responsBody// masukkan chace
+                            UPCOMING -> cacheDataUpcoming = responsBody
+                        }
                         val limitEvent = responsBody.listEvents//.take(5)
-//                        _listEventData.value = limitEvent
                         callback(Resource.Success(limitEvent))
                     } else {
-                        callback(Resource.Empty(emptyList())) // data kosong
+                        Log.e(TAG, "onResponse: data null}")
+                        callback(Resource.Empty(List<EventItem?>(2) {null})) // data kosong
                     }
                 } else {
                     Log.e(TAG, "onResponse: onfailure ${response.message()}")
                     val erroMessage = errorHandling(response.code())
-                    callback(Resource.Error(erroMessage))
+                    when(active){
+                        FINISHED -> callback(Resource.Error(erroMessage, List<EventItem?>(5) {null}))
+                        UPCOMING -> callback(Resource.Error(erroMessage))
+                    }
                 }
             }
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 Log.e(TAG, "onResponse: onfailure ${t.message}")
                 if (t is IOException) {
-                    callback(Resource.Error(context.resources.getString(R.string.error_koneksi)))
+                    callback(Resource.ErrorConection(context.resources.getString(R.string.error_koneksi), List<EventItem?>(5) {null}))
+
+                    if (cacheDataUpcoming != null || cacheDataFinished != null) {
+                        when(active){
+                            UPCOMING -> {
+                                if (cacheDataUpcoming != null)
+                                    callback(Resource.Success(cacheDataUpcoming?.listEvents ?: emptyList()))
+                                else
+                                    callback(Resource.Empty(List<EventItem?>(2) {null}))
+                            }
+                            FINISHED -> callback(Resource.Success(cacheDataFinished?.listEvents ?: emptyList()))
+                        }
+                        Log.d(TAG, "onFailure cace data: tes")
+                    }
                 } else {
-                    callback(Resource.Error(context.resources.getString(R.string.error_takterduga)))
+                    when(active){
+                        FINISHED -> callback(Resource.Error(context.resources.getString(R.string.error_takterduga), List<EventItem?>(5) {null}))
+                        UPCOMING -> callback(Resource.Error(context.resources.getString(R.string.error_takterduga)))
+                    }
                 }
             }
         })
-
-        // upcoming
-//        val clientEventUpcoming = ApiConfig.getApiService().getEventActive(HomeViewModel.FINISHED)
-//        clientEventUpcoming.enqueue(object : Callback<EventResponse> {
-//            override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
-//                if (response.isSuccessful) {
-//                    val responsBody = response.body()
-//                    if (responsBody != null) {
-//                        val limitEvent = responsBody.listEvents.take(5)
-//                        _listEventData.value = limitEvent
-//                    }
-//                } else {
-//                    Log.e("res", "onResponse: onfailure ${response.message()}")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-//                Log.e("res", "onFailure: ${t.message}")
-//            }
-//
-//        })
     }
 
     private fun errorHandling(code: Int): String {

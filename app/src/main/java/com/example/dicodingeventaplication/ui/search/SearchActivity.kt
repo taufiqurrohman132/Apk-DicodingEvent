@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
@@ -15,7 +16,7 @@ import com.example.dicodingeventaplication.data.repository.DicodingEventReposito
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
-import com.example.dicodingeventaplication.ui.DialogUtils
+import com.example.dicodingeventaplication.Utils.DialogUtils
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.filterDialog.FilterDialogFragment
 import com.example.dicodingeventaplication.EventViewModelFactory
@@ -37,6 +38,7 @@ class SearchActivity : AppCompatActivity() {
         var queryIsSubmit = false
         val linearLayout = LinearLayoutManager(this)
         binding.rvSearch.layoutManager = linearLayout
+        binding.rvSearch.itemAnimator = DefaultItemAnimator()
 
         binding.searchView.isIconified = false // menampilkan keyboard langsung
 
@@ -146,24 +148,25 @@ class SearchActivity : AppCompatActivity() {
                 when(event){
                     is Resource.Loading -> {
                         // mulai simmer
-                        updateList(emptyList(), emptyList())
+//                        updateList(emptyList(), emptyList())
                         binding.searchSimmer.startShimmer()
                         binding.searchSimmer.visibility = View.VISIBLE
                         binding.rvSearch.visibility = View.GONE
+                        Log.d(TAG, "onCreate: reaouse loading")
                     }
                     is Resource.Success -> {
                         updateList(searchViewModel.listhHistory.value ?: emptyList(), event.data ?: emptyList())
-                        Log.d(TAG, "onCreate: resouse sukses")
                         binding.searchSimmer.stopShimmer()
                         binding.searchSimmer.visibility = View.GONE
                         binding.rvSearch.visibility = View.VISIBLE
+                        Log.d(TAG, "onCreate: reaouse sukses")
 
                     }
                     is Resource.Error -> {
 //                    updateList(emptyList(), emptyList())
                         binding.searchSimmer.stopShimmer()
                         binding.searchSimmer.visibility = View.GONE
-                        binding.rvSearch.visibility = View.GONE
+                        binding.rvSearch.visibility = View.VISIBLE
                         Log.d(TAG, "onCreate: reaouse rerror")
 
                         if (queryIsSubmit) {
@@ -171,11 +174,16 @@ class SearchActivity : AppCompatActivity() {
                             queryIsSubmit = false
                         }
                     }
+                    is Resource.ErrorConection -> {
+
+                    }
                     is Resource.Empty -> {
-                        binding.rvSearch.visibility = View.GONE
+                        binding.rvSearch.visibility = View.VISIBLE
 //                    updateList(emptyList(), emptyList())
                         binding.searchSimmer.stopShimmer()
                         binding.searchSimmer.visibility = View.GONE
+                        Log.d(TAG, "onCreate: reaouse empty")
+
                     }
 
                 }

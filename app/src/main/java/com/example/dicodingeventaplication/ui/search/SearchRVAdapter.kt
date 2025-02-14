@@ -87,8 +87,7 @@ class SearchRVAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
-        when(item){
+        when(val item = getItem(position)){
             is SearchItem.HistoryItem -> (holder as HistoryViewHolder).bind(item.eventItem, onItemClick)
             is SearchItem.ResultItem -> (holder as ResultViewHolder).bind(item.eventItem, onItemClick)
             is SearchItem.Header -> (holder as HeaderViewHolder).bind(onClearHistory) // di triger dan main

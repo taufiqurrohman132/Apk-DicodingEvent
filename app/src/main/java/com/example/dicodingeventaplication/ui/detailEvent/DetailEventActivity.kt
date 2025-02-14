@@ -27,6 +27,9 @@ class DetailEventActivity : AppCompatActivity() {
 
         Log.d(TAG, "item id = $itemFinishedId")
 
+        binding.detailBtnBack.setOnClickListener {
+            finish()
+        }
 
     }
 

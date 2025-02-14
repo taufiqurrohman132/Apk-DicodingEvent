@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:shapeAppearanceOverlay="@style/Radius8"
+        android:background="@color/abu_abu_terang"/>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        android:layout_marginTop="8dp"
+        app:shapeAppearanceOverlay="@style/Radius8"
+        android:background="@color/abu_abu_terang"/>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="8dp"
+        app:shapeAppearanceOverlay="@style/Radius8"
+        android:background="@color/abu_abu_terang"/>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:shapeAppearanceOverlay="@style/Radius8"
+        android:background="@color/abu_abu_terang"/>
+
+</LinearLayout>

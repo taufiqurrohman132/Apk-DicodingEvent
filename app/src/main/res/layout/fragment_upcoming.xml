@@ -110,118 +110,109 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/upcoming.simmmer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:paddingTop="16dp"
-        app:shimmer_auto_start="true"
-        app:shimmer_duration="1500"
-        app:shimmer_repeat_count="3"
-        app:shimmer_direction="left_to_right">
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp">
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="14dp"
-                    android:layout_marginTop="8dp"
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="14dp"
-                    android:layout_marginEnd="80dp"
-                    android:layout_marginTop="8dp"
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="18dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="14dp"
-                    android:layout_marginTop="8dp"
-
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="14dp"
-                    android:layout_marginEnd="80dp"
-                    android:layout_marginTop="8dp"
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="18dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="14dp"
-                    android:layout_marginTop="8dp"
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="14dp"
-                    android:layout_marginEnd="80dp"
-                    android:layout_marginTop="8dp"
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="18dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
-                    app:shapeAppearanceOverlay="@style/Radius8"
-                    android:background="@color/abu_abu_terang"/>
-
-
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_upcoming"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/upcoming.swip_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:paddingHorizontal="16dp"
-        />
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            >
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/upcoming.simmmer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                app:shimmer_auto_start="true"
+                app:shimmer_duration="1500"
+                app:shimmer_repeat_count="3"
+                app:shimmer_direction="left_to_right">
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="16dp">
+                        <include
+                            layout="@layout/simmer_upcoming"/>
+                        <include
+                            layout="@layout/simmer_upcoming"/>
+                        <include
+                            layout="@layout/simmer_upcoming"/>
+                    </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_upcoming"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="16dp"
+                />
+
+            <LinearLayout
+                android:id="@+id/upcoming.lottie_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                android:layout_gravity="center"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    android:text="@string/event_not_available_yet_but_we_re_working_on_something_amazing"
+                    />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/animation_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:lottie_rawRes="@raw/lottie_empty"
+                    app:lottie_loop="true"
+                    app:lottie_autoPlay="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/upcoming.lottie_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                >
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/error" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    />
+            </LinearLayout>
+
+        </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.search.SearchView
         android:id="@+id/upcoming.sv"

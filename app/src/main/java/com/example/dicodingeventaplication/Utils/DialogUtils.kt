@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication.ui
+package com.example.dicodingeventaplication.Utils
 
 import android.app.AlertDialog
 import android.content.Context
@@ -9,7 +9,6 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.widget.TextView
 import com.example.dicodingeventaplication.R
-import kotlinx.coroutines.CoroutineScope
 
 object DialogUtils {
 

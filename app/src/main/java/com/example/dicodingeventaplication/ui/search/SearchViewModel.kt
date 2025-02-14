@@ -45,18 +45,7 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
     fun loadSearchHistory(){
         _listHistory.value = repository.getSearchHistory()
         Log.d(TAG, "loadSearchHistory: live data, size ${repository.getSearchHistory().size}")
-
-//        val historyId = repository.getSearchHistory()
-//        fetchItemFromApi(historyId)
     }
-
-    // simulasikan pengambilan data dari api berdasarkan id
-//    private fun fetchItemFromApi(id: List<Int>){
-//        val historyList = id.map { ids ->
-//            SearchItem.History(ids, "item $ids") // misal ambil nama dari id
-//        }
-//        _listHistory.value = listOf(SearchItem.History(id"Riwayta Pencarian")) + historyList
-//    }
 
     // tembahkan pencarian baru ke history
     fun saveToHistory(eventItem: EventItem){
@@ -68,8 +57,6 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
     fun removeFromHistory(eventItem: EventItem){//item: SearchItem.History
         val historyList = repository.getSearchHistory().toMutableList()
         historyList.remove(eventItem)
-//        historyList.toList()
-//        repository.saveSearchHistory(historyList)
         loadSearchHistory()
     }
 
@@ -77,7 +64,6 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
     fun clearHistory(){
         repository.clearHistory()
         _listHistory.value = emptyList()
-//        loadSearchHistory()
     }
 
     fun searchEvent(query: String, active: Int){
@@ -88,73 +74,17 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
             return
         }
 
-            _searchResultEvenItem.value = Resource.Loading()
-
+        _searchResultEvenItem.value = Resource.Loading()
 
         job = viewModelScope.launch {
-//            if (query.isBlank()){
-//                _searchResultEvenItem.value = Resource.Success(emptyList()) // kosongkan hasil pencarian
-////                return@launch
-//            }//else{
-//            if (query.isNotBlank()){
-//
-//            }
             delay(500)
-//            else{
-//            }
+
             if (!isActive || query.isBlank()) return@launch // tidak lanjut jika job dibatalkan
             repository.searchEvent(query, active) { result ->
-//            if (result is Resource.Success ){
-//                cacheResult = result.data
-//            }
-//            _searchResultEvenItem.postValue(result)
                 _searchResultEvenItem.value = result
             }
-//            }
-
-//            if (query.length > 1) {
-////                _searchResultEvenItem.postValue(Resource.Loading())
-//            }
-//            if(!isActive) return@launch //stop jika job dibatalkan
-
         }
-}
-
-        // jika query samadengan sebelumnya dan sudah ada di chace, maka pakai
-//        if (query == lastQuery && cacheResult != null){
-//            _searchResultEvenItem.value = Resource.Success(cacheResult!!)
-//            return
-//        }
-
-//        lastQuery = query
-//        _searchResultEvenItem.value = Resource.Loading()
-
-
-
-//        val clientEventSearch = ApiConfig.getApiService().searchEvent(FINISHED, query)
-//        clientEventSearch.enqueue(object : Callback<EventResponse> {
-//            override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
-//                if (response.isSuccessful){
-//                    val responsBody = response.body()
-//                    if(responsBody != null){
-//                        _searchEvenItem.value = responsBody.listEvents
-//                        Log.e(TAG, "onResponse: onsucces ${response.message()}")
-//                    }else{
-//                        _searchEvenItem.value = emptyList()
-//                    }
-//                }
-//                else{
-//                    Log.e(TAG, "onResponse: onfailure ${response.message()}")
-//                    _searchEvenItem.value = emptyList()
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-//                Log.e(TAG, "onResponse: onfailure ${t.message}")
-//            }
-//        })
-
-
+    }
 
     fun selectButton(buttonId: Int){
         _selectButton.value = buttonId
@@ -164,8 +94,6 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
             else -> ALL
         }
     }
-
-
 
     companion object{
         const val TAG = "searchvm"

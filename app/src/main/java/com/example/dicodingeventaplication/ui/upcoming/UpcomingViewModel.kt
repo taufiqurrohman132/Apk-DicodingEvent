@@ -1,73 +1,41 @@
 package com.example.dicodingeventaplication.ui.upcoming
 
+import android.app.Application
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.Resource
+import com.example.dicodingeventaplication.Utils.NetworkUtils
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.ui.home.HomeFragment
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class UpcomingViewModel(private val repository: DicodingEventRepository) : ViewModel() {
 
-    private val _resultEvenItemUpcome = MutableLiveData<Resource<List<EventItem>>>()
-    val resultEventItemUpcome: LiveData<Resource<List<EventItem>>> = _resultEvenItemUpcome
+    private val _resultEvenItemUpcome = MutableLiveData<Resource<List<EventItem?>>>()
+    val resultEventItemUpcome: LiveData<Resource<List<EventItem?>>> = _resultEvenItemUpcome
 
-//    private var hasMoreData = true
-    private var isLoading = false
+//    private val _isRefresing = MutableLiveData<Boolean>()
+//    val isRefresing: LiveData<Boolean> = _isRefresing
 
     init {
         findEventUpcome()
     }
 
-    private fun findEventUpcome(){
-        repository.findEvent(HomeFragment.FINISHED) { event ->
+    fun findEventUpcome(callback: (() -> Unit)? = null){
+        viewModelScope.launch {
+            delay(500)
+            Log.d(UpcomingFragment.TAG, "findEvent upcome berjalan di thread: ${Thread.currentThread().name}")
 
-//            if(event is Resource.Success){
-//                val eventItem = event.data ?: emptyList()
-//
-//                // tambahkan 3 shimmer
-//                val shimmerItem = List(3) {UpcomingItem.Loading}
-//
-//            }else{
-//                _resultEvenItemUpcome.value = event
-//            }
+            repository.findEvent(HomeFragment.UPCOMING) { event ->
                 _resultEvenItemUpcome.value = event
-
-
-//            // jika data kosong atau batas akhir
-//            if (event is Resource.Success && (event.data?.size ?: 0) < resultEventItemUpcome.value?.data?.size){
-//
-//            }
+                callback?.invoke()
+            }
         }
     }
-
-//    fun findEventUpcomeWithLoading(eventResource: Resource<List<EventItem>>): List<UpcomingItem> {
-//        return when(eventResource) {
-//            is Resource.Success ->{
-//                val eventItem = eventResource.data?.map { UpcomingItem.ResultItem(it) } ?: emptyList()
-//                eventItem// + UpcomingItem.Loading
-//            }
-//            is Resource.Loading ->{
-//                val eventItem = eventResource.data?.map { UpcomingItem.ResultItem(it) } ?: emptyList()
-//                eventItem + UpcomingItem.Loading
-////                listOf(UpcomingItem.Loading)
-//            }
-//            is Resource.Error -> {
-//                emptyList()
-//            }
-//            is Resource.Empty -> {
-//                emptyList()
-//            }
-//        }
-//    }
-
-//    fun removeLoading(){
-//        val currentList = _resultEvenItemUpcome.value?.data?.toMutableList() ?: mutableListOf()
-//        if (currentList.isNotEmpty() && currentList?.last() is UpcomingItem.Loading){
-//            currentList.removeAt(currentList.size -1)
-//            _resultEvenItemUpcome.value = currentList
-//        }
-//    }
-
 }

@@ -58,4 +58,14 @@ data class EventItem(
 
 	@field:SerializedName("category")
 	val category: String? = null
-)
+) {
+	val formatYear: String?
+		get() = beginTime?.split(" ")?.getOrNull(0)
+
+	val formateDate: String?
+		get() = formatYear?.split("-")?.getOrNull(2)
+
+	val formatMount: String?
+		get() = formatYear?.split("-")?.getOrNull(1)
+
+}

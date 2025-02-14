@@ -11,7 +11,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/img"
+        android:src="@drawable/dbs"
         android:background="@drawable/img_radius8_all_no_botomright"
         android:clipToOutline="true"/>
     <TextView

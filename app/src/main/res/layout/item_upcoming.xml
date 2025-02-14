@@ -19,7 +19,7 @@
             app:shapeAppearanceOverlay="@style/RadiusBottomRight16"
             android:background="@color/abu_abu_terang"
             android:scaleType="centerCrop"
-            android:src="@drawable/img"
+            android:src="@drawable/dbs"
             android:foreground="@drawable/gradient_img_bottom13"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

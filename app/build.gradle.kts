@@ -59,14 +59,18 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
     implementation(libs.glide)
-    implementation(libs.circleimageview)
+    implementation(libs.glide.transformations)
+//    implementation(libs.circleimageview)
 
     // simmer
     implementation(libs.shimmer)
-    implementation(libs.shimmer.recyclerview.x)
 
+    // lottie
+    implementation(libs.lottie)
+
+    implementation(libs.androidx.swiperefreshlayout)
     // bottom nav
-    implementation("com.exyte:animated-navigation-bar:1.0.0")
+//    implementation("com.exyte:animated-navigation-bar:1.0.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

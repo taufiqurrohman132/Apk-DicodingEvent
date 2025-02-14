@@ -13,10 +13,9 @@ import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.FragmentFinishedBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.EventViewModelFactory
+import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
-import com.example.dicodingeventaplication.data.respons.EventItem
-import com.example.dicodingeventaplication.ui.DialogUtils
-import com.example.dicodingeventaplication.ui.upcoming.UpcomingRVAdapter
+import com.example.dicodingeventaplication.Utils.DialogUtils
 
 class FinishedFragment : Fragment() {
 
@@ -47,6 +46,9 @@ class FinishedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.finishedSimmmer.startShimmer()
+        binding.finishedSimmmer.visibility = View.VISIBLE
+
         // repository
         val apiService = ApiConfig.getApiService()
         finishedRepository = DicodingEventRepository(apiService, requireContext())
@@ -65,35 +67,43 @@ class FinishedFragment : Fragment() {
         }
         binding.rvFinished.adapter = adapterFinished
 
-        binding.finishedSimmmer.startShimmer()
-        binding.finishedSimmmer.visibility = View.VISIBLE
-        binding.rvFinished.visibility = View.GONE
-
         finishedViewModel.resultEventItemUpcome.observe(viewLifecycleOwner){ event ->
             when(event){
                 is Resource.Loading -> {
-
                 }
                 is Resource.Success -> {
                     binding.finishedSimmmer.stopShimmer()
-                    binding.finishedSimmmer.visibility = View.GONE
-                    binding.rvFinished.visibility = View.VISIBLE
-                    binding.finishedSimmmer.animate().alpha(0f).setDuration(300).withEndAction {
-                        adapterFinished.submitList(event.data)
-                    }
+                    binding.finishedSimmmer.visibility = View.INVISIBLE
+
+                    adapterFinished.submitList(event.data)
                 }
                 is Resource.Error -> {
                     binding.finishedSimmmer.stopShimmer()
-                    binding.finishedSimmmer.visibility = View.GONE
-                    binding.rvFinished.visibility = View.VISIBLE
+                    binding.finishedSimmmer.visibility = View.INVISIBLE
+
+                    DialogUtils.showPopUpErrorDialog(requireActivity(), event.message)
 
                     adapterFinished.submitList(emptyList())
+                }
+                is Resource.ErrorConection -> {
+                    binding.finishedSimmmer.stopShimmer()
+                    binding.finishedSimmmer.visibility = View.INVISIBLE
+
                 }
                 is Resource.Empty -> {
                     adapterFinished.submitList(emptyList())
-
                 }
 
+            }
+        }
+
+        // swip
+        binding.finishedSwipRefresh.setColorSchemeColors(resources.getColor(R.color.biru_tua))
+        binding.finishedSwipRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.white))
+        binding.finishedSwipRefresh.setProgressViewOffset(true, 0, 200)
+        binding.finishedSwipRefresh.setOnRefreshListener {
+            finishedViewModel.findEventUpcome{
+                binding.finishedSwipRefresh.isRefreshing = false
             }
         }
     }

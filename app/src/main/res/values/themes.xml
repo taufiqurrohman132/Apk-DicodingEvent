@@ -10,21 +10,21 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/biru_tua</item>
+        <item name="android:statusBarColor">@color/biru_tua_trans30</item>
         <!-- Customize your theme here. -->
         <item name="elevationOverlayEnabled">true</item>
 
     </style>
 
-    <style name="Theme.StatusBar" parent="Theme.MaterialComponents.Light">
-        <!-- Status bar ikon jadi hitam -->
-        <item name="android:windowLightStatusBar">false</item>
-        <!-- Warna status bar (bisa disesuaikan) -->
-        <item name="android:statusBarColor">@color/tranparant</item>
-    </style>
+<!--    <style name="Theme.StatusBar" parent="Theme.MaterialComponents.Light">-->
+<!--        &lt;!&ndash; Status bar ikon jadi hitam &ndash;&gt;-->
+<!--        <item name="android:windowLightStatusBar">false</item>-->
+<!--        &lt;!&ndash; Warna status bar (bisa disesuaikan) &ndash;&gt;-->
+<!--        <item name="android:statusBarColor">@color/tranparant</item>-->
+<!--    </style>-->
 
     <style name="ToolBarWithNavigationBack">
-        <item name="navigationIcon">@drawable/img</item>
+        <item name="navigationIcon">@drawable/dbs</item>
     </style>
 
     <style name="Text.Header24" parent="Theme.DicodingEventAplication">
@@ -100,6 +100,10 @@
     <style name="RadiusTopRight16">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopRight">16dp</item>
+    </style>
+    <style name="Circular">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 
 </resources>
