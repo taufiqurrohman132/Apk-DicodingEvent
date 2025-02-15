@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication.Utils
+package com.example.dicodingeventaplication.utils
 
 open class Event<out T>(private val content: T) {
 

@@ -65,7 +65,7 @@ class HomeFinishedRVAdapter(
 
                 Glide.with(context)
                     .load(eventsItem.imageLogo)
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .override(200, 200)
                     .thumbnail(0.25f)
                     .into(item.imgItemVer)
@@ -123,22 +123,22 @@ class HomeFinishedRVAdapter(
 //    }
 
     companion object{
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EventItem>() {
-            override fun areItemsTheSame(
-                oldItem: EventItem,
-                newItem: EventItem
-            ): Boolean {
-                return oldItem == newItem
-            }
-
-            override fun areContentsTheSame(
-                oldItem: EventItem,
-                newItem: EventItem
-            ): Boolean {
-                return oldItem == newItem
-            }
-
-        }
+//        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EventItem>() {
+//            override fun areItemsTheSame(
+//                oldItem: EventItem,
+//                newItem: EventItem
+//            ): Boolean {
+//                return oldItem == newItem
+//            }
+//
+//            override fun areContentsTheSame(
+//                oldItem: EventItem,
+//                newItem: EventItem
+//            ): Boolean {
+//                return oldItem == newItem
+//            }
+//
+//        }
 
         private const val TYPE_HEADER = 0
         private const val TYPE_UPCOMING = 1

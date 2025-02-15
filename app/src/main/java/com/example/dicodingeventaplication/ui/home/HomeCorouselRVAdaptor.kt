@@ -10,10 +10,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.dicodingeventaplication.utils.TimeUtils
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.databinding.ItemHomeCorouselBinding
-import java.text.SimpleDateFormat
-import java.util.Locale
 import java.util.concurrent.Executors
 
 class HomeCorouselRVAdaptor(
@@ -43,11 +42,11 @@ class HomeCorouselRVAdaptor(
                 item.tvOwnerItem.text= eventsItem.ownerName
                 item.tvHeaderItem.text = eventsItem.name
                 item.tvDes1Item.text = eventsItem.summary
-                item.homeTvBulan.text = getMount(eventsItem.formatMount)//getMount(eventsItem).uppercase()
+                item.homeTvBulan.text = TimeUtils.getMount(eventsItem.formatMount)//getMount(eventsItem).uppercase()
                 item.homeTvTgl.text = eventsItem.formateDate // tgl
                 Glide.with(context)
                     .load(eventsItem.imageLogo)
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .override(400, 400)
                     .thumbnail(0.25f)
                     .into(item.imgItemHori)
@@ -55,9 +54,6 @@ class HomeCorouselRVAdaptor(
                 itemView.setOnClickListener {
                     onItemClick(eventsItem)
                 }
-            } else { // item tanpa data
-//                item.itemCorousel.visibility = View.INVISIBLE
-//                item.itemCorouselLottieEmpty.visibility = View.VISIBLE
             }
         }
     }
@@ -70,39 +66,24 @@ class HomeCorouselRVAdaptor(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val event = getItem(position)
         holder.bind(event)
-
-    }
-
-    private fun getMount(date: String?): String{
-        val month = arrayOf(
-            "JAN",  "FEB",  "MAR",  "APR",  "MEI",  "JUN",
-            "JUL",  "AGS",  "SEP",  "OKT",  "NOV",  "DES"
-        )
-
-        return try {
-            val index = date?.toIntOrNull()?.minus(1) ?: return ""
-            if (index in month.indices) month[index] else ""
-        }catch (e: Exception){
-            return ""
-        }
     }
 
     companion object{
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EventItem>() {
-            override fun areItemsTheSame(
-                oldItem: EventItem,
-                newItem: EventItem
-            ): Boolean {
-                return oldItem.id == newItem.id
-            }
-
-            override fun areContentsTheSame(
-                oldItem: EventItem,
-                newItem: EventItem
-            ): Boolean {
-                return oldItem == newItem
-            }
-
-        }
+//        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EventItem>() {
+//            override fun areItemsTheSame(
+//                oldItem: EventItem,
+//                newItem: EventItem
+//            ): Boolean {
+//                return oldItem.id == newItem.id
+//            }
+//
+//            override fun areContentsTheSame(
+//                oldItem: EventItem,
+//                newItem: EventItem
+//            ): Boolean {
+//                return oldItem == newItem
+//            }
+//
+//        }
     }
 }

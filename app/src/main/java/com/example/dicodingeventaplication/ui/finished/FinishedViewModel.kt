@@ -16,13 +16,15 @@ class FinishedViewModel(private val repository: DicodingEventRepository) : ViewM
     private val _resultEvenItemUpcome = MutableLiveData<Resource<List<EventItem?>>>()
     val resultEventItemUpcome: LiveData<Resource<List<EventItem?>>> = _resultEvenItemUpcome
 
+    var appBarOffset: Int = 0
+
     init {
         findEventUpcome()
     }
 
     fun findEventUpcome(callback: (() -> Unit)? = null){
         viewModelScope.launch {
-            delay(500)
+            delay(1500)
 
             repository.findEvent(HomeFragment.FINISHED) { event ->
                 _resultEvenItemUpcome.value = event

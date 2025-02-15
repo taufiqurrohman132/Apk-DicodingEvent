@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.Resource
-import com.example.dicodingeventaplication.Utils.NetworkUtils
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.ui.home.HomeFragment
@@ -29,7 +28,7 @@ class UpcomingViewModel(private val repository: DicodingEventRepository) : ViewM
 
     fun findEventUpcome(callback: (() -> Unit)? = null){
         viewModelScope.launch {
-            delay(500)
+            delay(1500)
             Log.d(UpcomingFragment.TAG, "findEvent upcome berjalan di thread: ${Thread.currentThread().name}")
 
             repository.findEvent(HomeFragment.UPCOMING) { event ->

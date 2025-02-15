@@ -23,8 +23,7 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     private val _headerEvent = MutableLiveData<Resource<List<EventItem?>>>()
     val headerEvent: LiveData<Resource<List<EventItem?>>> = _headerEvent
 
-    private val _imageHeaderUrl = MutableLiveData<String?>()
-    val imageHeaderUrl: LiveData<String?> = _imageHeaderUrl
+    var scrollY: Int= 0
 
     init {
 //        findEventUpcome()
@@ -36,11 +35,10 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
         Log.d(HomeFragment.TAG, "findImageHeader dipanggil")
         viewModelScope.launch {
             delay(500)
-            Log.d(HomeFragment.TAG, "findEvent finish berjalan di thread: ${Thread.currentThread().name}")
+            Log.d(HomeFragment.TAG, "findEvent heder berjalan di thread: ${Thread.currentThread().name}")
 
             repository.findEvent(HomeFragment.FINISHED) { event ->
                 _headerEvent.value = event
-                _imageHeaderUrl.value = event.data?.getOrNull(6)?.mediaCover
             }
             findEventUpcome{
                 callback?.invoke()
@@ -90,5 +88,8 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
             }
             findEventFinished()
         }
+    }
+    companion object{
+        const val TAGV = " tagv"
     }
 }

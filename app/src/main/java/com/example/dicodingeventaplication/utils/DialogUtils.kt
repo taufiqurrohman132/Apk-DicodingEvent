@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication.Utils
+package com.example.dicodingeventaplication.utils
 
 import android.app.AlertDialog
 import android.content.Context

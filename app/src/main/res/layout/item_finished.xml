@@ -31,7 +31,7 @@
             android:id="@+id/finished.btn_favorit"
             style="@style/Button.Back"
             android:layout_margin="16dp"
-            android:background="@drawable/rip_white_trens_white"
+            android:background="@drawable/rip_white_trans_white_dark1"
             android:contentDescription="@string/faforit"
             android:src="@drawable/ic_favorit"
             app:layout_constraintBottom_toBottomOf="parent"

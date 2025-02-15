@@ -9,8 +9,8 @@ sealed class SearchItem {
     data class ResultItem(val eventItem: EventItem) : SearchItem(){
         val id get() = eventItem.id
     }
-    object Header : SearchItem(){
-        const val id = -1
-    }
+//    data object Header : SearchItem(){
+//        const val id = -1
+//    }
 
 }

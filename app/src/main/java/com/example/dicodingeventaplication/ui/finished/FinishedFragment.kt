@@ -2,6 +2,7 @@ package com.example.dicodingeventaplication.ui.finished
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,7 @@ import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.EventViewModelFactory
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
-import com.example.dicodingeventaplication.Utils.DialogUtils
+import com.example.dicodingeventaplication.utils.DialogUtils
 
 class FinishedFragment : Fragment() {
 
@@ -24,6 +25,18 @@ class FinishedFragment : Fragment() {
 
     private lateinit var finishedViewModel: FinishedViewModel
     private lateinit var finishedRepository: DicodingEventRepository
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val rvPosition = binding.rvFinished.layoutManager?.onSaveInstanceState()
+        outState.putParcelable(SCROLL_POSITION, rvPosition)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        val rvPosition = savedInstanceState?.getParcelable<Parcelable>(SCROLL_POSITION)
+        binding.rvFinished.layoutManager?.onRestoreInstanceState(rvPosition)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,12 +87,14 @@ class FinishedFragment : Fragment() {
                 is Resource.Success -> {
                     binding.finishedSimmmer.stopShimmer()
                     binding.finishedSimmmer.visibility = View.INVISIBLE
+                    binding.finishedLottieError.visibility = View.INVISIBLE
 
                     adapterFinished.submitList(event.data)
                 }
                 is Resource.Error -> {
                     binding.finishedSimmmer.stopShimmer()
                     binding.finishedSimmmer.visibility = View.INVISIBLE
+                    binding.finishedLottieError.visibility = View.VISIBLE
 
                     DialogUtils.showPopUpErrorDialog(requireActivity(), event.message)
 
@@ -88,10 +103,15 @@ class FinishedFragment : Fragment() {
                 is Resource.ErrorConection -> {
                     binding.finishedSimmmer.stopShimmer()
                     binding.finishedSimmmer.visibility = View.INVISIBLE
+                    binding.finishedLottieError.visibility = View.INVISIBLE
 
                 }
                 is Resource.Empty -> {
                     adapterFinished.submitList(emptyList())
+
+                    binding.finishedSimmmer.stopShimmer()
+                    binding.finishedSimmmer.visibility = View.INVISIBLE
+                    binding.finishedLottieError.visibility = View.INVISIBLE
                 }
 
             }
@@ -108,10 +128,12 @@ class FinishedFragment : Fragment() {
         }
     }
 
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object{
+        private const val SCROLL_POSITION = "scrol_position"
     }
 }

@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +21,7 @@ import com.example.dicodingeventaplication.data.repository.DicodingEventReposito
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.FragmentHomeBinding
-import com.example.dicodingeventaplication.Utils.DialogUtils
+import com.example.dicodingeventaplication.utils.DialogUtils
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.SearchActivity
 import com.example.dicodingeventaplication.EventViewModelFactory
@@ -33,6 +34,21 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putInt(
+//            SCROLL_POSITION,
+//            binding.homeNestedScroll.scrollY
+//        )
+//    }
+//
+//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+//        super.onViewStateRestored(savedInstanceState)
+//        binding.homeNestedScroll.post {
+//            binding.homeNestedScroll.scrollTo(0, savedInstanceState?.getInt(SCROLL_POSITION) ?: 0)
+//        }
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,34 +104,23 @@ class HomeFragment : Fragment() {
         }
         binding.vpItemCorousel.setPageTransformer(compositePageTransformer)
 
+//        // blur img
+//        Glide.with(requireActivity())
+//            .load(R.drawable.dbs)
+//            .transform(BlurTransformation(25))
+//            .into(binding.imgpopHeaderHome)
+
+
         val root: View = binding.root
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // mulai simmer
         binding.homeUpcomingSimmmer.visibility = View.VISIBLE
-//        binding.vpItemCorousel.visibility = View.INVISIBLE
-//        binding.homeUpcomingSimmmer.apply {
-//            binding.homeUpcomingSimmmer.visibility = View.VISIBLE
-//        }
-//        binding.homeUpcomingSimmmer.postDelayed({
-//            binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
-//            binding.homeLottieCorousel.visibility = View.INVISIBLE
-//            binding.homeUpcomingSimmmer.stopShimmer()
-//        }, 1000)
-
         binding.homeFinishedSimmmer.visibility = View.VISIBLE
         binding.homeProgres.visibility = View.VISIBLE
-
-
-        // blur img
-//        Glide.with(requireContext())
-//            .load(R.drawable.dbs)
-//            .transform(BlurTransformation(25))
-//            .into(binding.imgpopHeaderHome)
 
         // repositori
         val apiService = ApiConfig.getApiService()
@@ -126,7 +131,7 @@ class HomeFragment : Fragment() {
         homeViewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]// pengganti get
 
         // inisialize adapter
-        val adapterCorousel = HomeCorouselRVAdaptor(requireContext()){ event ->
+        val adapterCorousel = HomeCorouselRVAdaptor(requireActivity()){ event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
             intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
             startActivity(intent)
@@ -141,7 +146,7 @@ class HomeFragment : Fragment() {
         binding.rvHomeFinished.isScrollContainer = false
         binding.rvHomeFinished.setItemViewCacheSize(3)
 
-        val adapterFinished = HomeFinishedRVAdapter(requireContext(),
+        val adapterFinished = HomeFinishedRVAdapter(requireActivity(),
             onItemClick = { event ->
                 val intent = Intent(requireContext(), DetailEventActivity::class.java)
                 intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
@@ -154,17 +159,18 @@ class HomeFragment : Fragment() {
 
         // akses dari view model dan meng observe
         // tiap data di observe
-        homeViewModel.imageHeaderUrl.observe(viewLifecycleOwner){ url ->
-            Log.d(TAG, "URL gambar setelah rotasi: $url")
-            if (!url.isNullOrEmpty()){
-                Glide.with(requireContext())
-                    .load(url)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .skipMemoryCache(true)
-                    .thumbnail(0.25f)
-                    .into(binding.imgpopHeaderHome)
-            } else Log.e(TAG, "URL gambar kosong setelah rotasi!")
-        }
+//        homeViewModel.imageHeaderUrl.observe(viewLifecycleOwner){ url ->
+////            Log.d(TAGA, "URL gambar setelah rotasi: $url")
+////            if (!url.isNullOrEmpty()){
+////                Glide.with(requireContext())
+////                    .load(url)
+////                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+////                    .override(600, 300)
+////                    .skipMemoryCache(true)
+////                    .thumbnail(0.25f)
+////                    .into(binding.imgpopHeaderHome)
+////            } else Log.e(TAGA, "URL gambar kosong setelah rotasi!")
+//        }
         homeViewModel.headerEvent.observe(viewLifecycleOwner){ event ->
             // memperbarui ketika ada perubahan
             when(event){
@@ -174,21 +180,19 @@ class HomeFragment : Fragment() {
                 is Resource.Success -> {
                     binding.homeProgres.visibility = View.INVISIBLE
                     binding.homeHeaderRefresh.visibility = View.INVISIBLE
+                    getImageHeader(event.data)
                 }
                 is Resource.Error -> {
                     binding.imgpopHeaderHome.setImageResource(0)
-                    binding.homeProgres.visibility = View.INVISIBLE
                     binding.homeHeaderRefresh.visibility = View.VISIBLE
+                    binding.homeProgres.visibility = View.INVISIBLE
                 }
                 is Resource.ErrorConection -> {
                     binding.homeProgres.visibility = View.INVISIBLE
-                    if (event.data != null)
-                        binding.homeHeaderRefresh.visibility = View.VISIBLE
                 }
                 is Resource.Empty -> {
                     binding.homeProgres.visibility = View.INVISIBLE
                 }
-
             }
             Log.d(TAG, "heder: $event")
         }
@@ -200,9 +204,10 @@ class HomeFragment : Fragment() {
                     adapterCorousel.submitList(event.data?.take(5)?.toList()){
                         binding.vpItemCorousel.post {
                             binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
-                            binding.homeLottieCorousel.visibility = View.INVISIBLE
                             binding.homeUpcomingSimmmer.stopShimmer()
-                            binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
+//                            binding.homeLottieCorousel.visibility = View.INVISIBLE
+//                            binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
+                            binding.grupHandlingLottie.visibility = View.INVISIBLE
                         }
                     }
                 }
@@ -216,22 +221,28 @@ class HomeFragment : Fragment() {
                         }
                     }
                     DialogUtils.showPopUpErrorDialog(requireActivity(), event.message)
+                    binding.homeProgres.visibility = View.INVISIBLE
+
+                    binding.homeHeaderRefresh.visibility = View.VISIBLE
                 }
                 is Resource.ErrorConection -> {
                     Log.d(TAG, "corousel currrent list = ${adapterCorousel.currentList.isEmpty()}")
                     DialogUtils.showPopUpErrorDialog(requireActivity(), event.message)
+                    binding.homeProgres.visibility = View.INVISIBLE
+
                     binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
                     binding.homeUpcomingSimmmer.stopShimmer()
                     binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
 
                     if (adapterCorousel.currentList.isEmpty()){
+                        binding.homeHeaderRefresh.visibility = View.VISIBLE
                         binding.homeLottieCorousel.visibility = View.VISIBLE
                     }
                 }
                 else -> {
                 }
             }
-            Log.d(TAG, "upcoming: $event")
+            Log.d(TAG, "upcoming: event is empty ${event.data?.isEmpty()}, is null ${event.data.isNullOrEmpty()}")
             Log.d(TAG, "upcoming: ${binding.homeUpcomingSimmmer.isShimmerStarted}")
         }
 
@@ -247,7 +258,6 @@ class HomeFragment : Fragment() {
                             binding.homeFinishedSimmmer.stopShimmer()
                         }
                     }
-//                    binding.homeFinishedSimmmer.stopShimmer()
                     Log.d(TAG, "finished: ${event.data}")
                 }
                 is Resource.Error -> {
@@ -276,6 +286,11 @@ class HomeFragment : Fragment() {
             Log.d(TAG, "finished: $event")
         }
 
+        // pulihkan posisi scroll
+        binding.homeNestedScroll.post {
+            binding.homeNestedScroll.scrollTo(0, homeViewModel.scrollY)
+        }
+
         // swip refres
         binding.homeSwipRefresh.setColorSchemeColors(resources.getColor(R.color.biru_tua))
         binding.homeSwipRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.white))
@@ -283,6 +298,10 @@ class HomeFragment : Fragment() {
         binding.homeSwipRefresh.setOnRefreshListener {
             homeViewModel.findImageHeader{
                 binding.homeSwipRefresh.isRefreshing = false
+            }
+            if (binding.homeHeaderRefresh.isVisible) {
+                binding.homeHeaderRefresh.visibility = View.INVISIBLE
+                binding.homeProgres.visibility = View.VISIBLE
             }
         }
 
@@ -299,28 +318,35 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        // simpan scrol position
+        homeViewModel.scrollY = binding.homeNestedScroll.scrollY
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-//    private fun getImageHeader(eventData: List<EventItem?>?){
-//        val event = eventData?.let {
-//            if (it.size > 6) it[6] else null
-//        }
-//
-//        Glide.with(requireActivity())
-//            .load(event?.mediaCover)
-//            .diskCacheStrategy(DiskCacheStrategy.ALL)
-//            .thumbnail(0.25f)
-//            .into(binding.imgpopHeaderHome)
-//    }
+    private fun getImageHeader(eventData: List<EventItem?>?){
+        Glide.with(requireActivity())
+            .load(eventData?.let {
+                if (it.size > 6) it[6] else null
+            }?.mediaCover)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .override(600, 300)
+            .thumbnail(0.25f)
+            .into(binding.imgpopHeaderHome)
+    }
 
     companion object{
         const val FINISHED = 0
         const val UPCOMING = 1
         const val TAG = "home"
+        const val TAGA = "homega"
+        private const val SCROLL_POSITION = "scrol_position"
     }
 
 }

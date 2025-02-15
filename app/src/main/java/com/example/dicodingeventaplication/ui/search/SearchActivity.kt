@@ -16,10 +16,11 @@ import com.example.dicodingeventaplication.data.repository.DicodingEventReposito
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
-import com.example.dicodingeventaplication.Utils.DialogUtils
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.filterDialog.FilterDialogFragment
 import com.example.dicodingeventaplication.EventViewModelFactory
+import com.example.dicodingeventaplication.utils.DialogUtils
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
@@ -94,7 +95,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchBtnBack.setOnClickListener{ finish() }
 
-        getEventData()
+        getAdapter()
 
         // inisialisasi repositori
         val apiService = ApiConfig.getApiService()
@@ -151,22 +152,22 @@ class SearchActivity : AppCompatActivity() {
 //                        updateList(emptyList(), emptyList())
                         binding.searchSimmer.startShimmer()
                         binding.searchSimmer.visibility = View.VISIBLE
-                        binding.rvSearch.visibility = View.GONE
+                        binding.rvSearch.visibility = View.INVISIBLE
                         Log.d(TAG, "onCreate: reaouse loading")
                     }
                     is Resource.Success -> {
                         updateList(searchViewModel.listhHistory.value ?: emptyList(), event.data ?: emptyList())
-                        binding.searchSimmer.stopShimmer()
-                        binding.searchSimmer.visibility = View.GONE
-                        binding.rvSearch.visibility = View.VISIBLE
+//                        binding.searchSimmer.stopShimmer()
+//                        binding.searchSimmer.visibility = View.INVISIBLE
+//                        binding.rvSearch.visibility = View.VISIBLE
                         Log.d(TAG, "onCreate: reaouse sukses")
 
                     }
                     is Resource.Error -> {
-//                    updateList(emptyList(), emptyList())
-                        binding.searchSimmer.stopShimmer()
-                        binding.searchSimmer.visibility = View.GONE
-                        binding.rvSearch.visibility = View.VISIBLE
+                        updateList(emptyList(), emptyList())
+//                        binding.searchSimmer.stopShimmer()
+//                        binding.searchSimmer.visibility = View.INVISIBLE
+//                        binding.rvSearch.visibility = View.VISIBLE
                         Log.d(TAG, "onCreate: reaouse rerror")
 
                         if (queryIsSubmit) {
@@ -178,10 +179,10 @@ class SearchActivity : AppCompatActivity() {
 
                     }
                     is Resource.Empty -> {
-                        binding.rvSearch.visibility = View.VISIBLE
-//                    updateList(emptyList(), emptyList())
-                        binding.searchSimmer.stopShimmer()
-                        binding.searchSimmer.visibility = View.GONE
+//                        binding.rvSearch.visibility = View.VISIBLE
+                        updateList(emptyList(), emptyList())
+//                        binding.searchSimmer.stopShimmer()
+//                        binding.searchSimmer.visibility = View.INVISIBLE
                         Log.d(TAG, "onCreate: reaouse empty")
 
                     }
@@ -191,7 +192,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun getEventData(){ //eventData: List<EventItem>?
+    private fun getAdapter(){ //eventData: List<EventItem>?
         adapter = SearchRVAdapter(
             onDeleteClickItem = { item -> searchViewModel.removeFromHistory(item)},
             onClearHistory = { searchViewModel.clearHistory() },
@@ -220,7 +221,16 @@ class SearchActivity : AppCompatActivity() {
             list.addAll(result.map { SearchItem.ResultItem(it) })
         }
 
-        adapter.submitList(ArrayList(list))
+        adapter.submitList(ArrayList(list)){
+            binding.rvSearch.post {
+                lifecycleScope.launch {
+                    delay(500)
+                    binding.searchSimmer.stopShimmer()
+                    binding.searchSimmer.visibility = View.INVISIBLE
+                    binding.rvSearch.visibility = View.VISIBLE
+                }
+            }
+        }
 
         Log.d(TAG, "updateList: list size ${list.size}")
         Log.d(TAG, "updateList: histori size ${history.size}")

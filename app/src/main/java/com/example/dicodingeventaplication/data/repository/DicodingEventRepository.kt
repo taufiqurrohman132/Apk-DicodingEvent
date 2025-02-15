@@ -4,12 +4,9 @@ import android.content.Context
 import android.util.Log
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
-import com.example.dicodingeventaplication.Utils.NetworkUtils
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.respons.EventResponse
-import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.data.retrofit.ApiService
-import com.example.dicodingeventaplication.ui.home.HomeViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okio.IOException
@@ -167,6 +164,5 @@ class DicodingEventRepository(
         private const val HISTORY_LIST = "history_list"
         private const val FINISHED = 0
         private const val UPCOMING = 1
-        private const val ALL = -1
     }
 }

@@ -121,29 +121,53 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:orientation="vertical">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/search.cv_status"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            app:cardCornerRadius="16dp">
-            <FrameLayout
+            android:paddingHorizontal="16dp"
+            >
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/gradient_btn_detail"
-                android:paddingVertical="4dp"
-                android:paddingHorizontal="16dp">
-                <TextView
-                    android:id="@+id/search.tv_status_active"
+                android:text="Pencarian Terbaru"
+                style="@style/Text.Subjudul16"
+                android:textColor="@color/black"
+                android:layout_marginTop="4dp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/tv_clear_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hapus Semua"
+                style="@style/Text.Konten14"
+                android:layout_gravity="end"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/merah"
+                android:textStyle="bold"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/search.cv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp">
+                <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All"
-                    android:textColor="@color/white"
-                    style="@style/Text.Subjudul16"
-                    android:textStyle="bold"/>
-            </FrameLayout>
+                    android:background="@drawable/gradient_btn_detail"
+                    android:paddingVertical="4dp"
+                    android:paddingHorizontal="16dp">
+                    <TextView
+                        android:id="@+id/search.tv_status_active"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="All"
+                        android:textColor="@color/white"
+                        style="@style/Text.Subjudul16"
+                        android:textStyle="bold"/>
+                </FrameLayout>
 
-        </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
+        </FrameLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -160,24 +184,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:shimmer_auto_start="true"
+                app:shimmer_duration="1500"
+                app:shimmer_repeat_count="3"
                 app:shimmer_direction="left_to_right">
-                <androidx.core.widget.NestedScrollView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <include layout="@layout/simmer_search_result"/>
-                        <include layout="@layout/simmer_search_result"/>
-                        <include layout="@layout/simmer_search_result"/>
-                        <include layout="@layout/simmer_search_result"/>
-                        <include layout="@layout/simmer_search_result"/>
-                        <include layout="@layout/simmer_search_result"/>
-                        <include layout="@layout/simmer_search_result"/>
-                        <include layout="@layout/simmer_search_result"/>
-                    </LinearLayout>
-                </androidx.core.widget.NestedScrollView>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <include layout="@layout/simmer_search_result"/>
+                    <include layout="@layout/simmer_search_result"/>
+                    <include layout="@layout/simmer_search_result"/>
+                    <include layout="@layout/simmer_search_result"/>
+                    <include layout="@layout/simmer_search_result"/>
+                    <include layout="@layout/simmer_search_result"/>
+                    <include layout="@layout/simmer_search_result"/>
+                    <include layout="@layout/simmer_search_result"/>
+                </LinearLayout>
 
             </com.facebook.shimmer.ShimmerFrameLayout>
         </FrameLayout>
