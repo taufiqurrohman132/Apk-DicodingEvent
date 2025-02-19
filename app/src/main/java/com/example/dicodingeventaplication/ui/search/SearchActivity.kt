@@ -2,100 +2,40 @@ package com.example.dicodingeventaplication.ui.search
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.filterDialog.FilterDialogFragment
 import com.example.dicodingeventaplication.EventViewModelFactory
 import com.example.dicodingeventaplication.utils.DialogUtils
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var searchRepository: DicodingEventRepository
-    private lateinit var adapter: SearchRVAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var activeQuery: Int = -1
-        var searching = ""
-        var queryIsSubmit = false
-        val linearLayout = LinearLayoutManager(this)
-        binding.rvSearch.layoutManager = linearLayout
-        binding.rvSearch.itemAnimator = DefaultItemAnimator()
-
-        binding.searchView.isIconified = false // menampilkan keyboard langsung
-
-        // searching
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let {
-                    queryIsSubmit = true
-                    searchViewModel.searchEvent(it, 0)
-                    binding.searchView.clearFocus()// menurunkan keyboard ketika di pencet search
-                }
-                Log.d("actsc", "query Data: onsucces")
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-//                updateList(emptyList(), emptyList())
-                if (newText.isNullOrBlank()){
-//                    binding.searchSimmer.stopShimmer()
-//                    binding.searchSimmer.visibility = View.GONE
-//                    binding.searchCvStatus.visibility = View.GONE
-                    updateList(searchViewModel.listhHistory.value ?: emptyList(), emptyList())
-                    Log.d(TAG, "onQueryTextChange: history ${searchViewModel.listhHistory.value}")
-                    Log.d(TAG, "onQueryTextChange: null")
-                }else{
-                    queryIsSubmit = false
-
-//                    // mulai simmer
-//                    binding.searchSimmer.startShimmer()
-//                    binding.searchSimmer.visibility = View.VISIBLE
-//                    binding.rvSearch.visibility = View.GONE
-
-//                    searchJob?.cancel()
-//
-//                    searchJob = lifecycleScope.launch {
-//                        delay(1000)
-//                        binding.searchSimmer.stopShimmer()
-//                        binding.searchSimmer.visibility = View.GONE
-//                    }
-
-//                    updateList(emptyList(), emptyList())
-                    searchViewModel.searchEvent(newText, activeQuery)
-//                    updateList(emptyList(), emptyList())
-                    binding.searchCvStatus.visibility = View.VISIBLE
-                    // coba
-                    searching = newText
-                }
-                Log.d("actsc", "query Data: onsucces")
-                return true
-            }
-
-        })
-
-        binding.searchBtnBack.setOnClickListener{ finish() }
-
-        getAdapter()
+        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         // inisialisasi repositori
         val apiService = ApiConfig.getApiService()
@@ -105,28 +45,73 @@ class SearchActivity : AppCompatActivity() {
         val viewModelFactory = EventViewModelFactory(searchRepository)
         searchViewModel = ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]// pengganti get
 
+        var activeQuery: Int = -1
+        var search = ""
+        var queryIsSubmit = false
+
+        val linearLayoutResult = LinearLayoutManager(this)
+        binding.rvSearchResult.layoutManager = linearLayoutResult
+        binding.rvSearchResult.itemAnimator = DefaultItemAnimator()
+
+        val linearLayoutHistory = LinearLayoutManager(this)
+        binding.rvSearchHistory.layoutManager = linearLayoutHistory
+        binding.rvSearchHistory.itemAnimator = DefaultItemAnimator()
+
+        binding.searchView.isIconified = false // menampilkan keyboard langsung
+
+        binding.searchSimmer.visibility = View.INVISIBLE
+        binding.rvSearchResult.visibility = View.INVISIBLE
+        binding.searchHeaderResult.visibility = View.INVISIBLE
+
+        val adapterHistory = SearchHistoryRVAdapter(
+            onDeleteClickItem = { item -> searchViewModel.removeFromHistory(item)},
+            onItemClick = { event ->
+                val intent = Intent(this@SearchActivity, DetailEventActivity::class.java)
+                intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+                startActivity(intent)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    searchViewModel.saveToHistory(event)
+                    Log.d("actsc", "setEvent Data: onsucces")
+                }, 500)
+                Log.d("actsc", "setEvent Data: onsucces")
+            },
+            context = this
+        )
+        binding.rvSearchHistory.adapter = adapterHistory
+
+        val adapterResult = SearchResultRVAdapter(
+            context = this,
+            onItemClick = {event ->
+                val intent = Intent(this@SearchActivity, DetailEventActivity::class.java)
+                intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+                startActivity(intent)
+                searchViewModel.saveToHistory(event)// save ke hsitory
+                Log.d("actsc", "setEvent Data: onsucces")
+            }
+        )
+        binding.rvSearchResult.adapter = adapterResult
+
+//        if (adapterHistory.currentList.isEmpty())
+//            binding.searchHeadarHistory.visibility = View.INVISIBLE
+
         // tampilkan history
-        searchViewModel.loadSearchHistory()
+        searchViewModel.loadSearchHistory{
+            binding.searchHeadarHistory.visibility = View.VISIBLE
+        }
 
         // observe history
         searchViewModel.listhHistory.observe(this){ historyList ->
-            updateList(historyList, searchViewModel.searchResultEventItem.value.data ?: emptyList())
+            adapterHistory.submitList(historyList)
+            Log.d(TAG, "onCreate: history $historyList")
         }
 
         searchViewModel.activeQuery.observe(this){ activeValue->
-            activeQuery = activeValue
 
             // update search
-            searchViewModel.searchEvent(searching, activeQuery)
-        }
-
-        // filter
-        binding.btnFilter.setOnClickListener {
-            val dialog = FilterDialogFragment()
-//            { selectedId ->
-//                searchViewModel.selectButton(selectedId)
-//            }
-            dialog.show(supportFragmentManager, "Filter Dialog")
+            if (activeQuery != activeValue){
+                activeQuery = activeValue
+                searchViewModel.searchEvent(search, activeQuery)
+            }
         }
 
         searchViewModel.selectButton.observe(this){ selectId ->
@@ -137,107 +122,165 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launch {
+        // searching
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    queryIsSubmit = true
+                    searchViewModel.searchEvent(it, activeQuery)
+                    binding.searchView.clearFocus()// menurunkan keyboard ketika di pencet search
+                }
+                Log.d(TAG, "query Data: onsucces")
+                return true
+            }
 
-            searchViewModel.searchResultEventItem.collect { event ->
-//            if (binding.searchView.query.isNullOrBlank()){
-//                binding.searchSimmer.stopShimmer()
-//                binding.searchSimmer.visibility = View.GONE
-//                binding.searchCvStatus.visibility = View.GONE
-//                return@observe
-//            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapterResult.submitList(emptyList())
+                search = newText ?: ""
+
+                binding.rvSearchResult.visibility = View.INVISIBLE
+                Log.d(TAG, "query Data: onchange")
+                Log.d(TAG, "query Data: newteks $newText")
+                if (newText.isNullOrBlank()){
+                    binding.searchHeaderResult.visibility = View.INVISIBLE
+                    binding.searchSimmer.visibility = View.INVISIBLE
+
+                    binding.searchLottieEror.visibility = View.INVISIBLE
+                    binding.searchLottieNotResult.visibility = View.INVISIBLE
+                    binding.searchLottieNotInternet.visibility = View.INVISIBLE
+
+                    if (adapterHistory.currentList.isNotEmpty()){
+                        binding.searchHeadarHistory.visibility = View.VISIBLE
+                        binding.rvSearchHistory.visibility = View.VISIBLE
+                    }
+
+//                        searching = ""
+                    adapterHistory.submitList(searchViewModel.listhHistory.value ?: emptyList())
+                    Log.d(TAG, "onQueryTextChange: history ${searchViewModel.listhHistory.value}")
+                    Log.d(TAG, "onQueryTextChange: null")
+                }else{
+                    queryIsSubmit = false
+
+                    binding.searchHeaderResult.visibility = View.VISIBLE
+
+                    binding.searchHeadarHistory.visibility = View.INVISIBLE
+                    binding.rvSearchHistory.visibility = View.INVISIBLE
+
+                    searchViewModel.searchEvent(newText, activeQuery)
+//                    if (searchViewModel.searching != newText) {
+//                        searchViewModel.setSearch(newText)
+//
+//                        Log.d(TAG, "onQueryTextChange: searchin !=  newteks")
+//                        adapterResult.submitList(emptyList())
+//                    } // tes
+
+//                        searching = newText
+                }
+                Log.d("actsc", "query Data: onsucces")
+                return true
+            }
+        })
+
+        searchViewModel.searchResultEventItem.observe(this) { event ->
+            adapterResult.submitList(emptyList())
+
+            if (binding.searchView.query.isNotEmpty()){
                 when(event){
                     is Resource.Loading -> {
                         // mulai simmer
-//                        updateList(emptyList(), emptyList())
+                        binding.rvSearchResult.visibility = View.INVISIBLE
                         binding.searchSimmer.startShimmer()
                         binding.searchSimmer.visibility = View.VISIBLE
-                        binding.rvSearch.visibility = View.INVISIBLE
+
+                        binding.searchLottieEror.visibility = View.INVISIBLE
+                        binding.searchLottieNotResult.visibility = View.INVISIBLE
+                        binding.searchLottieNotInternet.visibility = View.INVISIBLE
+
                         Log.d(TAG, "onCreate: reaouse loading")
                     }
                     is Resource.Success -> {
-                        updateList(searchViewModel.listhHistory.value ?: emptyList(), event.data ?: emptyList())
-//                        binding.searchSimmer.stopShimmer()
-//                        binding.searchSimmer.visibility = View.INVISIBLE
-//                        binding.rvSearch.visibility = View.VISIBLE
+                        binding.rvSearchResult.visibility = View.VISIBLE
+                        adapterResult.submitList(event.data ?: emptyList())
+                        binding.searchSimmer.stopShimmer()
+                        binding.searchSimmer.visibility = View.INVISIBLE
                         Log.d(TAG, "onCreate: reaouse sukses")
 
+                        binding.searchLottieEror.visibility = View.INVISIBLE
+                        binding.searchLottieNotResult.visibility = View.INVISIBLE
+                        binding.searchLottieNotInternet.visibility = View.INVISIBLE
                     }
                     is Resource.Error -> {
-                        updateList(emptyList(), emptyList())
-//                        binding.searchSimmer.stopShimmer()
-//                        binding.searchSimmer.visibility = View.INVISIBLE
-//                        binding.rvSearch.visibility = View.VISIBLE
+                        binding.searchSimmer.stopShimmer()
+                        binding.searchSimmer.visibility = View.INVISIBLE
+                        binding.rvSearchResult.visibility = View.INVISIBLE
                         Log.d(TAG, "onCreate: reaouse rerror")
 
                         if (queryIsSubmit) {
                             DialogUtils.showPopUpErrorDialog(this@SearchActivity, event.message)
                             queryIsSubmit = false
                         }
+
+                        binding.searchLottieNotResult.visibility = View.INVISIBLE
+                        binding.searchLottieNotInternet.visibility = View.INVISIBLE
+
+                        if (adapterResult.currentList.isEmpty()){
+                            binding.searchLottieEror.visibility = View.VISIBLE
+                            binding.searchLottieErorLottie.playAnimation()
+                        }
                     }
                     is Resource.ErrorConection -> {
+                        binding.searchSimmer.stopShimmer()
+                        binding.searchSimmer.visibility = View.INVISIBLE
 
+                        if (queryIsSubmit) {
+                            DialogUtils.showPopUpErrorDialog(this@SearchActivity, event.message)
+                            queryIsSubmit = false
+                        }
+
+                        Log.d(TAG, "onCreate: reaouse rerror konect")
+                        binding.searchLottieEror.visibility = View.INVISIBLE
+                        binding.searchLottieNotResult.visibility = View.INVISIBLE
+                        if (adapterResult.currentList.isEmpty()){
+                            binding.searchLottieNotInternet.visibility = View.VISIBLE
+                            binding.searchLottieNotInternetLottie.playAnimation()
+                        }
+                        Log.d(TAG, "onCreate: eror conect ${adapterResult.currentList}")
                     }
                     is Resource.Empty -> {
-//                        binding.rvSearch.visibility = View.VISIBLE
-                        updateList(emptyList(), emptyList())
-//                        binding.searchSimmer.stopShimmer()
-//                        binding.searchSimmer.visibility = View.INVISIBLE
+                        binding.rvSearchResult.visibility = View.INVISIBLE
+                        binding.searchSimmer.stopShimmer()
+                        binding.searchSimmer.visibility = View.INVISIBLE
                         Log.d(TAG, "onCreate: reaouse empty")
 
+                        binding.searchLottieEror.visibility = View.INVISIBLE
+                        binding.searchLottieNotResult.visibility = View.VISIBLE
+                        binding.searchLottieNotInternet.visibility = View.INVISIBLE
+
+                        binding.searchLottieNotResultLottie.playAnimation()
                     }
 
                 }
             }
         }
-    }
+        // click
+        binding.searchBtnBack.setOnClickListener{ finish() }
 
-    private fun getAdapter(){ //eventData: List<EventItem>?
-        adapter = SearchRVAdapter(
-            onDeleteClickItem = { item -> searchViewModel.removeFromHistory(item)},
-            onClearHistory = { searchViewModel.clearHistory() },
-            onItemClick = { event ->
-                val intent = Intent(this@SearchActivity, DetailEventActivity::class.java)
-                intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-                startActivity(intent)
-                searchViewModel.saveToHistory(event)// save ke hsitory
-                Log.d("actsc", "setEvent Data: onsucces")
-            },
-            context = this
-        )
-        binding.rvSearch.adapter = adapter
-    }
-
-    private fun updateList(history: List<EventItem>, result: List<EventItem>){
-        val list = mutableListOf<SearchItem>()
-        if (binding.searchView.query.isBlank()){
-            if (history.isNotEmpty()){
-                list.add(SearchItem.Header)
-            }
-            list.addAll(history.map { SearchItem.HistoryItem(it) })
-            binding.searchCvStatus.visibility = View.GONE
-        }else {
-//            binding.searchCvStatus.visibility = View.VISIBLE
-            list.addAll(result.map { SearchItem.ResultItem(it) })
+        // filter
+        binding.btnFilter.setOnClickListener {
+            val dialog = FilterDialogFragment()
+            dialog.show(supportFragmentManager, "Filter Dialog")
         }
 
-        adapter.submitList(ArrayList(list)){
-            binding.rvSearch.post {
-                lifecycleScope.launch {
-                    delay(500)
-                    binding.searchSimmer.stopShimmer()
-                    binding.searchSimmer.visibility = View.INVISIBLE
-                    binding.rvSearch.visibility = View.VISIBLE
-                }
+        // clear history
+        binding.tvClearHistory.setOnClickListener {
+            searchViewModel.clearHistory{
+                binding.searchHeadarHistory.visibility = View.INVISIBLE
             }
         }
-
-        Log.d(TAG, "updateList: list size ${list.size}")
-        Log.d(TAG, "updateList: histori size ${history.size}")
-        Log.d(TAG, "updateList: histori result $result")
     }
 
     companion object{
         const val TAG = "sadapter"
+        private const val SEARCHING = "search"
     }
 }

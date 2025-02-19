@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shape="rectangle">
+            <gradient
+                android:angle="315"
+                android:endColor="@color/tranparant"
+                android:startColor="@color/biru_tua" />
+        </shape>
+    </item>
+</layer-list>

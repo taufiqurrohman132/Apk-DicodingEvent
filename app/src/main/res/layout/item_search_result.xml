@@ -2,18 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingHorizontal="16dp"
-    android:layout_marginTop="12dp"
+    android:paddingVertical="6dp"
+    android:theme="@style/Theme.MaterialComponents.Light"
     android:background="?attr/selectableItemBackground"
     android:orientation="horizontal">
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/reulst.img_logo"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:scaleType="centerCrop"
         android:src="@drawable/dbs"
         android:background="@drawable/img_radius8_all_no_botomright"
-        android:clipToOutline="true"/>
+        app:shapeAppearanceOverlay="@style/Radius8NoBottomRight"/>
     <TextView
         android:id="@+id/search.tv_judul"
         android:layout_width="0dp"
@@ -21,7 +23,7 @@
         android:layout_weight="1"
         android:layout_marginHorizontal="12dp"
         android:layout_gravity="center_vertical"
-        android:text="kajkjkjfdkajdjkjdkjakdfdsfsdfadfaaffafasfdafdfaafasfdadfafafdfkfkjgkfjgkjfgkjskfgjkjsgksjfjskjgkjskjfgjkjsfgjksjgkskjadkj"
+        android:text=""
         style="@style/Text.Konten14"
         android:textColor="@color/black"
         android:textStyle="bold"

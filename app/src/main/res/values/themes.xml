@@ -16,12 +16,12 @@
 
     </style>
 
-<!--    <style name="Theme.StatusBar" parent="Theme.MaterialComponents.Light">-->
-<!--        &lt;!&ndash; Status bar ikon jadi hitam &ndash;&gt;-->
-<!--        <item name="android:windowLightStatusBar">false</item>-->
-<!--        &lt;!&ndash; Warna status bar (bisa disesuaikan) &ndash;&gt;-->
-<!--        <item name="android:statusBarColor">@color/tranparant</item>-->
-<!--    </style>-->
+    <style name="Theme.StatusBar" parent="Theme.MaterialComponents.DayNight">
+        <!-- Status bar ikon jadi hitam -->
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- Warna status bar (bisa disesuaikan) -->
+        <item name="android:statusBarColor">@color/white</item>
+    </style>
 
     <style name="ToolBarWithNavigationBack">
         <item name="navigationIcon">@drawable/dbs</item>
@@ -92,6 +92,12 @@
     <style name="Radius8">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
+    </style>
+    <style name="Radius8NoBottomRight">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">8dp</item>
+        <item name="cornerSizeTopLeft">8dp</item>
+        <item name="cornerSizeBottomLeft">8dp</item>
     </style>
     <style name="RadiusBottomRight16">
         <item name="cornerFamily">rounded</item>

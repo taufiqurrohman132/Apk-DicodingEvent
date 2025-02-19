@@ -16,6 +16,13 @@
 
     </style>
 
+    <style name="Theme.StatusBar" parent="Theme.MaterialComponents.DayNight">
+        <!-- Status bar ikon jadi hitam -->
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Warna status bar (bisa disesuaikan) -->
+        <item name="android:statusBarColor">@color/white</item>
+    </style>
+
     <style name="Text.Header24" parent="Theme.DicodingEventAplication">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
@@ -64,6 +71,12 @@
     <style name="Radius8">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
+    </style>
+    <style name="Radius8NoBottomRight">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">8dp</item>
+        <item name="cornerSizeTopLeft">8dp</item>
+        <item name="cornerSizeBottomLeft">8dp</item>
     </style>
     <style name="RadiusBottomRight16">
         <item name="cornerFamily">rounded</item>

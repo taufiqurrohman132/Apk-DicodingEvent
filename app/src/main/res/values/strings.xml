@@ -23,5 +23,9 @@
     <string name="img_header">IMG Header</string>
     <string name="event_not_available_yet_but_we_re_working_on_something_amazing">Event not available yet, but we’re working on something amazing!</string>
     <string name="img_header_detail">IMG Header</string>
+    <string name="not_event_result">Not Event Result</string>
+    <string name="favorit_now">Favorit Now</string>
+    <string name="all">All</string>
+    <string name="delete_item">Delete Item</string>
 
 </resources>

@@ -32,29 +32,6 @@
             app:expandedTitleTextAppearance="@style/Text.Header38_appbar"
             app:collapsedTitleTextAppearance="@style/Text.Header22_appbar"
             >
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="?attr/actionBarSize"-->
-<!--                android:orientation="vertical"-->
-<!--                android:fitsSystemWindows="true"-->
-<!--                app:layout_collapseMode="pin">-->
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Discover Upcoming"-->
-<!--                    style="@style/Text.Header24"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:layout_marginTop="20dp"-->
-<!--                    android:layout_marginHorizontal="16dp"/>-->
-<!--                <com.google.android.material.search.SearchBar-->
-<!--                    android:id="@+id/upcoming.sb"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="48dp"-->
-<!--                    android:hint="Find Event Here"/>-->
-<!--            </LinearLayout>-->
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:paddingStart="16dp"

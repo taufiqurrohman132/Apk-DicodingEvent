@@ -87,6 +87,7 @@ class DetailEventActivity : AppCompatActivity() {
 
     companion object{
         const val EXTRA_ID = "extra id"
+        const val EXTRA_EVENT_ITEM = "EXTRA_EVENT_ITEM"
         private const val TAG = "detailactivity"
     }
 }

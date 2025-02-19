@@ -4,17 +4,18 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingHorizontal="16dp"
-    android:layout_marginTop="12dp"
-    android:background="@color/white"
+    android:paddingVertical="6dp"
+    android:theme="@style/Theme.MaterialComponents.Light"
+    android:background="?attr/selectableItemBackground"
     android:orientation="horizontal">
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/history.img_logo"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:scaleType="centerCrop"
         android:src="@drawable/dbs"
-        android:background="@drawable/img_radius8_all_no_botomright"
-        android:clipToOutline="true"/>
+        android:background="@color/white"
+        app:shapeAppearanceOverlay="@style/Radius8NoBottomRight"/>
     <TextView
         android:id="@+id/history.tv_judul"
         android:layout_width="0dp"
@@ -22,7 +23,7 @@
         android:layout_weight="1"
         android:layout_marginHorizontal="12dp"
         android:layout_gravity="center_vertical"
-        android:text="kajkjkjfdkajdjkjdkjakdfdsfsdfadfaaffafasfdafdfaafasfdadfafafdfkfkjgkfjgkjfgkjskfgjkjsgksjfjskjgkjskjfgjkjsfgjksjgkskjadkj"
+        android:text=""
         style="@style/Text.Konten14"
         android:textColor="@color/black"
         android:textStyle="bold"
@@ -32,6 +33,7 @@
         android:id="@+id/btn_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/delete_item"
         android:padding="6dp"
         android:src="@drawable/ic_clear"
         android:background="?attr/selectableItemBackgroundBorderless"

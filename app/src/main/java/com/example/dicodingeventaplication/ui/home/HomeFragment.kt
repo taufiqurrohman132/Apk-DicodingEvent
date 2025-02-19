@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -104,32 +106,12 @@ class HomeFragment : Fragment() {
         }
         binding.vpItemCorousel.setPageTransformer(compositePageTransformer)
 
-//        // blur img
-//        Glide.with(requireActivity())
-//            .load(R.drawable.dbs)
-//            .transform(BlurTransformation(25))
-//            .into(binding.imgpopHeaderHome)
-
-
         val root: View = binding.root
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // mulai simmer
-        binding.homeUpcomingSimmmer.visibility = View.VISIBLE
-        binding.homeFinishedSimmmer.visibility = View.VISIBLE
-        binding.homeProgres.visibility = View.VISIBLE
-
-        // repositori
-        val apiService = ApiConfig.getApiService()
-        homeRepository = DicodingEventRepository(apiService, requireContext())
-
-        // view model factory
-        val viewModelFactory = EventViewModelFactory(homeRepository)
-        homeViewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]// pengganti get
-
         // inisialize adapter
         val adapterCorousel = HomeCorouselRVAdaptor(requireActivity()){ event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
@@ -157,41 +139,40 @@ class HomeFragment : Fragment() {
         val sharedPool = RecyclerView.RecycledViewPool()
         binding.rvHomeFinished.setRecycledViewPool(sharedPool)
 
+        // repositori
+        val apiService = ApiConfig.getApiService()
+        homeRepository = DicodingEventRepository(apiService, requireContext())
+
+        // view model factory
+        val viewModelFactory = EventViewModelFactory(homeRepository)
+        homeViewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]// pengganti get
+
         // akses dari view model dan meng observe
         // tiap data di observe
-//        homeViewModel.imageHeaderUrl.observe(viewLifecycleOwner){ url ->
-////            Log.d(TAGA, "URL gambar setelah rotasi: $url")
-////            if (!url.isNullOrEmpty()){
-////                Glide.with(requireContext())
-////                    .load(url)
-////                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-////                    .override(600, 300)
-////                    .skipMemoryCache(true)
-////                    .thumbnail(0.25f)
-////                    .into(binding.imgpopHeaderHome)
-////            } else Log.e(TAGA, "URL gambar kosong setelah rotasi!")
-//        }
         homeViewModel.headerEvent.observe(viewLifecycleOwner){ event ->
             // memperbarui ketika ada perubahan
             when(event){
                 is Resource.Loading -> {
-
+                    if (!homeViewModel.isHeaderSuccess)
+                        binding.homeProgres.visibility = View.VISIBLE
                 }
                 is Resource.Success -> {
-                    binding.homeProgres.visibility = View.INVISIBLE
                     binding.homeHeaderRefresh.visibility = View.INVISIBLE
+                    binding.homeHeaderBtnFavorit.visibility = View.VISIBLE
+                    binding.imgpopHeaderHome.foreground = ContextCompat.getDrawable(requireContext(), R.drawable.gradient_top_left)
                     getImageHeader(event.data)
+                    homeViewModel.isHeaderSuccess()
                 }
                 is Resource.Error -> {
                     binding.imgpopHeaderHome.setImageResource(0)
                     binding.homeHeaderRefresh.visibility = View.VISIBLE
-                    binding.homeProgres.visibility = View.INVISIBLE
+                    binding.homeHeaderBtnFavorit.visibility = View.INVISIBLE
+                    binding.imgpopHeaderHome.foreground = null
                 }
                 is Resource.ErrorConection -> {
-                    binding.homeProgres.visibility = View.INVISIBLE
+                    Log.d(TAG, "onViewCreated: header event data ${event.data}")
                 }
                 is Resource.Empty -> {
-                    binding.homeProgres.visibility = View.INVISIBLE
                 }
             }
             Log.d(TAG, "heder: $event")
@@ -199,91 +180,132 @@ class HomeFragment : Fragment() {
 
         homeViewModel.resultEventItemUpcome.observe(viewLifecycleOwner){ event ->
             // memperbarui ketika ada perubahan
-            when(event){
-                is Resource.Success -> {
-                    adapterCorousel.submitList(event.data?.take(5)?.toList()){
-                        binding.vpItemCorousel.post {
-                            binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
-                            binding.homeUpcomingSimmmer.stopShimmer()
-//                            binding.homeLottieCorousel.visibility = View.INVISIBLE
-//                            binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
-                            binding.grupHandlingLottie.visibility = View.INVISIBLE
+            if (!homeViewModel.isRefreshing.value!!){
+                binding.homeProgres.visibility = View.INVISIBLE
+                when(event){
+                    is Resource.Success -> {
+                        adapterCorousel.submitList(event.data?.take(5)?.toList()){
+                            binding.vpItemCorousel.post {
+                                binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
+                                binding.homeUpcomingSimmmer.stopShimmer()
+                                binding.homeLottieCorousel.visibility = View.INVISIBLE
+                                binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
+//                                binding.grupHandlingLottie.visibility = View.INVISIBLE
+                            }
+                        }
+                        homeViewModel.isUpcomingSuccess()
+                    }
+                    is Resource.Error -> {
+                        adapterCorousel.submitList(emptyList()){
+                            binding.vpItemCorousel.post {
+                                binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
+                                binding.homeLottieCorousel.visibility = View.INVISIBLE
+                                binding.homeUpcomingSimmmer.stopShimmer()
+                                binding.homeLottieErrorCorousel.visibility = View.VISIBLE
+                            }
+                        }
+                        DialogUtils.showPopUpErrorDialog(requireActivity(), event.message)
+                        binding.homeProgres.visibility = View.INVISIBLE
+                    }
+                    is Resource.ErrorConection -> {
+                        Log.d(TAG, "corousel currrent list = ${adapterCorousel.currentList.isEmpty()}")
+                        DialogUtils.showPopUpErrorDialog(requireActivity(), event.message)
+
+                        binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
+                        binding.homeUpcomingSimmmer.stopShimmer()
+                        binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
+
+                        if (!binding.homeHeaderBtnFavorit.isVisible)
+                            binding.homeHeaderRefresh.isVisible = true
+
+                        if (adapterCorousel.currentList.isEmpty() && !homeViewModel.isUpcomingSuccess){
+                            binding.homeLottieCorousel.visibility = View.VISIBLE
+                            Log.d(
+                                TAG,
+                                "onViewCreated: lottie corou visible ${binding.homeLottieCorousel.isVisible}"
+                            )
                         }
                     }
-                }
-                is Resource.Error -> {
-                    adapterCorousel.submitList(emptyList()){
-                        binding.vpItemCorousel.post {
-                            binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
-                            binding.homeLottieCorousel.visibility = View.INVISIBLE
-                            binding.homeUpcomingSimmmer.stopShimmer()
-                            binding.homeLottieErrorCorousel.visibility = View.VISIBLE
-                        }
+                    else -> {
                     }
-                    DialogUtils.showPopUpErrorDialog(requireActivity(), event.message)
-                    binding.homeProgres.visibility = View.INVISIBLE
-
-                    binding.homeHeaderRefresh.visibility = View.VISIBLE
-                }
-                is Resource.ErrorConection -> {
-                    Log.d(TAG, "corousel currrent list = ${adapterCorousel.currentList.isEmpty()}")
-                    DialogUtils.showPopUpErrorDialog(requireActivity(), event.message)
-                    binding.homeProgres.visibility = View.INVISIBLE
-
-                    binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
-                    binding.homeUpcomingSimmmer.stopShimmer()
-                    binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
-
-                    if (adapterCorousel.currentList.isEmpty()){
-                        binding.homeHeaderRefresh.visibility = View.VISIBLE
-                        binding.homeLottieCorousel.visibility = View.VISIBLE
-                    }
-                }
-                else -> {
                 }
             }
             Log.d(TAG, "upcoming: event is empty ${event.data?.isEmpty()}, is null ${event.data.isNullOrEmpty()}")
             Log.d(TAG, "upcoming: ${binding.homeUpcomingSimmmer.isShimmerStarted}")
+            Log.d(TAG, "upcoming: observe $event")
+
+            Log.d(TAG, "onViewCreated: lottie corousel ${binding.homeLottieCorousel.isVisible}")
         }
 
         homeViewModel.resultEventItemFinished.observe(viewLifecycleOwner){ event ->
            // memperbarui ketika ada perubahan
-            when(event){
-                is Resource.Loading -> {
-                }
-                is Resource.Success -> {
-                    adapterFinished.submitList(event.data?.toList()){
-                        binding.rvHomeFinished.post {
-                            binding.homeFinishedSimmmer.visibility = View.INVISIBLE
-                            binding.homeFinishedSimmmer.stopShimmer()
+            if (!homeViewModel.isRefreshing.value!!){
+
+                when(event){
+                    is Resource.Loading -> {
+                    }
+                    is Resource.Success -> {
+                        adapterFinished.submitList(event.data?.toList()){
+                            binding.rvHomeFinished.post {
+                                binding.homeFinishedSimmmer.visibility = View.INVISIBLE
+                                binding.homeFinishedSimmmer.stopShimmer()
+                            }
+                        }
+                        Log.d(TAG, "finished: ${event.data}")
+                    }
+                    is Resource.Error -> {
+                        adapterFinished.setError(event.message)
+                        adapterFinished.submitList(event.data?.toList()){
+                            binding.rvHomeFinished.post {
+                                binding.homeFinishedSimmmer.visibility = View.INVISIBLE
+                                binding.homeFinishedSimmmer.stopShimmer()
+                            }
                         }
                     }
-                    Log.d(TAG, "finished: ${event.data}")
-                }
-                is Resource.Error -> {
-                    adapterFinished.setError(event.message)
-                    adapterFinished.submitList(event.data?.toList()){
-                        binding.rvHomeFinished.post {
-                            binding.homeFinishedSimmmer.visibility = View.INVISIBLE
-                            binding.homeFinishedSimmmer.stopShimmer()
+                    is Resource.ErrorConection -> {
+                        adapterFinished.setError(event.message)
+                        adapterFinished.submitList(event.data?.toList()){
+                            binding.rvHomeFinished.post {
+                                binding.homeFinishedSimmmer.visibility = View.INVISIBLE
+                                binding.homeFinishedSimmmer.stopShimmer()
+                            }
                         }
                     }
-                }
-                is Resource.ErrorConection -> {
-                    adapterFinished.setError(event.message)
-                    adapterFinished.submitList(event.data?.toList()){
-                        binding.rvHomeFinished.post {
-                            binding.homeFinishedSimmmer.visibility = View.INVISIBLE
-                            binding.homeFinishedSimmmer.stopShimmer()
-                        }
+                    is Resource.Empty -> {
+                        binding.homeFinishedSimmmer.visibility = View.INVISIBLE
+                        binding.homeFinishedSimmmer.stopShimmer()
                     }
-                }
-                is Resource.Empty -> {
-                    binding.homeFinishedSimmmer.visibility = View.INVISIBLE
-                    binding.homeFinishedSimmmer.stopShimmer()
                 }
             }
             Log.d(TAG, "finished: $event")
+        }
+
+        // observe swip refrss
+
+        homeViewModel.isRefreshing.observe(viewLifecycleOwner){ isRefresh ->
+            binding.homeSwipRefresh.isRefreshing = isRefresh
+            if ((binding.homeLottieCorousel.isVisible || adapterFinished.currentList.any { it == null }) && isRefresh){
+                Log.d(TAG, "onViewCreated: stat simmer")
+                Log.d(TAG, "onViewCreated: finished current list ${adapterFinished.currentList}")
+                Log.d(TAG, "onViewCreated: finished current list ${ adapterFinished.currentList.any { it == null }}")
+                binding.homeHeaderRefresh.isVisible = !isRefresh
+                binding.homeProgres.isVisible = isRefresh
+
+                adapterCorousel.submitList(emptyList())
+                adapterFinished.submitList(emptyList()){
+                    // mulai simmer
+                    binding.homeHeaderBtnFavorit.visibility = View.INVISIBLE
+                    binding.homeHeaderTvName.text = ""
+                    binding.imgpopHeaderHome.foreground = null
+
+                    binding.homeLottieCorousel.visibility = View.INVISIBLE
+
+                    binding.homeUpcomingSimmmer.startShimmer()
+                    binding.homeFinishedSimmmer.startShimmer()
+                    binding.homeUpcomingSimmmer.visibility = View.VISIBLE
+                    binding.homeFinishedSimmmer.visibility = View.VISIBLE
+                }
+            }
         }
 
         // pulihkan posisi scroll
@@ -295,21 +317,17 @@ class HomeFragment : Fragment() {
         binding.homeSwipRefresh.setColorSchemeColors(resources.getColor(R.color.biru_tua))
         binding.homeSwipRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.white))
         binding.homeSwipRefresh.setProgressViewOffset(true, 0, 200)
+
         binding.homeSwipRefresh.setOnRefreshListener {
-            homeViewModel.findImageHeader{
-                binding.homeSwipRefresh.isRefreshing = false
-            }
-            if (binding.homeHeaderRefresh.isVisible) {
-                binding.homeHeaderRefresh.visibility = View.INVISIBLE
-                binding.homeProgres.visibility = View.VISIBLE
-            }
+            homeViewModel.startRefreshing()
+
+            homeViewModel.findImageHeader()
         }
 
         binding.homeHeaderRefresh.setOnClickListener {
-            homeViewModel.findImageHeader()
+            homeViewModel.startRefreshing()
 
-            binding.homeHeaderRefresh.visibility = View.INVISIBLE
-            binding.homeProgres.visibility = View.VISIBLE
+            homeViewModel.findImageHeader()
         }
 
         binding.sbHome.setOnClickListener {
@@ -331,14 +349,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun getImageHeader(eventData: List<EventItem?>?){
+        val event = eventData?.let {
+            if (it.size > 6) it[6] else null
+        }
         Glide.with(requireActivity())
-            .load(eventData?.let {
-                if (it.size > 6) it[6] else null
-            }?.mediaCover)
+            .load(event?.mediaCover)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .override(600, 300)
+            .override(400, 200)
             .thumbnail(0.25f)
             .into(binding.imgpopHeaderHome)
+
+        binding.homeHeaderTvName.text = event?.name ?: ""
     }
 
     companion object{

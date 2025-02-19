@@ -1,6 +1,8 @@
 package com.example.dicodingeventaplication.data.respons
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class EventResponse(
 
@@ -15,6 +17,7 @@ data class EventResponse(
 	val message: String? = null
 )
 
+@Parcelize
 data class EventItem(
 
 	@field:SerializedName("summary")
@@ -58,7 +61,7 @@ data class EventItem(
 
 	@field:SerializedName("category")
 	val category: String? = null
-) {
+) : Parcelable{
 	val formatYear: String?
 		get() = beginTime?.split(" ")?.getOrNull(0)
 

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingHorizontal="16dp"
-    android:layout_marginTop="12dp"
+    android:paddingVertical="6dp"
     android:background="?attr/selectableItemBackground"
     android:orientation="horizontal">
     <com.google.android.material.imageview.ShapeableImageView

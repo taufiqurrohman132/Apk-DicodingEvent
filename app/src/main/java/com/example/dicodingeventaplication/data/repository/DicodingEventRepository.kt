@@ -24,6 +24,10 @@ class DicodingEventRepository(
     // variable chache
     private var  cacheDataUpcoming: EventResponse? = null
     private var  cacheDataFinished: EventResponse? = null
+    private var  cacheDataSearching: EventResponse? = null
+
+    private var querySearch = ""
+    private var isActive = -1
 
     // ambil history dari shered
     fun getSearchHistory(): List<EventItem> {
@@ -52,6 +56,15 @@ class DicodingEventRepository(
         sharedPref.edit().remove(HISTORY_LIST).apply()
     }
 
+    fun removeItemHistory(eventItem: EventItem){
+        val historyList = getSearchHistory().toMutableList()
+        historyList.removeAll { it.id == eventItem.id }
+
+        val json = gson.toJson(historyList)
+        sharedPref.edit().putString(HISTORY_LIST, json).apply()
+        Log.d(TAG, "remoseSearchHistory: $json")
+    }
+
     // mencari event
     fun searchEvent(query: String, active: Int, callback: (Resource<List<EventItem>>) -> Unit) {
         callback(Resource.Loading()) // tampilkan loding dulu
@@ -60,13 +73,15 @@ class DicodingEventRepository(
             override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
                 if (response.isSuccessful) {
                     val responsBody = response.body()
-                    if (responsBody != null) {
-//                        _listEvenItem.value = responsBody.listEvents
+                    querySearch = query
+
+                    if (responsBody?.listEvents?.isNotEmpty() == true) {
                         callback(Resource.Success(responsBody.listEvents.take(8)))
+                        cacheDataSearching = responsBody
+                        isActive = active
                         Log.e(TAG, "onResponse: onsucces ${response.message()}")
                     } else {
                         callback(Resource.Empty(emptyList())) // data kosong
-//                        _listEvenItem.value = emptyList()
                         Log.e(TAG, "onResponse: onsucces ${response.message()}")
                         Log.e(TAG, "onResponse: onsucces data null")
                     }
@@ -80,7 +95,11 @@ class DicodingEventRepository(
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 Log.e(TAG, "onResponse: onfailure ${t.message}")
                 if (t is IOException) {
-                    callback(Resource.Error(context.resources.getString(R.string.error_koneksi)))
+//                    callback(Resource.ErrorConection(context.resources.getString(R.string.error_koneksi)))
+                    if (cacheDataSearching != null && querySearch == query && isActive == active)
+                        callback(Resource.Success(cacheDataSearching?.listEvents?.take(8) ?: emptyList()))
+                    else
+                        callback(Resource.ErrorConection(context.resources.getString(R.string.error_koneksi)))
                 } else {
                     callback(Resource.Error(context.resources.getString(R.string.error_takterduga)))
                 }
@@ -122,8 +141,7 @@ class DicodingEventRepository(
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 Log.e(TAG, "onResponse: onfailure ${t.message}")
                 if (t is IOException) {
-                    callback(Resource.ErrorConection(context.resources.getString(R.string.error_koneksi), List<EventItem?>(5) {null}))
-
+                    callback(Resource.ErrorConection(context.resources.getString(R.string.error_koneksi),  List<EventItem?>(5) {null}))
                     if (cacheDataUpcoming != null || cacheDataFinished != null) {
                         when(active){
                             UPCOMING -> {
@@ -132,10 +150,13 @@ class DicodingEventRepository(
                                 else
                                     callback(Resource.Empty(List<EventItem?>(2) {null}))
                             }
-                            FINISHED -> callback(Resource.Success(cacheDataFinished?.listEvents ?: emptyList()))
+                            FINISHED -> {
+                                callback(Resource.Success(cacheDataFinished?.listEvents ?: emptyList()))
+                            }
                         }
                         Log.d(TAG, "onFailure cace data: tes")
                     }
+
                 } else {
                     when(active){
                         FINISHED -> callback(Resource.Error(context.resources.getString(R.string.error_takterduga), List<EventItem?>(5) {null}))
