@@ -3,7 +3,7 @@ package com.example.dicodingeventaplication.data.repository
 import android.content.Context
 import android.util.Log
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.Resource
+import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.respons.EventResponse
 import com.example.dicodingeventaplication.data.retrofit.ApiService
@@ -156,7 +156,6 @@ class DicodingEventRepository(
                         }
                         Log.d(TAG, "onFailure cace data: tes")
                     }
-
                 } else {
                     when(active){
                         FINISHED -> callback(Resource.Error(context.resources.getString(R.string.error_takterduga), List<EventItem?>(5) {null}))

@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication.ui.detailEvent
+package com.example.dicodingeventaplication.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData

@@ -131,6 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingHorizontal="12dp"
+                android:paddingBottom="16dp"
                 />
 
             <LinearLayout
@@ -159,6 +160,45 @@
                     android:textAlignment="center"
                     />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/finished.lottie_error_koneksi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:visibility="invisible"
+                android:layout_gravity="center"
+                >
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/no_internet" />
+                <TextView
+                    android:id="@+id/finished.tv_lottie_error_koneksi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:text="@string/error_koneksi"
+                    android:textAlignment="center"
+                    />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/finished.btn_lottie_eror_koneksi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/biru_tua"
+                    android:text="@string/try_again"/>
+            </LinearLayout>
+
         </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

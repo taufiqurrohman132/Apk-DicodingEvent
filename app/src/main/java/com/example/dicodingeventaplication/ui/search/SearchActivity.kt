@@ -7,14 +7,13 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.Resource
+import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
@@ -22,6 +21,7 @@ import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.filterDialog.FilterDialogFragment
 import com.example.dicodingeventaplication.EventViewModelFactory
 import com.example.dicodingeventaplication.utils.DialogUtils
+import com.example.dicodingeventaplication.viewmodel.SearchViewModel
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
@@ -57,8 +57,6 @@ class SearchActivity : AppCompatActivity() {
         binding.rvSearchHistory.layoutManager = linearLayoutHistory
         binding.rvSearchHistory.itemAnimator = DefaultItemAnimator()
 
-        binding.searchView.isIconified = false // menampilkan keyboard langsung
-
         binding.searchSimmer.visibility = View.INVISIBLE
         binding.rvSearchResult.visibility = View.INVISIBLE
         binding.searchHeaderResult.visibility = View.INVISIBLE
@@ -91,8 +89,7 @@ class SearchActivity : AppCompatActivity() {
         )
         binding.rvSearchResult.adapter = adapterResult
 
-//        if (adapterHistory.currentList.isEmpty())
-//            binding.searchHeadarHistory.visibility = View.INVISIBLE
+        binding.searchView.isIconified = false // menampilkan keyboard langsung
 
         // tampilkan history
         searchViewModel.loadSearchHistory{

@@ -1,5 +1,6 @@
 package com.example.dicodingeventaplication
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -17,6 +18,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Kunci rotasi sementara
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -26,6 +30,11 @@ class MainActivity : AppCompatActivity() {
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                         View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR //icon jadi gelap ketika bg terang
                 )
+
+//        // Setelah UI siap, izinkan rotasi kembali
+//        window.decorView.post {
+//            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+//        }
 
         val navView: BottomNavigationView = binding.navView
 

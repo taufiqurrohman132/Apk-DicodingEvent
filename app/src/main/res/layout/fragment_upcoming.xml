@@ -110,11 +110,18 @@
                 app:shimmer_duration="1500"
                 app:shimmer_repeat_count="3"
                 app:shimmer_direction="left_to_right">
-                <androidx.core.widget.NestedScrollView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp">
 
-                </androidx.core.widget.NestedScrollView>
+                    <include layout="@layout/simmer_upcoming" />
+
+                    <include layout="@layout/simmer_upcoming" />
+
+                    <include layout="@layout/simmer_upcoming" />
+                </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>
 
 
@@ -168,9 +175,11 @@
                     app:lottie_loop="false"
                     app:lottie_rawRes="@raw/error" />
                 <TextView
+                    android:id="@+id/upcoming.tv_lottie_error"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="16dp"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="18sp"
@@ -180,16 +189,41 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/upcoming.lottie_error_koneksi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="16dp">
+                android:gravity="center_horizontal"
+                android:visibility="invisible"
+                android:layout_gravity="center"
+                >
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/no_internet" />
+                <TextView
+                    android:id="@+id/upcoming.tv_lottie_error_koneksi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:text="@string/error_koneksi"
+                    android:textAlignment="center"
+                    />
 
-                <include layout="@layout/simmer_upcoming" />
-
-                <include layout="@layout/simmer_upcoming" />
-
-                <include layout="@layout/simmer_upcoming" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/upcome.btn_lottie_eror_koneksi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/biru_tua"
+                    android:text="@string/try_again"/>
             </LinearLayout>
 
         </FrameLayout>

@@ -1,35 +1,20 @@
 package com.example.dicodingeventaplication.ui.home
 
 import android.content.Context
-import android.content.Intent
-import android.content.res.Resources
-import android.os.Message
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import androidx.viewpager2.widget.CompositePageTransformer
-import androidx.viewpager2.widget.MarginPageTransformer
-import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.Resource
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.databinding.ItemHomeFinishedBinding
-import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
-import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.material.search.SearchBar
 import java.util.concurrent.Executors
-import kotlin.math.abs
 
 class HomeFinishedRVAdapter(
     private val context: Context,

@@ -1,6 +1,7 @@
 package com.example.dicodingeventaplication.ui.home
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -8,17 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.dicodingeventaplication.Resource
+import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.retrofit.ApiConfig
@@ -28,11 +29,14 @@ import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.SearchActivity
 import com.example.dicodingeventaplication.EventViewModelFactory
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.viewmodel.HomeViewModel
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var homeRepository: DicodingEventRepository
+
+    private var eventHeader: EventItem? = null
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -58,6 +62,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+
         binding.vpItemCorousel.apply {
             clipChildren = false
             clipToPadding = false
@@ -112,6 +117,12 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Setelah UI siap, izinkan rotasi kembali
+//        wind.decorView.post {
+//            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+//        }
+
         // inisialize adapter
         val adapterCorousel = HomeCorouselRVAdaptor(requireActivity()){ event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
@@ -128,12 +139,12 @@ class HomeFragment : Fragment() {
         binding.rvHomeFinished.isScrollContainer = false
         binding.rvHomeFinished.setItemViewCacheSize(3)
 
-        val adapterFinished = HomeFinishedRVAdapter(requireActivity(),
-            onItemClick = { event ->
-                val intent = Intent(requireContext(), DetailEventActivity::class.java)
-                intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-                startActivity(intent)}
-        )
+        val adapterFinished = HomeFinishedRVAdapter(requireActivity()) { event ->
+            val intent = Intent(requireContext(), DetailEventActivity::class.java)
+            intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+            startActivity(intent)
+        }
+
         binding.rvHomeFinished.adapter = adapterFinished
 
         val sharedPool = RecyclerView.RecycledViewPool()
@@ -153,23 +164,33 @@ class HomeFragment : Fragment() {
             // memperbarui ketika ada perubahan
             when(event){
                 is Resource.Loading -> {
-                    if (!homeViewModel.isHeaderSuccess)
+                    if (!homeViewModel.isHeaderSuccess) {
                         binding.homeProgres.visibility = View.VISIBLE
+                        binding.homeHeaderRefresh.visibility = View.INVISIBLE
+                    }
                 }
                 is Resource.Success -> {
                     binding.homeHeaderRefresh.visibility = View.INVISIBLE
                     binding.homeHeaderBtnFavorit.visibility = View.VISIBLE
                     binding.imgpopHeaderHome.foreground = ContextCompat.getDrawable(requireContext(), R.drawable.gradient_top_left)
-                    getImageHeader(event.data)
+
+                    eventHeader = getImageHeader(event.data)
                     homeViewModel.isHeaderSuccess()
+                    binding.homeProgres.isVisible = false
+
                 }
                 is Resource.Error -> {
                     binding.imgpopHeaderHome.setImageResource(0)
                     binding.homeHeaderRefresh.visibility = View.VISIBLE
                     binding.homeHeaderBtnFavorit.visibility = View.INVISIBLE
                     binding.imgpopHeaderHome.foreground = null
+                    binding.homeProgres.isVisible = false
+                    binding.homeHeaderRefresh.isVisible = true
                 }
                 is Resource.ErrorConection -> {
+                    binding.homeProgres.isVisible = false
+                    if (!homeViewModel.isHeaderSuccess)
+                        binding.homeHeaderRefresh.isVisible = true
                     Log.d(TAG, "onViewCreated: header event data ${event.data}")
                 }
                 is Resource.Empty -> {
@@ -181,7 +202,7 @@ class HomeFragment : Fragment() {
         homeViewModel.resultEventItemUpcome.observe(viewLifecycleOwner){ event ->
             // memperbarui ketika ada perubahan
             if (!homeViewModel.isRefreshing.value!!){
-                binding.homeProgres.visibility = View.INVISIBLE
+//                binding.homeProgres.visibility = View.INVISIBLE
                 when(event){
                     is Resource.Success -> {
                         adapterCorousel.submitList(event.data?.take(5)?.toList()){
@@ -204,19 +225,13 @@ class HomeFragment : Fragment() {
                                 binding.homeLottieErrorCorousel.visibility = View.VISIBLE
                             }
                         }
-                        DialogUtils.showPopUpErrorDialog(requireActivity(), event.message)
-                        binding.homeProgres.visibility = View.INVISIBLE
                     }
                     is Resource.ErrorConection -> {
                         Log.d(TAG, "corousel currrent list = ${adapterCorousel.currentList.isEmpty()}")
-                        DialogUtils.showPopUpErrorDialog(requireActivity(), event.message)
 
                         binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
                         binding.homeUpcomingSimmmer.stopShimmer()
                         binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
-
-                        if (!binding.homeHeaderBtnFavorit.isVisible)
-                            binding.homeHeaderRefresh.isVisible = true
 
                         if (adapterCorousel.currentList.isEmpty() && !homeViewModel.isUpcomingSuccess){
                             binding.homeLottieCorousel.visibility = View.VISIBLE
@@ -284,7 +299,7 @@ class HomeFragment : Fragment() {
 
         homeViewModel.isRefreshing.observe(viewLifecycleOwner){ isRefresh ->
             binding.homeSwipRefresh.isRefreshing = isRefresh
-            if ((binding.homeLottieCorousel.isVisible || adapterFinished.currentList.any { it == null }) && isRefresh){
+            if ((binding.homeLottieCorousel.isVisible || adapterFinished.currentList.any { it == null } || binding.homeLottieErrorCorousel.isVisible) && isRefresh){
                 Log.d(TAG, "onViewCreated: stat simmer")
                 Log.d(TAG, "onViewCreated: finished current list ${adapterFinished.currentList}")
                 Log.d(TAG, "onViewCreated: finished current list ${ adapterFinished.currentList.any { it == null }}")
@@ -299,6 +314,7 @@ class HomeFragment : Fragment() {
                     binding.imgpopHeaderHome.foreground = null
 
                     binding.homeLottieCorousel.visibility = View.INVISIBLE
+                    binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
 
                     binding.homeUpcomingSimmmer.startShimmer()
                     binding.homeFinishedSimmmer.startShimmer()
@@ -308,9 +324,20 @@ class HomeFragment : Fragment() {
             }
         }
 
+        homeViewModel.dialogNotifError.observe(viewLifecycleOwner){
+            it.getContentIfNotHandled()?.let { dialogMessage ->
+                DialogUtils.showPopUpErrorDialog(requireActivity(), dialogMessage)
+            }
+        }
+
         // pulihkan posisi scroll
-        binding.homeNestedScroll.post {
-            binding.homeNestedScroll.scrollTo(0, homeViewModel.scrollY)
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            view.post {
+                binding.homeNestedScroll.scrollTo(0, homeViewModel.scrollY)
+
+                // Izinkan kembali rotasi setelah UI siap
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+            }
         }
 
         // swip refres
@@ -325,9 +352,20 @@ class HomeFragment : Fragment() {
         }
 
         binding.homeHeaderRefresh.setOnClickListener {
-            homeViewModel.startRefreshing()
 
-            homeViewModel.findImageHeader()
+            if (!homeViewModel.isRefreshing.value!!){
+                homeViewModel.startRefreshing()
+
+                homeViewModel.findImageHeader()
+            }
+        }
+
+        binding.imgHeaderHome.setOnClickListener {
+            if (homeViewModel.isHeaderSuccess && eventHeader != null){
+                val intent = Intent(requireContext(), DetailEventActivity::class.java)
+                intent.putExtra(DetailEventActivity.EXTRA_ID, eventHeader?.id)
+                startActivity(intent)
+            }
         }
 
         binding.sbHome.setOnClickListener {
@@ -348,7 +386,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun getImageHeader(eventData: List<EventItem?>?){
+    private fun getImageHeader(eventData: List<EventItem?>?): EventItem?{
         val event = eventData?.let {
             if (it.size > 6) it[6] else null
         }
@@ -360,6 +398,8 @@ class HomeFragment : Fragment() {
             .into(binding.imgpopHeaderHome)
 
         binding.homeHeaderTvName.text = event?.name ?: ""
+
+        return event
     }
 
     companion object{

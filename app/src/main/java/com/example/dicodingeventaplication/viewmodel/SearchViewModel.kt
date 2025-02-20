@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication.ui.search
+package com.example.dicodingeventaplication.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.Resource
+import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import kotlinx.coroutines.Job
@@ -18,7 +18,8 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
 //    private var cacheResult: List<EventItem>? = null
 //    private var lastQuery: String? = null
 
-    private val _searchResultEvenItem = MutableLiveData<Resource<List<EventItem>>>(Resource.Success(
+    private val _searchResultEvenItem = MutableLiveData<Resource<List<EventItem>>>(
+        Resource.Success(
         emptyList()
     ))
     val searchResultEventItem: LiveData<Resource<List<EventItem>>> = _searchResultEvenItem

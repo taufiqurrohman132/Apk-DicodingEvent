@@ -27,5 +27,6 @@
     <string name="favorit_now">Favorit Now</string>
     <string name="all">All</string>
     <string name="delete_item">Delete Item</string>
+    <string name="try_again">Try Again</string>
 
 </resources>

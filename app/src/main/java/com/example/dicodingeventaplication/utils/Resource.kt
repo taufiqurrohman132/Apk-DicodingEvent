@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication
+package com.example.dicodingeventaplication.utils
 
 
 // menangani 3 kemungkinan : error, succes, loading

@@ -9,12 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.databinding.FragmentFilterDialogBinding
-import com.example.dicodingeventaplication.ui.search.SearchViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.example.dicodingeventaplication.viewmodel.SearchViewModel
 
 class FilterDialogFragment : DialogFragment() {//private val onBtnClick: (Int) -> Unit // tidak di sarankan pakai construktor
     private var _binding: FragmentFilterDialogBinding? = null

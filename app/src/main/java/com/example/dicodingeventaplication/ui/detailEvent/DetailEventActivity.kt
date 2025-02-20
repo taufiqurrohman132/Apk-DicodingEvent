@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.dicodingeventaplication.data.respons.DetailEventResponse
 import com.example.dicodingeventaplication.databinding.ActivityDetailEventBinding
+import com.example.dicodingeventaplication.viewmodel.DetailEventViewModel
 
 class DetailEventActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailEventBinding

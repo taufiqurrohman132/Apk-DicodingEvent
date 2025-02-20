@@ -3,10 +3,10 @@ package com.example.dicodingeventaplication
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.ui.finished.FinishedViewModel
-import com.example.dicodingeventaplication.ui.home.HomeViewModel
-import com.example.dicodingeventaplication.ui.search.SearchViewModel
-import com.example.dicodingeventaplication.ui.upcoming.UpcomingViewModel
+import com.example.dicodingeventaplication.viewmodel.FinishedViewModel
+import com.example.dicodingeventaplication.viewmodel.HomeViewModel
+import com.example.dicodingeventaplication.viewmodel.SearchViewModel
+import com.example.dicodingeventaplication.viewmodel.UpcomingViewModel
 
 class EventViewModelFactory(private val repository: DicodingEventRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
