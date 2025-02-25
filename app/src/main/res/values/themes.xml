@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources >
     <!-- Base application theme. -->
     <style name="Theme.DicodingEventAplication" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -13,18 +13,8 @@
         <item name="android:statusBarColor">@color/biru_tua_trans30</item>
         <!-- Customize your theme here. -->
         <item name="elevationOverlayEnabled">true</item>
-
-    </style>
-
-    <style name="Theme.StatusBar" parent="Theme.MaterialComponents.DayNight">
-        <!-- Status bar ikon jadi hitam -->
-        <item name="android:windowLightStatusBar">true</item>
-        <!-- Warna status bar (bisa disesuaikan) -->
-        <item name="android:statusBarColor">@color/white</item>
-    </style>
-
-    <style name="ToolBarWithNavigationBack">
-        <item name="navigationIcon">@drawable/dbs</item>
+        <!-- background layout. -->
+        <item name="colorSurface">@color/white</item>
     </style>
 
     <style name="Text.Header24" parent="Theme.DicodingEventAplication">
@@ -46,10 +36,6 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/black</item>
     </style>
-    <style name="Text.JudulBerita20" parent="Theme.DicodingEventAplication">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">normal</item>
-    </style>
     <style name="Text.JudulBerita18" parent="Theme.DicodingEventAplication">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">normal</item>
@@ -66,10 +52,6 @@
     </style>
     <style name="Text.Metadata12" parent="Theme.DicodingEventAplication">
         <item name="android:textSize">12sp</item>
-    </style>
-    <style name="Text.TombolCTA16" parent="Theme.DicodingEventAplication">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Button.Back" parent="Theme.DicodingEventAplication">
@@ -89,9 +71,18 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+<!--    shapable view radius-->
     <style name="Radius8">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
+    </style>
+    <style name="Radius16">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+    <style name="Radius24">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
     </style>
     <style name="Radius8NoBottomRight">
         <item name="cornerFamily">rounded</item>
@@ -102,6 +93,11 @@
     <style name="RadiusBottomRight16">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeBottomRight">16dp</item>
+    </style>
+    <style name="RadiusBottom24">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">24dp</item>
+        <item name="cornerSizeBottomRight">24dp</item>
     </style>
     <style name="RadiusTopRight16">
         <item name="cornerFamily">rounded</item>

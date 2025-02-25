@@ -6,8 +6,7 @@
     <string name="back">Back</string>
     <string name="img">IMG</string>
     <string name="faforit">Faforit</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="remaining_quota_value">%s - %s</string>
 
     <!-- Error handling -->
     <string name="error_400">Oops! Ada kesalahan saat meminta data. Coba periksa kembali.</string>
@@ -20,6 +19,10 @@
     <string name="error_koneksi">No internet connection. Please check your network.</string>
     <string name="error_takterduga">Terjadi kesalahan tak terduga. Coba lagi nanti.</string>
     <string name="search">Search</string>
+    <string name="sample">mainViewModel.postReview(binding.edReview.text.toString())
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)</string>
+    <string name="data_not_available_please_try_again_later">Data not available. Please try again later</string>
     <string name="img_header">IMG Header</string>
     <string name="event_not_available_yet_but_we_re_working_on_something_amazing">Event not available yet, but we’re working on something amazing!</string>
     <string name="img_header_detail">IMG Header</string>
@@ -28,5 +31,37 @@
     <string name="all">All</string>
     <string name="delete_item">Delete Item</string>
     <string name="try_again">Try Again</string>
+    <string name="quota">Quota</string>
+    <string name="category">Category</string>
+    <string name="locations">Locations</string>
+    <string name="registrants">Registrants</string>
+    <string name="register_now">Register Now</string>
+    <string name="add_to_favorit">Add To Favorit</string>
+    <string name="_0">0</string>
+    <string name="remaining_nquota">Remaining\nQuota</string>
+    <string name="hash">-</string>
+    <string name="yyyy_mm_dd">YYYY-MM-DD</string>
+    <string name="status">Status</string>
+    <string name="hosted_by">Hosted By</string>
+    <string name="event_detail">Event Detail</string>
+    <string name="summary">Summary</string>
+    <string name="filter">Filter</string>
+    <string name="recent_searches">Recent Searches</string>
+    <string name="remove_all">Remove All</string>
+    <string name="active_n_filter">Active \n Filter</string>
+    <string name="hello_home">Hello, Dicoding</string>
+    <string name="descovery">Descovery</string>
+    <string name="amazing_event">Amazing Event</string>
+    <string name="find_amazing_event">Find Amazing Event</string>
+    <string name="recommended">Recommended</string>
+    <string name="dicoding_event">Dicoding Event</string>
+    <string name="remaining_quota_item_upcome">Remaining Quota %d</string>
+    <string name="_14">14</string>
+    <string name="jun">JUN</string>
+    <string name="all_events_that_have_taken_place_and_ended">All Events That Have Taken Place and Ended</string>
+    <string name="event">Event</string>
+    <string name="_100">100</string>
+    <string name="recommendation_event_for_you">Recommendation event for you!</string>
+    <string name="descover">Descover</string>
 
 </resources>

@@ -3,10 +3,12 @@ package com.example.dicodingeventaplication.data.repository
 import android.content.Context
 import android.util.Log
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.data.respons.DetailEventResponse
+import com.example.dicodingeventaplication.data.respons.Event
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.data.respons.EventResponse
-import com.example.dicodingeventaplication.data.retrofit.ApiService
+import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okio.IOException
@@ -14,8 +16,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DicodingEventRepository(
-    private val apiService: ApiService,
+class
+DicodingEventRepository(
+//    private val apiService: ApiService,
     private val context: Context
 ) {
     private val sharedPref = context.getSharedPreferences(SEARCH_HISTORY, Context.MODE_PRIVATE)
@@ -25,6 +28,9 @@ class DicodingEventRepository(
     private var  cacheDataUpcoming: EventResponse? = null
     private var  cacheDataFinished: EventResponse? = null
     private var  cacheDataSearching: EventResponse? = null
+    private var  cacheDataDetail: DetailEventResponse? = null
+
+    private val apiService = ApiConfig.getApiService()
 
     private var querySearch = ""
     private var isActive = -1
@@ -166,6 +172,55 @@ class DicodingEventRepository(
         })
     }
 
+    fun findDetailEvent(id: Int?, callback: (Resource<Event?>) -> Unit) {
+        callback(Resource.Loading())
+
+        if (id != null){
+            apiService.getEventDetail(id).enqueue(object : Callback<DetailEventResponse> { // enqueue otomatis berjalan di bg treaad
+                override fun onResponse(
+                    call: Call<DetailEventResponse>,
+                    response: Response<DetailEventResponse>
+                ) {
+                    if (response.isSuccessful){
+                        val responsBody = response.body()
+                        if (responsBody?.event != null){
+                            cacheDataDetail = responsBody
+                            callback(Resource.Success(responsBody.event))
+                        }else{
+                            Log.e(TAG, "onResponse: data null}")
+                            callback(Resource.Empty(
+                                null,
+                                context.resources.getString(R.string.data_not_available_please_try_again_later)
+                            ))
+                        }
+                        Log.d("res", "onResponse: succes $responsBody")
+                    }else{
+                        Log.e("res", "onResponse: onfailure ${response.message()}")
+                        val errorMessage = errorHandling(response.code())
+                        callback(Resource.Error(errorMessage))
+                    }
+                }
+
+                override fun onFailure(call: Call<DetailEventResponse>, t: Throwable) {
+                    Log.e(TAG, "detail onResponse: onfailure ${t.message}")
+                    if (t is IOException) {
+                        callback(Resource.ErrorConection(context.resources.getString(R.string.error_koneksi)))
+                        if (cacheDataDetail != null ){
+                            Log.d(TAG, "onFailure: cache != null ")
+                            callback(Resource.Success(cacheDataDetail?.event))
+                        }
+//                    else
+//                        callback(Resource.ErrorConection(context.resources.getString(R.string.error_koneksi)))
+                    } else {
+                        callback(Resource.Error(context.resources.getString(R.string.error_takterduga)))
+                    }
+                }
+            })
+        } else{
+            callback(Resource.Empty(null))
+        }
+    }
+
     private fun errorHandling(code: Int): String {
         return when (code) {
             400 -> context.resources.getString(R.string.error_400)
@@ -174,7 +229,7 @@ class DicodingEventRepository(
             408 -> context.resources.getString(R.string.error_408)
             500 -> context.resources.getString(R.string.error_500)
             503 -> context.resources.getString(R.string.error_503)
-            else -> "Terjadi kesalahan ($code)"
+            else -> context.resources.getString(R.string.error_else)
         }
     }
 

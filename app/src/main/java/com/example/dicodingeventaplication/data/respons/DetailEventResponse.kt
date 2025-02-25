@@ -57,4 +57,15 @@ data class Event(
 
 	@field:SerializedName("category")
 	val category: String? = null
-)
+) {
+	val formatBeginTime: String?
+		get() = beginTime?.split(" ")?.getOrNull(1)
+
+	val formatEndTime: String?
+		get() = endTime?.split(" ")?.getOrNull(1)
+
+	val formatYear: String?
+		get() = beginTime?.split(" ")?.getOrNull(0)
+
+
+}

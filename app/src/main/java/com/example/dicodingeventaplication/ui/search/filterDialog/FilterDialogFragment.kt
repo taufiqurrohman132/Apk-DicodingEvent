@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.databinding.FragmentFilterDialogBinding
-import com.example.dicodingeventaplication.viewmodel.SearchViewModel
+import com.example.dicodingeventaplication.ui.search.SearchViewModel
 
 class FilterDialogFragment : DialogFragment() {//private val onBtnClick: (Int) -> Unit // tidak di sarankan pakai construktor
     private var _binding: FragmentFilterDialogBinding? = null

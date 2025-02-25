@@ -8,51 +8,45 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.FragmentUpcomingBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.EventViewModelFactory
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.ui.home.HomeFragment
 import com.example.dicodingeventaplication.utils.DialogUtils
-import com.example.dicodingeventaplication.viewmodel.UpcomingViewModel
+import com.google.android.material.appbar.AppBarLayout
 
 class UpcomingFragment : Fragment() {
 
     private var _binding: FragmentUpcomingBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var upcomingViewModel: UpcomingViewModel
-    private lateinit var upcomeRepository: DicodingEventRepository
+    private val upcomeRepository: DicodingEventRepository by lazy {
+        DicodingEventRepository(requireContext())
+    }
+    private val upcomingViewModel: UpcomingViewModel by lazy {
+        ViewModelProvider(this, EventViewModelFactory(upcomeRepository))[UpcomingViewModel::class.java]// pengganti get
+    }
 
-    private var menuItem: MenuItem? = null
+    private var isExpanned = true
 
-//    private val offsetChangedListener = AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-//        val totalScrollRange = appBarLayout.totalScrollRange
-//
-//        if (Math.abs(verticalOffset) == totalScrollRange){
-//            // jka kolap tamilkan title
-////            binding.mainCollapsing.title = resources.getString(R.string.upcoming)
-////            binding.mainToolbar.menu. = View.VISIBLE/
-//            menuItem?.icon?.setTint(resources.getColor(R.color.black))
-//
-//        }else{
-//            // jka expand
-////            binding.mainCollapsing.title = ""
-////            binding.upcomingSbCollaps.visibility = View.GONE
-//            menuItem?.icon?.setTint(resources.getColor(R.color.white))
-//        }
-//    }
+    private var appBarOffset = 0
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         val rvPosition = binding.rvUpcoming.layoutManager?.onSaveInstanceState()
         outState.putParcelable(SCROLL_POSITION, rvPosition)
+        outState.putInt(
+            APP_BAR_OFFSET,
+            appBarOffset
+        )
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -74,20 +68,28 @@ class UpcomingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // menambahkan listerner appbar
-//        binding.mainAppbar.addOnOffsetChangedListener(offsetChangedListener)
+        if ( savedInstanceState != null) {
+            appBarOffset = savedInstanceState.getInt(APP_BAR_OFFSET, 0)
+        }
 
-        // mulai simmer
-//        binding.upcomingSimmmer.startShimmer()
-//        binding.upcomingSimmmer.visibility = View.VISIBLE
+        // pulihkan offset
+        binding.upcomeCoordinator.post {
+            val params = binding.mainAppbar.layoutParams as CoordinatorLayout.LayoutParams
+            val behavior = params.behavior as? AppBarLayout.Behavior
+            behavior?.setTopAndBottomOffset(appBarOffset)
+        }
 
-        // repositori
-        val apiService = ApiConfig.getApiService()
-        upcomeRepository = DicodingEventRepository(apiService, requireContext())
+        // listener app bar
+        binding.mainAppbar.addOnOffsetChangedListener{ _, verticalOffset ->
+            binding.mainAppbar.totalScrollRange
+            isExpanned = verticalOffset == 0 // expaned jika offset 0
+            appBarOffset = verticalOffset // inisialis untuk simpan posisi app bar
+        }
 
-        // view model factory
-        val viewModelFactory = EventViewModelFactory(upcomeRepository)
-        upcomingViewModel = ViewModelProvider(this, viewModelFactory)[UpcomingViewModel::class.java]// pengganti get
+        // mencegah swip jika colap
+        binding.upcomingSwipRefresh.setOnChildScrollUpCallback { _, _ ->
+            !isExpanned // cegah swip jika colap
+        }
 
         val linearLayout = LinearLayoutManager(requireContext())
         binding.rvUpcoming.layoutManager = linearLayout
@@ -95,6 +97,7 @@ class UpcomingFragment : Fragment() {
         val adapterUpcoming = UpcomingRVAdapter(requireContext()){ event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
             intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+            intent.putExtra(DetailEventActivity.EXTRA_EVENT_ACTIVE, HomeFragment.UPCOMING)
             startActivity(intent)
         }
         binding.rvUpcoming.adapter = adapterUpcoming
@@ -113,7 +116,7 @@ class UpcomingFragment : Fragment() {
                             binding.upcomingLottieError.visibility = View.INVISIBLE
                             binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
                         }
-                        upcomingViewModel.isUpcomingSuccess()
+                        upcomingViewModel.markUpcomingSuccess()
                     }
                     is Resource.Error -> {
                         adapterUpcoming.submitList(emptyList()){
@@ -141,7 +144,7 @@ class UpcomingFragment : Fragment() {
                             binding.upcomingLottieError.visibility = View.INVISIBLE
                             binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
                         }
-                        upcomingViewModel.isUpcomingEmpty()
+                        upcomingViewModel.markUpcomingEmpty()
                     }
                 }
             }
@@ -190,14 +193,13 @@ class UpcomingFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        //hapus listener app bar
-//        binding.mainAppbar.removeOnOffsetChangedListener(offsetChangedListener)
         _binding = null
     }
 
     companion object{
         const val TAG = "upcome"
         private const val SCROLL_POSITION = "scrol_position"
+        private const val APP_BAR_OFFSET = "app_bar_offset"
     }
 
 }

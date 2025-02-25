@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:clipToPadding="false"
     android:clipChildren="false"
-    android:background="@color/tranparant"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.search.filterDialog.FilterDialogFragment">
     <androidx.cardview.widget.CardView
@@ -25,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:text="Active \n Filter"
+                android:text="@string/active_n_filter"
                 style="@style/Text.Header24"/>
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_state_all"

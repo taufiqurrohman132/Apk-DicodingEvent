@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/upcome.coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -45,7 +46,7 @@
                     android:id="@+id/tv_descover"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Descover"
+                    android:text="@string/descover"
                     android:layout_alignParentBottom="true"
                     android:layout_marginBottom="70dp"
                     android:textColor="@color/kuning"
@@ -54,17 +55,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" Event"
+                    android:text="@string/event"
                     android:layout_alignParentBottom="true"
                     android:layout_toEndOf="@id/tv_descover"
                     android:layout_marginBottom="70dp"
                     android:textColor="@color/white"
+                    android:layout_marginStart="6dp"
                     android:textStyle="bold"
                     android:textSize="34sp"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Recommendation event for you!"
+                    android:text="@string/recommendation_event_for_you"
                     style="@style/Text.Subjudul16"
                     android:layout_marginBottom="8dp"
                     android:layout_alignParentBottom="true"
@@ -77,7 +79,7 @@
                 android:layout_height="wrap_content"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_collapseMode="pin"
-                android:paddingTop="24dp"
+                android:paddingTop="28dp"
                 app:collapseIcon="@drawable/ic_search"
                 app:menu="@menu/app_bar_menu"
                 android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
@@ -229,10 +231,21 @@
         </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.google.android.material.search.SearchView
-        android:id="@+id/upcoming.sv"
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:orientation="vertical"-->
+<!--        >-->
+
+<!--        <com.google.android.material.search.SearchView-->
+<!--            android:id="@+id/upcoming.sv"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"/>-->
+<!--    </LinearLayout>-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/upcoming.rv_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"/>
+        android:paddingHorizontal="16dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

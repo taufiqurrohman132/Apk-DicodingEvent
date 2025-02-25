@@ -52,7 +52,7 @@ class HomeFinishedRVAdapter(
                     .load(eventsItem.imageLogo)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .override(200, 200)
-                    .thumbnail(0.25f)
+                    .thumbnail(0.50f)
                     .into(item.imgItemVer)
 
                 itemView.setOnClickListener {
@@ -78,56 +78,11 @@ class HomeFinishedRVAdapter(
     override fun onBindViewHolder(holder: FinishedViewHolder, position: Int) {
         val event = getItem(position)
         holder.bind(event)
-//        holder.itemView.findViewById<TextView>(R.id.tv_home_finished_error).text = errorMessage
         Log.d(TAG, "bindv: $errorMessage")
         Log.d(TAG, "bindv itemcount: ${super.getItemCount()}")
     }
 
-//    fun updateCorousel(state: Resource<List<EventItem?>>){
-////        this.state = state
-//        when(state){
-//            is Resource.Loading -> {
-//                simmerCorousel?.visibility = View.VISIBLE
-//            }
-//            is Resource.Success -> {
-//                simmerCorousel?.visibility = View.INVISIBLE
-//                adapterCorusel?.submitList(state.data)
-//            }
-//            is Resource.ErrorConection -> {
-//                simmerCorousel?.visibility = View.VISIBLE
-//            }
-//            is Resource.Empty -> {
-//                simmerCorousel?.visibility = View.VISIBLE
-//                List<EventItem?>(2) {null}
-//            }
-//            else -> {
-//                simmerCorousel?.visibility = View.VISIBLE
-//            }
-//        }
-//
-//    }
-
     companion object{
-//        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EventItem>() {
-//            override fun areItemsTheSame(
-//                oldItem: EventItem,
-//                newItem: EventItem
-//            ): Boolean {
-//                return oldItem == newItem
-//            }
-//
-//            override fun areContentsTheSame(
-//                oldItem: EventItem,
-//                newItem: EventItem
-//            ): Boolean {
-//                return oldItem == newItem
-//            }
-//
-//        }
-
-        private const val TYPE_HEADER = 0
-        private const val TYPE_UPCOMING = 1
-        private const val TYPE_FINISHED = 2
         private const val TAG = "adapterfinishHome"
     }
 }

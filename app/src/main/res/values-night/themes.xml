@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources >
     <!-- Base application theme. -->
     <style name="Theme.DicodingEventAplication" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -10,9 +10,11 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/tranparant</item>
+        <item name="android:statusBarColor">@color/biru_tua_trans60</item>
         <!-- Customize your theme here. -->
         <item name="elevationOverlayEnabled">true</item>
+         <!-- background layout. -->
+        <item name="colorSurface">@color/white</item>
 
     </style>
 
@@ -68,6 +70,7 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <!--    shapable view radius-->
     <style name="Radius8">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
@@ -77,6 +80,11 @@
         <item name="cornerSizeTopRight">8dp</item>
         <item name="cornerSizeTopLeft">8dp</item>
         <item name="cornerSizeBottomLeft">8dp</item>
+    </style>
+    <style name="RadiusBottom24">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">24dp</item>
+        <item name="cornerSizeBottomRight">24dp</item>
     </style>
     <style name="RadiusBottomRight16">
         <item name="cornerFamily">rounded</item>

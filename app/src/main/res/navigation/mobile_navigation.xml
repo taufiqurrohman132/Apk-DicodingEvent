@@ -8,15 +8,14 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.dicodingeventaplication.ui.home.HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home"/>
 
     <fragment
         android:id="@+id/navigation_upcoming"
         android:name="com.example.dicodingeventaplication.ui.upcoming.UpcomingFragment"
-        tools:layout="@layout/fragment_upcoming" />
-
+        tools:layout="@layout/fragment_upcoming"/>
     <fragment
         android:id="@+id/navigation_finished"
         android:name="com.example.dicodingeventaplication.ui.finished.FinishedFragment"
-        tools:layout="@layout/fragment_finished" />
+        tools:layout="@layout/fragment_finished"/>
 </navigation>

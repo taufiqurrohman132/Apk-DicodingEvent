@@ -9,24 +9,29 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.filterDialog.FilterDialogFragment
 import com.example.dicodingeventaplication.EventViewModelFactory
 import com.example.dicodingeventaplication.utils.DialogUtils
-import com.example.dicodingeventaplication.viewmodel.SearchViewModel
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var searchViewModel: SearchViewModel
-    private lateinit var searchRepository: DicodingEventRepository
+
+    private val repository: DicodingEventRepository by lazy {
+        DicodingEventRepository(this)
+    }
+
+    private val searchViewModel: SearchViewModel by lazy {
+        ViewModelProvider(this, EventViewModelFactory(repository))[SearchViewModel::class.java]// pengganti get
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,17 +42,11 @@ class SearchActivity : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                 View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
-        // inisialisasi repositori
-        val apiService = ApiConfig.getApiService()
-        searchRepository = DicodingEventRepository(apiService, this)
-
-        // pakai view model factory
-        val viewModelFactory = EventViewModelFactory(searchRepository)
-        searchViewModel = ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]// pengganti get
-
         var activeQuery: Int = -1
         var search = ""
         var queryIsSubmit = false
+
+        binding.searchView.isIconified = false // menampilkan keyboard langsung
 
         val linearLayoutResult = LinearLayoutManager(this)
         binding.rvSearchResult.layoutManager = linearLayoutResult
@@ -62,13 +61,13 @@ class SearchActivity : AppCompatActivity() {
         binding.searchHeaderResult.visibility = View.INVISIBLE
 
         val adapterHistory = SearchHistoryRVAdapter(
-            onDeleteClickItem = { item -> searchViewModel.removeFromHistory(item)},
+            onDeleteClickItem = { item -> this.searchViewModel.removeFromHistory(item)},
             onItemClick = { event ->
                 val intent = Intent(this@SearchActivity, DetailEventActivity::class.java)
                 intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
                 startActivity(intent)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    searchViewModel.saveToHistory(event)
+                    this.searchViewModel.saveToHistory(event)
                     Log.d("actsc", "setEvent Data: onsucces")
                 }, 500)
                 Log.d("actsc", "setEvent Data: onsucces")
@@ -83,35 +82,33 @@ class SearchActivity : AppCompatActivity() {
                 val intent = Intent(this@SearchActivity, DetailEventActivity::class.java)
                 intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
                 startActivity(intent)
-                searchViewModel.saveToHistory(event)// save ke hsitory
+                this.searchViewModel.saveToHistory(event)// save ke hsitory
                 Log.d("actsc", "setEvent Data: onsucces")
             }
         )
         binding.rvSearchResult.adapter = adapterResult
 
-        binding.searchView.isIconified = false // menampilkan keyboard langsung
-
         // tampilkan history
-        searchViewModel.loadSearchHistory{
+        this.searchViewModel.loadSearchHistory{
             binding.searchHeadarHistory.visibility = View.VISIBLE
         }
 
         // observe history
-        searchViewModel.listhHistory.observe(this){ historyList ->
+        this.searchViewModel.listhHistory.observe(this){ historyList ->
             adapterHistory.submitList(historyList)
             Log.d(TAG, "onCreate: history $historyList")
         }
 
-        searchViewModel.activeQuery.observe(this){ activeValue->
+        this.searchViewModel.activeQuery.observe(this){ activeValue->
 
             // update search
             if (activeQuery != activeValue){
                 activeQuery = activeValue
-                searchViewModel.searchEvent(search, activeQuery)
+                this.searchViewModel.searchEvent(search, activeQuery)
             }
         }
 
-        searchViewModel.selectButton.observe(this){ selectId ->
+        this.searchViewModel.selectButton.observe(this){ selectId ->
             binding.searchTvStatusActive.text = when(selectId){
                 R.id.btn_state_upcone -> "Upcoming"
                 R.id.btn_state_finish -> "Finished"
@@ -124,7 +121,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
                     queryIsSubmit = true
-                    searchViewModel.searchEvent(it, activeQuery)
+                    this@SearchActivity.searchViewModel.searchEvent(it, activeQuery)
                     binding.searchView.clearFocus()// menurunkan keyboard ketika di pencet search
                 }
                 Log.d(TAG, "query Data: onsucces")
@@ -152,8 +149,8 @@ class SearchActivity : AppCompatActivity() {
                     }
 
 //                        searching = ""
-                    adapterHistory.submitList(searchViewModel.listhHistory.value ?: emptyList())
-                    Log.d(TAG, "onQueryTextChange: history ${searchViewModel.listhHistory.value}")
+                    adapterHistory.submitList(this@SearchActivity.searchViewModel.listhHistory.value ?: emptyList())
+                    Log.d(TAG, "onQueryTextChange: history ${this@SearchActivity.searchViewModel.listhHistory.value}")
                     Log.d(TAG, "onQueryTextChange: null")
                 }else{
                     queryIsSubmit = false
@@ -163,22 +160,14 @@ class SearchActivity : AppCompatActivity() {
                     binding.searchHeadarHistory.visibility = View.INVISIBLE
                     binding.rvSearchHistory.visibility = View.INVISIBLE
 
-                    searchViewModel.searchEvent(newText, activeQuery)
-//                    if (searchViewModel.searching != newText) {
-//                        searchViewModel.setSearch(newText)
-//
-//                        Log.d(TAG, "onQueryTextChange: searchin !=  newteks")
-//                        adapterResult.submitList(emptyList())
-//                    } // tes
-
-//                        searching = newText
+                    this@SearchActivity.searchViewModel.searchEvent(newText, activeQuery)
                 }
                 Log.d("actsc", "query Data: onsucces")
                 return true
             }
         })
 
-        searchViewModel.searchResultEventItem.observe(this) { event ->
+        this.searchViewModel.searchResultEventItem.observe(this) { event ->
             adapterResult.submitList(emptyList())
 
             if (binding.searchView.query.isNotEmpty()){
@@ -270,7 +259,7 @@ class SearchActivity : AppCompatActivity() {
 
         // clear history
         binding.tvClearHistory.setOnClickListener {
-            searchViewModel.clearHistory{
+            this.searchViewModel.clearHistory{
                 binding.searchHeadarHistory.visibility = View.INVISIBLE
             }
         }
@@ -278,6 +267,5 @@ class SearchActivity : AppCompatActivity() {
 
     companion object{
         const val TAG = "sadapter"
-        private const val SEARCHING = "search"
     }
 }

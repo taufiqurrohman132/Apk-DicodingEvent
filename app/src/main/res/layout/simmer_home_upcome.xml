@@ -13,7 +13,7 @@
         android:layout_height="170dp"
         android:contentDescription="@string/img"
         android:background="@color/abu_abu_terang"
-        app:shapeAppearanceOverlay="@style/Radius8"
+        app:shapeAppearanceOverlay="@style/Radius16"
         />
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -39,6 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="12dp"
         android:layout_marginEnd="100dp"
+        app:shapeAppearanceOverlay="@style/Radius8"
         android:layout_marginTop="8dp"
         android:background="@color/abu_abu_terang"
         android:layout_marginBottom="12dp" />

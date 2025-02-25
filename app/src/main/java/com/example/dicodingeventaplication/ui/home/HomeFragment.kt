@@ -1,7 +1,6 @@
 package com.example.dicodingeventaplication.ui.home
 
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -22,39 +20,28 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.respons.EventItem
-import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.FragmentHomeBinding
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.SearchActivity
 import com.example.dicodingeventaplication.EventViewModelFactory
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.viewmodel.HomeViewModel
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
-    private lateinit var homeViewModel: HomeViewModel
-    private lateinit var homeRepository: DicodingEventRepository
 
     private var eventHeader: EventItem? = null
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        outState.putInt(
-//            SCROLL_POSITION,
-//            binding.homeNestedScroll.scrollY
-//        )
-//    }
-//
-//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-//        super.onViewStateRestored(savedInstanceState)
-//        binding.homeNestedScroll.post {
-//            binding.homeNestedScroll.scrollTo(0, savedInstanceState?.getInt(SCROLL_POSITION) ?: 0)
-//        }
-//    }
+    private val repository: DicodingEventRepository by lazy {
+        DicodingEventRepository(requireContext())
+    }
+
+    private val homeViewModel: HomeViewModel by lazy {
+        ViewModelProvider(this, EventViewModelFactory(repository))[HomeViewModel::class.java]// pengganti get
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -118,15 +105,16 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Setelah UI siap, izinkan rotasi kembali
-//        wind.decorView.post {
-//            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-//        }
+        // scroll dilakukan setelah layout siap, restor posisi
+        binding.homeNestedScroll.post {
+            binding.homeNestedScroll.scrollTo(0, homeViewModel.scrollY)
+        }
 
         // inisialize adapter
         val adapterCorousel = HomeCorouselRVAdaptor(requireActivity()){ event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
             intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+            intent.putExtra(DetailEventActivity.EXTRA_EVENT_ACTIVE, UPCOMING)
             startActivity(intent)
         }
         binding.vpItemCorousel.adapter = adapterCorousel
@@ -142,6 +130,7 @@ class HomeFragment : Fragment() {
         val adapterFinished = HomeFinishedRVAdapter(requireActivity()) { event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
             intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+            intent.putExtra(DetailEventActivity.EXTRA_EVENT_ACTIVE, FINISHED)
             startActivity(intent)
         }
 
@@ -149,14 +138,6 @@ class HomeFragment : Fragment() {
 
         val sharedPool = RecyclerView.RecycledViewPool()
         binding.rvHomeFinished.setRecycledViewPool(sharedPool)
-
-        // repositori
-        val apiService = ApiConfig.getApiService()
-        homeRepository = DicodingEventRepository(apiService, requireContext())
-
-        // view model factory
-        val viewModelFactory = EventViewModelFactory(homeRepository)
-        homeViewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]// pengganti get
 
         // akses dari view model dan meng observe
         // tiap data di observe
@@ -330,16 +311,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // pulihkan posisi scroll
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            view.post {
-                binding.homeNestedScroll.scrollTo(0, homeViewModel.scrollY)
-
-                // Izinkan kembali rotasi setelah UI siap
-                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
-            }
-        }
-
         // swip refres
         binding.homeSwipRefresh.setColorSchemeColors(resources.getColor(R.color.biru_tua))
         binding.homeSwipRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.white))
@@ -374,15 +345,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        // simpan scrol position
-        homeViewModel.scrollY = binding.homeNestedScroll.scrollY
-    }
-
-
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d(TAG, "onDestroyView: ")
+        homeViewModel.scrollY = binding.homeNestedScroll.scrollY
         _binding = null
     }
 
@@ -394,7 +360,7 @@ class HomeFragment : Fragment() {
             .load(event?.mediaCover)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .override(400, 200)
-            .thumbnail(0.25f)
+            .thumbnail(0.50f)
             .into(binding.imgpopHeaderHome)
 
         binding.homeHeaderTvName.text = event?.name ?: ""
@@ -406,8 +372,6 @@ class HomeFragment : Fragment() {
         const val FINISHED = 0
         const val UPCOMING = 1
         const val TAG = "home"
-        const val TAGA = "homega"
-        private const val SCROLL_POSITION = "scrol_position"
     }
 
 }

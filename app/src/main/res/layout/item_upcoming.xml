@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -19,7 +18,6 @@
             app:shapeAppearanceOverlay="@style/RadiusBottomRight16"
             android:background="@color/abu_abu_terang"
             android:scaleType="centerCrop"
-            android:src="@drawable/dbs"
             android:foreground="@drawable/gradient_img_bottom13"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/biru_tua"
-                    android:text="14"
+                    android:text=""
                     android:textStyle="bold"
                     style="@style/Text.JudulBerita18"/>
                 <TextView
@@ -67,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/biru_tua"
-                    android:text="JUN"
+                    android:text=""
                     android:textStyle="bold"
                     style="@style/Text.Subjudul16"/>
             </LinearLayout>
@@ -86,14 +84,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.00"
-            app:tint="@color/kuning" />
+            app:tint="@color/biru_tua" />
 
         <TextView
             android:id="@+id/upcoming.tv_judul_item"
             style="@style/Text.Subjudul16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="kajkjfj kjdfjk jkdjfjd jdkdjfk kdfkkjkdfkjakjkjafkj kdjfjdjfkjdakjkjdj jkdfk kjdfkjd"
+            android:text=""
             android:textColor="@color/white"
             android:textStyle="bold"
             android:ellipsize="end"
@@ -112,7 +110,7 @@
             style="@style/Text.Metadata12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="kajkjfj kjdfjk jkdjfjd jdkdjfk kdfkjdj jkdfk kjdfkjd"
+            android:text=""
             android:textColor="@color/abu_abu_terang2"
             android:ellipsize="end"
             android:maxLines="1"
@@ -129,7 +127,7 @@
             style="@style/Text.Metadata12"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Dicoding Event"
+            android:text="@string/dicoding_event"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:maxLines="1"
@@ -145,7 +143,7 @@
             style="@style/Text.Metadata12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Remaining Quota 2773"
+            android:text="@string/remaining_quota_item_upcome"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:layout_marginHorizontal="12dp"

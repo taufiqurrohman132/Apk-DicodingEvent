@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication.viewmodel
+package com.example.dicodingeventaplication.ui.home
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -8,9 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.respons.EventItem
-import com.example.dicodingeventaplication.ui.home.HomeFragment
 import com.example.dicodingeventaplication.ui.home.HomeFragment.Companion.TAG
-import com.example.dicodingeventaplication.utils.Event
+import com.example.dicodingeventaplication.utils.SingleEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,8 +25,8 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     private val _headerEvent = MutableLiveData<Resource<List<EventItem?>>>()
     val headerEvent: LiveData<Resource<List<EventItem?>>> = _headerEvent
 
-    private val _dialogNotifError = MutableLiveData<Event<String?>>()
-    val dialogNotifError: LiveData<Event<String?>> = _dialogNotifError
+    private val _dialogNotifError = MutableLiveData<SingleEvent<String?>>()
+    val dialogNotifError: LiveData<SingleEvent<String?>> = _dialogNotifError
 
     private var _isRefreshing = MutableLiveData(false)
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -46,20 +45,20 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     fun findImageHeader(){ //callback: (() -> Unit)? = null
         job?.cancel()
 
-        Log.d(HomeFragment.TAG, "findImageHeader dipanggil")
+        Log.d(TAG, "findImageHeader dipanggil")
 
         job = viewModelScope.launch {
             delay(1000)
-            Log.d(HomeFragment.TAG, "findEvent heder berjalan di thread: ${Thread.currentThread().name}")
+            Log.d(TAG, "findEvent heder berjalan di thread: ${Thread.currentThread().name}")
 
             repository.findEvent(HomeFragment.FINISHED) { event ->
                 _headerEvent.value = when(event){
                     is Resource.ErrorConection -> {
-                        _dialogNotifError.value = Event(event.message)
+                        _dialogNotifError.value = SingleEvent(event.message)
                         event
                     }
                     is Resource.Error ->{
-                        _dialogNotifError.value = Event(event.message)
+                        _dialogNotifError.value = SingleEvent(event.message)
                         event
                     }
                     else -> event
@@ -73,7 +72,7 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     private fun findEventFinished(){
         viewModelScope.launch {
             delay(500)
-            Log.d(HomeFragment.TAG, "findEvent finish berjalan di thread: ${Thread.currentThread().name}")
+            Log.d(TAG, "findEvent finish berjalan di thread: ${Thread.currentThread().name}")
 
             repository.findEvent(HomeFragment.FINISHED) { event ->
                 _resultEvenItemFinished.value = event
@@ -84,7 +83,7 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     private fun findEventUpcome(){
         viewModelScope.launch {
             delay(500)
-            Log.d(HomeFragment.TAG, "findEvent upcome berjalan di thread: ${Thread.currentThread().name}")
+            Log.d(TAG, "findEvent upcome berjalan di thread: ${Thread.currentThread().name}")
 
             repository.findEvent(HomeFragment.UPCOMING) { event ->
                 _resultEvenItemUpcome.value= when(event) {
@@ -125,7 +124,4 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
         _isRefreshing.value = true
     }
 
-    companion object{
-        const val TAGV = " tagv"
-    }
 }

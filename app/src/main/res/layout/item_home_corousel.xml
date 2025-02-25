@@ -22,8 +22,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
                 android:contentDescription="@string/img"
-                android:src="@drawable/dbs"
                 android:background="@color/abu_abu_terang"
+                android:src="@drawable/dbs_blur"
                 app:shapeAppearanceOverlay="@style/RadiusBottomRight16"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -81,7 +81,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/biru_tua"
-                        android:text="14"
+                        android:text="@string/_14"
                         android:textStyle="bold"
                         style="@style/Text.JudulBerita18"/>
                     <TextView
@@ -89,7 +89,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/biru_tua"
-                        android:text="JUN"
+                        android:text="@string/jun"
                         android:textStyle="bold"
                         style="@style/Text.Subjudul16"/>
                 </LinearLayout>
@@ -100,7 +100,7 @@
                 android:id="@+id/tv_header_item"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:text="Elevate ai diconing idcamp bejaya selalujaya dan sukse selalu"
+                android:text="@string/sample"
                 android:ellipsize="end"
                 android:maxLines="2"
                 style="@style/Text.Subjudul16"
@@ -118,7 +118,7 @@
                 android:id="@+id/tv_des1_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="elevate ai dickdjfkajkjakfdjajdfffffffffkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjjjjjjjjjjjjjjjjjjjjjjjjjjjodj "
+                android:text="@string/sample"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:gravity="center_vertical"
@@ -134,7 +134,7 @@
                 android:id="@+id/tv_owner_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Decoding Event"
+                android:text="@string/sample"
                 android:ellipsize="end"
                 android:maxLines="1"
                 style="@style/Text.Metadata12"
@@ -157,7 +157,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_gravity="center"
             >
             <TextView

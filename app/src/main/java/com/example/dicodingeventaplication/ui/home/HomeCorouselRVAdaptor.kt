@@ -48,7 +48,7 @@ class HomeCorouselRVAdaptor(
                     .load(eventsItem.imageLogo)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .override(400, 400)
-                    .thumbnail(0.25f)
+                    .thumbnail(0.50f)
                     .into(item.imgItemHori)
 
                 itemView.setOnClickListener {

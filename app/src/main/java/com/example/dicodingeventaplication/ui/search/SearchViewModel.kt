@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication.viewmodel
+package com.example.dicodingeventaplication.ui.search
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -109,8 +109,6 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
 
     companion object{
         const val TAG = "searchvm"
-        private const val SEARCH_HISTORY = "search_history"
-        private const val HISTORY_LIST = "history_list"
         private const val FINISHED = 0
         private const val UPCOMING = 1
         private const val ALL = -1

@@ -1,5 +1,11 @@
 package com.example.dicodingeventaplication.utils
 
+import android.util.Log
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import kotlin.math.log
+
 object TimeUtils {
 
     fun getMount(date: String?): String{
@@ -14,5 +20,20 @@ object TimeUtils {
         }catch (e: Exception){
             return ""
         }
+    }
+
+    fun isEventFinished(eventDate: String): Boolean {
+        // format data dari api
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        Log.d("format", "isEventFinished: formater $formatter")
+
+        // konversi string ke local date time
+        val eventDateTime = LocalDateTime.parse(eventDate, formatter)
+
+        // ambil waktu seakrangdi zona waktu yang sama
+        val now = LocalDateTime.now(ZoneId.of("UTC"))
+
+        // event selsai jika eent data time sebelum waktu sekarang
+        return eventDateTime.isBefore(now)
     }
 }

@@ -34,6 +34,7 @@
                     android:id="@+id/search.btn_back"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:contentDescription="@string/back"
                     android:src="@drawable/ic_back"
                     android:background="@color/tranparant"
                     app:tint="@color/black" />
@@ -60,7 +61,7 @@
                     app:icon="@drawable/ic_filter_add"
                     app:iconTint="@color/biru_tua"
                     app:iconSize="22dp"
-                    android:text="Filter"
+                    android:text="@string/filter"
                     android:textColor="@color/biru_tua"
                     app:iconPadding="0.00dp"
                     android:layout_marginEnd="16dp"
@@ -101,7 +102,7 @@
                         android:id="@+id/search.tv_status_active"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="All"
+                        android:text="@string/all"
                         android:textColor="@color/white"
                         style="@style/Text.Subjudul16"
                         android:textStyle="bold"/>
@@ -158,7 +159,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pencarian Terbaru"
+                    android:text="@string/recent_searches"
                     style="@style/Text.Subjudul16"
                     android:textColor="@color/black"
                     android:layout_marginTop="4dp"
@@ -167,7 +168,7 @@
                     android:id="@+id/tv_clear_history"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hapus Semua"
+                    android:text="@string/remove_all"
                     style="@style/Text.Konten14"
                     android:layout_gravity="end"
                     android:layout_marginTop="4dp"
@@ -192,7 +193,7 @@
             android:visibility="invisible"
             android:gravity="center_horizontal"
             android:paddingHorizontal="16dp"
-            android:layout_marginTop="170dp"
+            android:layout_gravity="center"
             >
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/search.lottie_not_result.lottie"
@@ -221,7 +222,8 @@
             android:orientation="vertical"
             android:visibility="invisible"
             android:gravity="center_horizontal"
-            android:layout_marginTop="170dp"
+            android:layout_gravity="center"
+            android:paddingBottom="40dp"
             android:paddingHorizontal="16dp"
             >
             <com.airbnb.lottie.LottieAnimationView
@@ -251,7 +253,8 @@
             android:visibility="invisible"
             android:gravity="center_horizontal"
             android:paddingHorizontal="16dp"
-            android:layout_marginTop="170dp"
+            android:layout_gravity="center"
+            android:paddingBottom="40dp"
             >
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/search.lottie_eror.lottie"

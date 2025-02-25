@@ -35,7 +35,7 @@
                 android:id="@+id/btn_notification"
                 style="@style/Button.Back"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="44dp"
                 android:background="@drawable/rip_white_trens_white"
                 android:contentDescription="@string/back"
                 android:src="@drawable/ic_notification"
@@ -50,7 +50,7 @@
             <ImageButton
                 android:id="@+id/btn_favorit"
                 style="@style/Button.Back"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="44dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/rip_white_trens_white"
                 android:contentDescription="@string/back"
@@ -68,9 +68,12 @@
                 style="@style/Text.Subjudul16"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Hello, Sandika"
+                android:text="@string/hello_home"
                 android:textAlignment="center"
                 android:textColor="@color/white"
+                android:paddingHorizontal="16dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintBottom_toTopOf="@id/icon_halo"
                 app:layout_constraintEnd_toStartOf="@id/btn_favorit"
                 app:layout_constraintStart_toEndOf="@id/btn_notification"
@@ -95,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="18dp"
-                android:text="Descovery"
+                android:text="@string/descovery"
                 android:textColor="@color/kuning"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -107,7 +110,7 @@
                 style="@style/Text.Header24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" Amazing Event"
+                android:text="@string/amazing_event"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="@id/tv_judul_dis"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -124,7 +127,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:backgroundTint="@color/white"
                 android:elevation="4dp"
-                android:hint="Find Amazing Event"
+                android:hint="@string/find_amazing_event"
                 android:outlineSpotShadowColor="@color/black"
                 android:paddingStart="0dp"
                 android:paddingEnd="56dp"
@@ -141,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Recomended"
+                android:text="@string/recommended"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -166,24 +169,15 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/abu_abu_terang"
+                    android:background="@color/abu_abu_terang2"
                     >
                     <ImageView
                         android:id="@+id/imgpop_header_home"
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
-                        android:background="@color/white"
-                        android:src="@drawable/dbs"
                         android:contentDescription="@string/img_header"
                         android:scaleType="centerCrop" />
 
-<!--                    <View-->
-<!--                        android:id="@+id/home.header_gradient"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:visibility="invisible"-->
-<!--                        android:foreground="@drawable/gradient_top_left"-->
-<!--                        />-->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/home.header_refresh"
                         android:layout_width="60dp"
@@ -308,7 +302,7 @@
                     <include
                         layout="@layout/simmer_home_upcome"
                         android:layout_width="270dp"
-                        android:layout_height="240dp"
+                        android:layout_height="220dp"
                         android:layout_marginStart="14dp" />
                 </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>
@@ -348,25 +342,7 @@
                     app:lottie_autoPlay="true"
                     app:lottie_loop="false"
                     app:lottie_rawRes="@raw/error" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:text="haloo"
-                    android:textAlignment="center"
-                    />
             </LinearLayout>
-
-<!--            <androidx.constraintlayout.widget.Group-->
-<!--                android:id="@+id/grup_handling_lottie"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:visibility="visible"-->
-<!--                app:constraint_referenced_ids="home.lottie_corousel, home.lottie_error_corousel"-->
-<!--                />-->
 
             <TextView
                 android:id="@+id/tv_home_finished"
@@ -425,7 +401,6 @@
                     <include layout="@layout/simmer_home_finished" />
                     <include layout="@layout/simmer_home_finished" />
                     <include layout="@layout/simmer_home_finished" />
-
                     <include layout="@layout/simmer_home_finished" />
                 </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>

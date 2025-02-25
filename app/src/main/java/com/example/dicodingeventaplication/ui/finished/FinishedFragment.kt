@@ -3,36 +3,60 @@ package com.example.dicodingeventaplication.ui.finished
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView.OnQueryTextListener
+import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.retrofit.ApiConfig
 import com.example.dicodingeventaplication.databinding.FragmentFinishedBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.EventViewModelFactory
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.ui.home.HomeFragment
+import com.example.dicodingeventaplication.ui.search.SearchResultRVAdapter
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.utils.DialogUtils
-import com.example.dicodingeventaplication.viewmodel.FinishedViewModel
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.search.SearchView
+import kotlin.math.abs
 
 class FinishedFragment : Fragment() {
 
     private var _binding: FragmentFinishedBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var finishedViewModel: FinishedViewModel
-    private lateinit var finishedRepository: DicodingEventRepository
+    private var isExpanned = true
+
+    private var appBarOffset = 0
+
+    private lateinit var searchView: SearchView
+
+    private val finishedRepository: DicodingEventRepository by lazy {
+        DicodingEventRepository( requireContext())
+    }
+
+    private val finishedViewModel: FinishedViewModel by lazy {
+        ViewModelProvider(this, EventViewModelFactory(finishedRepository))[FinishedViewModel::class.java]
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         val rvPosition = binding.rvFinished.layoutManager?.onSaveInstanceState()
         outState.putParcelable(SCROLL_POSITION, rvPosition)
+        outState.putInt(APP_BAR_OFFSET, appBarOffset)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -54,13 +78,34 @@ class FinishedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // repository
-        val apiService = ApiConfig.getApiService()
-        finishedRepository = DicodingEventRepository(apiService, requireContext())
+        if ( savedInstanceState != null) {
+            appBarOffset = savedInstanceState.getInt(APP_BAR_OFFSET, 0)
+        }
 
-        val viewModelFactory = EventViewModelFactory(finishedRepository)
-        finishedViewModel =
-            ViewModelProvider(this, viewModelFactory)[FinishedViewModel::class.java]
+        // pulihkan offset
+        binding.finishedCoordinator.post {
+            val params = binding.finishedAppbar.layoutParams as CoordinatorLayout.LayoutParams
+            val behavior = params.behavior as? AppBarLayout.Behavior
+            behavior?.setTopAndBottomOffset(appBarOffset)
+        }
+
+        // listener app bar
+        binding.finishedAppbar.addOnOffsetChangedListener{ appBarLayout, verticalOffset ->
+            binding.finishedAppbar.totalScrollRange
+            isExpanned = verticalOffset == 0 // expaned jika offset 0
+            appBarOffset = verticalOffset // inisialis untuk simpan posisi app bar
+
+            val scrollRange = appBarLayout.totalScrollRange
+            val alphaValue = 1f - (abs(verticalOffset) / scrollRange) // hitung transparasi
+
+            binding.finishedCvTotal.animate().alpha(alphaValue).setDuration(300).start()
+            Log.d(TAG, "onViewCreated: scroll range $scrollRange")
+        }
+
+        // mencegah swip jika colap
+        binding.finishedSwipRefresh.setOnChildScrollUpCallback { _, _ ->
+            !isExpanned // cegah swip jika colap
+        }
 
         val stragledLayout = StaggeredGridLayoutManager(2,  StaggeredGridLayoutManager.VERTICAL)
         binding.rvFinished.layoutManager = stragledLayout
@@ -68,6 +113,7 @@ class FinishedFragment : Fragment() {
         val adapterFinished = FinishedRVAdapter(requireContext()) { event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
             intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+            intent.putExtra(DetailEventActivity.EXTRA_EVENT_ACTIVE, HomeFragment.FINISHED)
             startActivity(intent)
         }
         binding.rvFinished.adapter = adapterFinished
@@ -85,7 +131,8 @@ class FinishedFragment : Fragment() {
                             binding.finishedLottieError.visibility = View.INVISIBLE
                             binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
                         }
-                        finishedViewModel.isFinishedSuccess()
+                        finishedViewModel.markFinishedSuccess()
+                        binding.finishedTotalEvent.text = adapterFinished.currentList.size.toString()
                     }
                     is Resource.Error -> {
                         adapterFinished.submitList(emptyList()){
@@ -152,7 +199,61 @@ class FinishedFragment : Fragment() {
             finishedViewModel.startRefreshing()
             finishedViewModel.findEventFinished()
         }
+
+        // searching
+//        binding.finishedRvSearch.layoutManager = LinearLayoutManager(requireContext())
+//        binding.finishedRvSearch.itemAnimator = DefaultItemAnimator()
+//
+//        val adapterSearch = SearchResultRVAdapter(
+//            context = requireContext(),
+//            onItemClick = { eventItem ->
+//                val intent = Intent(requireContext(), DetailEventActivity::class.java)
+//                intent.putExtra(DetailEventActivity.EXTRA_ID, eventItem.id)
+//                startActivity(intent)
+//                Log.d("actsc", "setEvent Data: onsucces")
+//
+//            }
+//        )
+//        binding.finishedRvSearch.adapter = adapterSearch
+        binding.finishedRvSearch.layoutManager = LinearLayoutManager(requireContext())
+        binding.finishedRvSearch.adapter = SearchResultRVAdapter(requireContext()){}
+
+        binding.finishedSv.setOnQueryTextListener(object : OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
+
+//        searchView.
+
     }
+
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        super.onCreateOptionsMenu(menu, inflater)
+//        inflater.inflate(R.menu.app_bar_menu, menu)
+//
+//        val searchItem = menu.findItem(R.id.app_search)
+//        searchView = searchItem.actionView as SearchView
+//
+//        searchView.hint = "Cari"
+//        searchView.editText.addTextChangedListener(object : TextWatcher{
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//
+//            }
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {
+//            }
+//        })
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -162,5 +263,6 @@ class FinishedFragment : Fragment() {
     companion object{
         private const val SCROLL_POSITION = "scrol_position"
         private const val TAG = "upcomingfrag"
+        private const val APP_BAR_OFFSET = "app_bar_offset"
     }
 }

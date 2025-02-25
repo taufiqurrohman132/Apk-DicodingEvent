@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.dicodingeventaplication.data.respons.EventItem
 import com.example.dicodingeventaplication.databinding.ItemFinishedBinding
-import kotlin.contracts.contract
 
 class FinishedRVAdapter(
     private val context: Context,
@@ -17,13 +16,8 @@ class FinishedRVAdapter(
 ) : ListAdapter<EventItem, FinishedRVAdapter.ItemViewHolder>(DIFF_CALLBACK) {
     inner class ItemViewHolder(private val binding: ItemFinishedBinding) : ViewHolder(binding.root) {
         fun bind(eventItem: EventItem){
-//            val dataTime = eventItem.beginTime
-//            val part = dataTime?.split(" ")
-//            val data = part?.get(0)
 
             binding.finishedTvJudulItem.text = eventItem.name
-//            binding.finishedTvSummaryItem.text = eventItem.summary
-//            binding.finishedTvOwnerItem.text = eventItem.ownerName
             Glide.with(context)
                 .load(eventItem.imageLogo)
                 .into(binding.finishedImgitem)
