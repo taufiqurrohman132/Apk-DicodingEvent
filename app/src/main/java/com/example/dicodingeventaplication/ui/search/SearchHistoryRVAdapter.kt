@@ -46,7 +46,6 @@ class SearchHistoryRVAdapter(
                 .load(eventItem.imageLogo)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .override(100, 100)
-                .thumbnail(0.25f)
                 .into(item.historyImgLogo)
         }
     }
@@ -60,9 +59,4 @@ class SearchHistoryRVAdapter(
         val event = getItem(position)
         holder.bind(event, onItemClick)
     }
-
-    companion object{
-//        private const val TYPE_HEADER_RESULT = 3
-    }
-
 }

@@ -6,10 +6,10 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,10 +20,19 @@ import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.filterDialog.FilterDialogFragment
 import com.example.dicodingeventaplication.EventViewModelFactory
+import com.example.dicodingeventaplication.NetworkViewModel
+import com.example.dicodingeventaplication.ui.search.filterDialog.DialogListener
 import com.example.dicodingeventaplication.utils.DialogUtils
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), DialogListener {
     private lateinit var binding: ActivitySearchBinding
+
+    private val networkViewModel: NetworkViewModel by lazy {
+        ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+        )[NetworkViewModel::class.java]
+    }
 
     private val repository: DicodingEventRepository by lazy {
         DicodingEventRepository(this)
@@ -46,6 +55,13 @@ class SearchActivity : AppCompatActivity() {
         var search = ""
         var queryIsSubmit = false
 
+        // observe koneksi
+        networkViewModel.isInternetAvailible.observe(this){ isAvailible ->
+            if (isAvailible && !searchViewModel.isSearchSuccess){
+                this@SearchActivity.searchViewModel.searchEvent(search, activeQuery)
+            }
+        }
+
         binding.searchView.isIconified = false // menampilkan keyboard langsung
 
         val linearLayoutResult = LinearLayoutManager(this)
@@ -61,7 +77,9 @@ class SearchActivity : AppCompatActivity() {
         binding.searchHeaderResult.visibility = View.INVISIBLE
 
         val adapterHistory = SearchHistoryRVAdapter(
-            onDeleteClickItem = { item -> this.searchViewModel.removeFromHistory(item)},
+            onDeleteClickItem = { item ->
+                this.searchViewModel.removeFromHistory(item)
+            },
             onItemClick = { event ->
                 val intent = Intent(this@SearchActivity, DetailEventActivity::class.java)
                 intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
@@ -94,13 +112,15 @@ class SearchActivity : AppCompatActivity() {
         }
 
         // observe history
-        this.searchViewModel.listhHistory.observe(this){ historyList ->
+        this.searchViewModel.listHistory.observe(this){ historyList ->
             adapterHistory.submitList(historyList)
+            if (historyList.isEmpty())
+                binding.searchHeadarHistory.visibility = View.INVISIBLE
+
             Log.d(TAG, "onCreate: history $historyList")
         }
 
         this.searchViewModel.activeQuery.observe(this){ activeValue->
-
             // update search
             if (activeQuery != activeValue){
                 activeQuery = activeValue
@@ -148,9 +168,8 @@ class SearchActivity : AppCompatActivity() {
                         binding.rvSearchHistory.visibility = View.VISIBLE
                     }
 
-//                        searching = ""
-                    adapterHistory.submitList(this@SearchActivity.searchViewModel.listhHistory.value ?: emptyList())
-                    Log.d(TAG, "onQueryTextChange: history ${this@SearchActivity.searchViewModel.listhHistory.value}")
+                    adapterHistory.submitList(this@SearchActivity.searchViewModel.listHistory.value ?: emptyList())
+                    Log.d(TAG, "onQueryTextChange: history ${this@SearchActivity.searchViewModel.listHistory.value}")
                     Log.d(TAG, "onQueryTextChange: null")
                 }else{
                     queryIsSubmit = false
@@ -194,6 +213,8 @@ class SearchActivity : AppCompatActivity() {
                         binding.searchLottieEror.visibility = View.INVISIBLE
                         binding.searchLottieNotResult.visibility = View.INVISIBLE
                         binding.searchLottieNotInternet.visibility = View.INVISIBLE
+
+                        this@SearchActivity.searchViewModel.isSearchSuccess = true
                     }
                     is Resource.Error -> {
                         binding.searchSimmer.stopShimmer()
@@ -230,6 +251,8 @@ class SearchActivity : AppCompatActivity() {
                             binding.searchLottieNotInternet.visibility = View.VISIBLE
                             binding.searchLottieNotInternetLottie.playAnimation()
                         }
+
+                        this@SearchActivity.searchViewModel.isSearchSuccess = false
                         Log.d(TAG, "onCreate: eror conect ${adapterResult.currentList}")
                     }
                     is Resource.Empty -> {
@@ -263,6 +286,10 @@ class SearchActivity : AppCompatActivity() {
                 binding.searchHeadarHistory.visibility = View.INVISIBLE
             }
         }
+    }
+
+    override fun showToant(message: String) {
+        Toast.makeText(this, "Switch to $message Event", Toast.LENGTH_SHORT).show()
     }
 
     companion object{

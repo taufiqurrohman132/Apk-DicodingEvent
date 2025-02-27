@@ -1,6 +1,7 @@
 package com.example.dicodingeventaplication.utils
 
 import android.util.Log
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -31,7 +32,7 @@ object TimeUtils {
         val eventDateTime = LocalDateTime.parse(eventDate, formatter)
 
         // ambil waktu seakrangdi zona waktu yang sama
-        val now = LocalDateTime.now(ZoneId.of("UTC"))
+        val now = Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime()
 
         // event selsai jika eent data time sebelum waktu sekarang
         return eventDateTime.isBefore(now)

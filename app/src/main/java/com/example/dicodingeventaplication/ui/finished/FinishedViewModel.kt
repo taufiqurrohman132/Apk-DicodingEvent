@@ -20,8 +20,18 @@ class FinishedViewModel(private val repository: DicodingEventRepository) : ViewM
     private val _dialogNotifError = MutableLiveData<SingleEvent<String?>>()
     val dialogNotifError: LiveData<SingleEvent<String?>> = _dialogNotifError
 
+    private val _listSearchResult = MutableLiveData<Resource<List<EventItem?>?>>()
+    val listSearchResult: LiveData<Resource<List<EventItem?>?>> get() = _listSearchResult
+
+    private val _isReload = MutableLiveData(false)
+    val isReload: LiveData<Boolean> = _isReload
+
     private val _isRefresing = MutableLiveData(false)
     val isRefresing: LiveData<Boolean> = _isRefresing
+
+    var isSearching = false
+
+    var isCollapse = false
 
     var isFinishedSuccess = false
 
@@ -46,9 +56,34 @@ class FinishedViewModel(private val repository: DicodingEventRepository) : ViewM
                     else -> event
                 }
             }
-
             _isRefresing.value = false
+            _isReload.value = false
         }
+    }
+
+    fun searchEvent(query: String){
+        val searchText = query.lowercase()
+        val filteredData = resultEventItemFinished.value?.data?.filter {
+            it?.name?.lowercase()?.contains(searchText) == true
+        }
+
+        _listSearchResult.value =
+            if (searchText.isBlank()){
+                Resource.Success(data = emptyList())
+            }else{
+                if (!filteredData.isNullOrEmpty()){
+                    Resource.Success(
+                        filteredData
+                    )
+                } else{
+                    Resource.Empty(data = emptyList())
+                }
+            }
+
+    }
+
+    fun startReload(){
+        _isReload.value = true
     }
 
     fun startRefreshing(){
@@ -57,5 +92,9 @@ class FinishedViewModel(private val repository: DicodingEventRepository) : ViewM
 
     fun markFinishedSuccess(){
         isFinishedSuccess = true
+    }
+
+    companion object{
+        private const val TAG = "finishedviewmodel"
     }
 }

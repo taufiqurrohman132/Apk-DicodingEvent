@@ -81,11 +81,11 @@
 
             <ImageView
                 android:id="@+id/icon_halo"
-                android:layout_width="80dp"
-                android:layout_height="16dp"
+                android:layout_width="100dp"
+                android:layout_height="10dp"
                 android:importantForAccessibility="no"
                 android:scaleType="centerCrop"
-                android:src="@drawable/icon_halo"
+                android:src="@drawable/garis_penyeimbang"
                 app:layout_constraintBottom_toBottomOf="@id/btn_notification"
                 app:layout_constraintEnd_toStartOf="@id/btn_favorit"
                 app:layout_constraintStart_toEndOf="@id/btn_notification"
@@ -125,7 +125,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackground"
-                android:backgroundTint="@color/white"
                 android:elevation="4dp"
                 android:hint="@string/find_amazing_event"
                 android:outlineSpotShadowColor="@color/black"

@@ -6,7 +6,7 @@
     <string name="back">Back</string>
     <string name="img">IMG</string>
     <string name="faforit">Faforit</string>
-    <string name="remaining_quota_value">%s - %s</string>
+    <string name="time_value">%s - %s</string>
 
     <!-- Error handling -->
     <string name="error_400">Oops! Ada kesalahan saat meminta data. Coba periksa kembali.</string>
@@ -18,6 +18,7 @@
     <string name="error_else">Oops! Ada kesalahan saat meminta data. Coba periksa kembali.</string>
     <string name="error_koneksi">No internet connection. Please check your network.</string>
     <string name="error_takterduga">Terjadi kesalahan tak terduga. Coba lagi nanti.</string>
+
     <string name="search">Search</string>
     <string name="sample">mainViewModel.postReview(binding.edReview.text.toString())
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -63,5 +64,8 @@
     <string name="_100">100</string>
     <string name="recommendation_event_for_you">Recommendation event for you!</string>
     <string name="descover">Descover</string>
+    <string name="cancel">Cancel</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

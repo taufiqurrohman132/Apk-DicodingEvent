@@ -21,8 +21,11 @@ class UpcomingViewModel(private val repository: DicodingEventRepository) : ViewM
     private val _dialogNotifError = MutableLiveData<SingleEvent<String?>>()
     val dialogNotifError: LiveData<SingleEvent<String?>> = _dialogNotifError
 
-    private val _isRefresing = MutableLiveData(false)
-    val isRefresing: LiveData<Boolean> = _isRefresing
+    private val _isReload = MutableLiveData(false)
+    val isReload: LiveData<Boolean> = _isReload
+
+    private val _isRefreshing = MutableLiveData(false)
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
 
     var isUpcomingSuccess = false
     var isUpcomingEmpty = false
@@ -49,12 +52,17 @@ class UpcomingViewModel(private val repository: DicodingEventRepository) : ViewM
                     else-> event
                 }
             }
-            _isRefresing.value = false
+            _isRefreshing.value = false
+            _isReload.value = false
         }
     }
 
+    fun startReload(){
+        _isReload.value = true
+    }
+
     fun startRefreshing(){
-        _isRefresing.value = true
+        _isRefreshing.value = true
     }
 
     fun markUpcomingSuccess(){

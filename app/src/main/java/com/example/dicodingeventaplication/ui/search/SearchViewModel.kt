@@ -25,13 +25,15 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
     val searchResultEventItem: LiveData<Resource<List<EventItem>>> = _searchResultEvenItem
 
     private val _listHistory = MutableLiveData<List<EventItem>>()
-    val listhHistory: LiveData<List<EventItem>> get() = _listHistory
+    val listHistory: LiveData<List<EventItem>> get() = _listHistory
 
     private val _selectButton = MutableLiveData<Int?>().apply { value = R.id.btn_state_all } // menyimpan id tombol yang di pilih
     val selectButton: LiveData<Int?> get() = _selectButton
 
     private val _activeQuery = MutableLiveData<Int>().apply { value = -1 } // default
     val activeQuery: LiveData<Int> get() =  _activeQuery
+
+    var isSearchSuccess = false
 
     private var job: Job? = null
     private var latestQueryTimestamp: Long = 0L // timestamp terbaru

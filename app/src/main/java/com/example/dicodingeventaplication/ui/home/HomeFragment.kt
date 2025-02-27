@@ -25,7 +25,9 @@ import com.example.dicodingeventaplication.utils.DialogUtils
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.SearchActivity
 import com.example.dicodingeventaplication.EventViewModelFactory
+import com.example.dicodingeventaplication.NetworkViewModel
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.utils.BounceEdgeEffectFactory
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
@@ -34,6 +36,13 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    private val networkViewModel: NetworkViewModel by lazy {
+        ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+        )[NetworkViewModel::class.java]
+    }
 
     private val repository: DicodingEventRepository by lazy {
         DicodingEventRepository(requireContext())
@@ -49,55 +58,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        binding.vpItemCorousel.apply {
-            clipChildren = false
-            clipToPadding = false
-            offscreenPageLimit = 3
-            (getChildAt(0) as RecyclerView).overScrollMode =
-                RecyclerView.OVER_SCROLL_NEVER
-        }
-
-        val compositePageTransformer = CompositePageTransformer()
-        compositePageTransformer.addTransformer(
-            MarginPageTransformer((8 * Resources.getSystem().displayMetrics.density).toInt())
-        )
-
-        compositePageTransformer.addTransformer { page, position ->
-            val r = 1 - abs(position)
-//            page.scaleY = (0.80f + r * 0.20f)
-
-            // Halaman tengah tidak mengalami zoom
-            if (position == 0f) {
-                // Halaman tengah tetap dengan skala normal
-                page.scaleY = 1f
-                page.elevation = 8f
-                page.translationZ = 8f
-            } else {
-                // Halaman di kiri atau kanan mendapat efek skala
-                if (position < 0) {
-                    // Halaman di kiri
-                    page.scaleY = 0.85f + r * 0.15f
-                    page.elevation = 6f
-                    page.translationZ = 6f
-                    if (position == -1f) {
-                        page.elevation = 0f
-                        page.translationZ = 0f
-                    }
-                } else {
-                    // Halaman di kanan
-                    page.scaleY = 0.80f + r * 0.20f
-                    page.elevation = 6f
-                    page.translationZ = 6f
-                    if (position == 1f){
-                        page.elevation = 4f
-                        page.translationZ = 4f
-                    }
-                }
-            }
-        }
-        binding.vpItemCorousel.setPageTransformer(compositePageTransformer)
-
+        setupViewPager()
         val root: View = binding.root
         return root
     }
@@ -105,9 +66,22 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // scroll dilakukan setelah layout siap, restor posisi
-        binding.homeNestedScroll.post {
-            binding.homeNestedScroll.scrollTo(0, homeViewModel.scrollY)
+        binding.homeNestedScroll.scrollTo(0, homeViewModel.scrollY)
+
+        // observer network
+        networkViewModel.isInternetAvailible.observe(viewLifecycleOwner){ isAvailible ->
+            if (isAvailible){
+                if (!homeViewModel.isHeaderSuccess){
+                    homeViewModel.startReload()
+                    homeViewModel.findImageHeader()
+                } else if (!homeViewModel.isUpcomingSuccess){
+                    homeViewModel.startReload()
+                    homeViewModel.findEventUpcome()
+                } else if (!homeViewModel.isFinishedSuccess){
+                    homeViewModel.startReload()
+                    homeViewModel.findEventFinished()
+                }
+            }
         }
 
         // inisialize adapter
@@ -118,6 +92,8 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
         binding.vpItemCorousel.adapter = adapterCorousel
+        val vpRecyclerView = binding.vpItemCorousel.getChildAt(0) as RecyclerView
+        vpRecyclerView.edgeEffectFactory = BounceEdgeEffectFactory()
 
         // finished
         val linearLayout = LinearLayoutManager(requireActivity()).apply {
@@ -182,8 +158,7 @@ class HomeFragment : Fragment() {
 
         homeViewModel.resultEventItemUpcome.observe(viewLifecycleOwner){ event ->
             // memperbarui ketika ada perubahan
-            if (!homeViewModel.isRefreshing.value!!){
-//                binding.homeProgres.visibility = View.INVISIBLE
+            if (!homeViewModel.isReload.value!!){
                 when(event){
                     is Resource.Success -> {
                         adapterCorousel.submitList(event.data?.take(5)?.toList()){
@@ -192,7 +167,6 @@ class HomeFragment : Fragment() {
                                 binding.homeUpcomingSimmmer.stopShimmer()
                                 binding.homeLottieCorousel.visibility = View.INVISIBLE
                                 binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
-//                                binding.grupHandlingLottie.visibility = View.INVISIBLE
                             }
                         }
                         homeViewModel.isUpcomingSuccess()
@@ -235,8 +209,7 @@ class HomeFragment : Fragment() {
 
         homeViewModel.resultEventItemFinished.observe(viewLifecycleOwner){ event ->
            // memperbarui ketika ada perubahan
-            if (!homeViewModel.isRefreshing.value!!){
-
+            if (!homeViewModel.isReload.value!!){
                 when(event){
                     is Resource.Loading -> {
                     }
@@ -247,6 +220,7 @@ class HomeFragment : Fragment() {
                                 binding.homeFinishedSimmmer.stopShimmer()
                             }
                         }
+                        homeViewModel.isFinishedSuccess()
                         Log.d(TAG, "finished: ${event.data}")
                     }
                     is Resource.Error -> {
@@ -277,15 +251,18 @@ class HomeFragment : Fragment() {
         }
 
         // observe swip refrss
-
         homeViewModel.isRefreshing.observe(viewLifecycleOwner){ isRefresh ->
             binding.homeSwipRefresh.isRefreshing = isRefresh
-            if ((binding.homeLottieCorousel.isVisible || adapterFinished.currentList.any { it == null } || binding.homeLottieErrorCorousel.isVisible) && isRefresh){
+        }
+
+        // loading simmer
+        homeViewModel.isReload.observe(viewLifecycleOwner){ isReload ->
+            if ((binding.homeLottieCorousel.isVisible || adapterFinished.currentList.any { it == null } || binding.homeLottieErrorCorousel.isVisible) && isReload){
                 Log.d(TAG, "onViewCreated: stat simmer")
                 Log.d(TAG, "onViewCreated: finished current list ${adapterFinished.currentList}")
                 Log.d(TAG, "onViewCreated: finished current list ${ adapterFinished.currentList.any { it == null }}")
-                binding.homeHeaderRefresh.isVisible = !isRefresh
-                binding.homeProgres.isVisible = isRefresh
+                binding.homeHeaderRefresh.isVisible = !isReload
+                binding.homeProgres.isVisible = isReload
 
                 adapterCorousel.submitList(emptyList())
                 adapterFinished.submitList(emptyList()){
@@ -318,15 +295,14 @@ class HomeFragment : Fragment() {
 
         binding.homeSwipRefresh.setOnRefreshListener {
             homeViewModel.startRefreshing()
-
+            homeViewModel.startReload()
             homeViewModel.findImageHeader()
         }
 
         binding.homeHeaderRefresh.setOnClickListener {
-
-            if (!homeViewModel.isRefreshing.value!!){
+            if (!homeViewModel.isReload.value!!){
                 homeViewModel.startRefreshing()
-
+                homeViewModel.startReload()
                 homeViewModel.findImageHeader()
             }
         }
@@ -366,6 +342,55 @@ class HomeFragment : Fragment() {
         binding.homeHeaderTvName.text = event?.name ?: ""
 
         return event
+    }
+
+    private fun setupViewPager(){
+        binding.vpItemCorousel.apply {
+            clipChildren = false
+            clipToPadding = false
+            offscreenPageLimit = 3
+            (getChildAt(0) as RecyclerView).overScrollMode =
+                RecyclerView.OVER_SCROLL_NEVER
+        }
+
+        val compositePageTransformer = CompositePageTransformer()
+        compositePageTransformer.addTransformer(
+            MarginPageTransformer((8 * Resources.getSystem().displayMetrics.density).toInt())
+        )
+
+        compositePageTransformer.addTransformer { page, position ->
+            val r = 1 - abs(position)
+            // Halaman tengah tidak mengalami zoom
+            if (position == 0f) {
+                // Halaman tengah tetap dengan skala normal
+                page.scaleY = 1f
+                page.elevation = 8f
+                page.translationZ = 8f
+            } else {
+                // Halaman di kiri atau kanan mendapat efek skala
+                if (position < 0) {
+                    // Halaman di kiri
+                    page.scaleY = 0.85f + r * 0.15f
+                    page.elevation = 6f
+                    page.translationZ = 6f
+                    if (position == -1f) {
+                        page.elevation = 2f
+                        page.translationZ = 2f
+                    }
+                } else {
+                    // Halaman di kanan
+                    page.scaleY = 0.80f + r * 0.20f
+                    page.elevation = 6f
+                    page.translationZ = 6f
+                    if (position == 1f){
+                        page.elevation = 4f
+                        page.translationZ = 4f
+                    }
+                }
+            }
+        }
+        binding.vpItemCorousel.setPageTransformer(compositePageTransformer)
+
     }
 
     companion object{

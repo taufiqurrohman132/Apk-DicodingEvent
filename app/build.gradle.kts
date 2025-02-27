@@ -63,6 +63,8 @@ dependencies {
 //    implementation(libs.glide.transformations)
 //    implementation(libs.circleimageview)
 
+//    implementation(libs.smoothbottombar)
+
     // simmer
     implementation(libs.shimmer)
 
@@ -70,9 +72,6 @@ dependencies {
     implementation(libs.lottie)
 
     implementation(libs.androidx.swiperefreshlayout)
-    // bottom nav
-//    implementation("com.exyte:animated-navigation-bar:1.0.0")
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

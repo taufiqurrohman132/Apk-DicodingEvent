@@ -1,6 +1,6 @@
 <resources >
     <!-- Base application theme. -->
-    <style name="Theme.DicodingEventAplication" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.DicodingEventAplication" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/biru_tua</item>
         <item name="colorPrimaryVariant">@color/biru_tua</item>
@@ -10,34 +10,27 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/biru_tua_trans30</item>
+        <item name="android:statusBarColor">@color/biru_tua_trans60</item>
         <!-- Customize your theme here. -->
         <item name="elevationOverlayEnabled">true</item>
         <!-- background layout. -->
         <item name="colorSurface">@color/white</item>
     </style>
 
+    <style name="ActiveIndikatorStyle" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/biru_tua_trans30</item>
+    </style>
+
     <style name="Text.Header24" parent="Theme.DicodingEventAplication">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="Text.Header38" parent="Theme.DicodingEventAplication">
-        <item name="android:textSize">38sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-    <style name="Text.Header38_appbar" parent="Theme.DicodingEventAplication">
-        <item name="android:textSize">38sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-    <style name="Text.Header22_appbar" parent="Theme.DicodingEventAplication">
-        <item name="android:textSize">22sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
     <style name="Text.JudulBerita18" parent="Theme.DicodingEventAplication">
         <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="Text.JudulBerita20" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">20sp</item>
         <item name="android:textStyle">normal</item>
     </style>
     <style name="Text.Subjudul16" parent="Theme.DicodingEventAplication">
@@ -53,6 +46,21 @@
     <style name="Text.Metadata12" parent="Theme.DicodingEventAplication">
         <item name="android:textSize">12sp</item>
     </style>
+    <style name="Text.Header38_appbar" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">38sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="Text.Header22_appbar" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="Text.TombolCTA16" parent="Theme.DicodingEventAplication">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 
     <style name="Button.Back" parent="Theme.DicodingEventAplication">
         <item name="android:layout_width">48dp</item>

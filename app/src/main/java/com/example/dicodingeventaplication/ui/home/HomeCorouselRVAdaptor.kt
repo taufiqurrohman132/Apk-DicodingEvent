@@ -67,23 +67,4 @@ class HomeCorouselRVAdaptor(
         val event = getItem(position)
         holder.bind(event)
     }
-
-    companion object{
-//        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EventItem>() {
-//            override fun areItemsTheSame(
-//                oldItem: EventItem,
-//                newItem: EventItem
-//            ): Boolean {
-//                return oldItem.id == newItem.id
-//            }
-//
-//            override fun areContentsTheSame(
-//                oldItem: EventItem,
-//                newItem: EventItem
-//            ): Boolean {
-//                return oldItem == newItem
-//            }
-//
-//        }
-    }
 }

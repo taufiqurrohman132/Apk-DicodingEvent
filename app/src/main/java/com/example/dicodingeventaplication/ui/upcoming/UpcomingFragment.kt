@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,15 +18,25 @@ import com.example.dicodingeventaplication.data.repository.DicodingEventReposito
 import com.example.dicodingeventaplication.databinding.FragmentUpcomingBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.EventViewModelFactory
+import com.example.dicodingeventaplication.NetworkViewModel
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.ui.home.HomeFragment
+import com.example.dicodingeventaplication.utils.BounceEdgeEffectFactory
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.google.android.material.appbar.AppBarLayout
+import kotlin.math.log
 
 class UpcomingFragment : Fragment() {
 
     private var _binding: FragmentUpcomingBinding? = null
     private val binding get() = _binding!!
+
+    private val networkViewModel: NetworkViewModel by lazy {
+        ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+        )[NetworkViewModel::class.java]
+    }
 
     private val upcomeRepository: DicodingEventRepository by lazy {
         DicodingEventRepository(requireContext())
@@ -68,8 +78,17 @@ class UpcomingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if ( savedInstanceState != null) {
+        if (savedInstanceState != null) {
             appBarOffset = savedInstanceState.getInt(APP_BAR_OFFSET, 0)
+        }
+
+        // observer network
+        networkViewModel.isInternetAvailible.observe(viewLifecycleOwner) { isAvailible ->
+            if (isAvailible && (!upcomingViewModel.isUpcomingSuccess && !upcomingViewModel.isUpcomingEmpty)) {
+                Log.d(TAG, "onViewCreated: refres otomatis")
+                upcomingViewModel.startReload()
+                upcomingViewModel.findEventUpcome()
+            }
         }
 
         // pulihkan offset
@@ -101,10 +120,10 @@ class UpcomingFragment : Fragment() {
             startActivity(intent)
         }
         binding.rvUpcoming.adapter = adapterUpcoming
+        binding.rvUpcoming.edgeEffectFactory = BounceEdgeEffectFactory()
 
         upcomingViewModel.resultEventItemUpcome.observe(viewLifecycleOwner){ eventList ->
-            if (!upcomingViewModel.isRefresing.value!!){
-
+            if (!upcomingViewModel.isReload.value!!){
                 when(eventList){
                     is Resource.Loading -> {
                     }
@@ -151,10 +170,13 @@ class UpcomingFragment : Fragment() {
             Log.d(TAG, "upcoming: $eventList")
         }
 
-        upcomingViewModel.isRefresing.observe(viewLifecycleOwner){ isRefresh ->
+        // refresh
+        upcomingViewModel.isRefreshing.observe(viewLifecycleOwner){ isRefresh ->
             binding.upcomingSwipRefresh.isRefreshing = isRefresh
+        }
 
-            if (binding.upcomingLottieError.isVisible || binding.upcomingLottieErrorKoneksi.isVisible && isRefresh){
+        upcomingViewModel.isReload.observe(viewLifecycleOwner){ isReload ->
+            if (binding.upcomingLottieError.isVisible || binding.upcomingLottieErrorKoneksi.isVisible && isReload){
                 Log.d(TAG, "onViewCreated: stat simmer")
 
                 adapterUpcoming.submitList(emptyList()){
@@ -171,22 +193,25 @@ class UpcomingFragment : Fragment() {
         // notif dialgo
         upcomingViewModel.dialogNotifError.observe(viewLifecycleOwner){
             it.getContentIfNotHandled()?.let { dialogMesege ->
+                Log.d(TAG, "onViewCreated: dialog show")
                 DialogUtils.showPopUpErrorDialog(requireActivity(), dialogMesege)
             }
         }
 
         binding.upcomeBtnLottieErorKoneksi.setOnClickListener {
             upcomingViewModel.startRefreshing()
+            upcomingViewModel.startReload()
             upcomingViewModel.findEventUpcome()
         }
 
         // swip
-        binding.upcomingSwipRefresh.setColorSchemeColors(resources.getColor(R.color.biru_tua))
-        binding.upcomingSwipRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.white))
+        binding.upcomingSwipRefresh.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.biru_tua))
+        binding.upcomingSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(requireContext(), R.color.white))
         binding.upcomingSwipRefresh.setProgressViewOffset(true, 0, 200)
 
         binding.upcomingSwipRefresh.setOnRefreshListener {
             upcomingViewModel.startRefreshing()
+            upcomingViewModel.startReload()
             upcomingViewModel.findEventUpcome()
         }
     }

@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.EventViewModelFactory
+import com.example.dicodingeventaplication.NetworkViewModel
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.respons.Event
@@ -32,6 +33,13 @@ import com.google.android.material.snackbar.Snackbar
 
 class DetailEventActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailEventBinding
+
+    private val networkViewModel: NetworkViewModel by lazy {
+        ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+        )[NetworkViewModel::class.java]
+    }
 
     private val itemId: Int by lazy {
         intent.getIntExtra(EXTRA_ID, 0)
@@ -246,7 +254,7 @@ class DetailEventActivity : AppCompatActivity() {
             binding.detailTvOwnerValue.text= eventsItem.ownerName
             binding.detailTvJudul.text = eventsItem.name
             binding.detailTvTanggal.text = eventsItem.formatYear
-            binding.detailTvJam.text = resources.getString(R.string.remaining_quota_value, eventsItem.formatBeginTime, eventsItem.formatEndTime)
+            binding.detailTvJam.text = resources.getString(R.string.time_value, eventsItem.formatBeginTime, eventsItem.formatEndTime)
             binding.detailTvSisakuotaValue.text = remainingQuota.toString()
 
             // remaining quota

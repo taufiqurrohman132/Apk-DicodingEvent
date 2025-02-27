@@ -28,10 +28,14 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     private val _dialogNotifError = MutableLiveData<SingleEvent<String?>>()
     val dialogNotifError: LiveData<SingleEvent<String?>> = _dialogNotifError
 
+    private var _isReload = MutableLiveData(false)
+    val isReload: LiveData<Boolean> = _isReload
+
     private var _isRefreshing = MutableLiveData(false)
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
     var isUpcomingSuccess = false
+    var isFinishedSuccess = false
     var isHeaderSuccess = false
 
     private var job: Job? = null
@@ -63,13 +67,14 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
                     }
                     else -> event
                 }
+                _isRefreshing.value = false
+                _isReload.value = false
             }
-            _isRefreshing.value = false
             findEventUpcome()
         }
     }
 
-    private fun findEventFinished(){
+    fun findEventFinished(){
         viewModelScope.launch {
             delay(500)
             Log.d(TAG, "findEvent finish berjalan di thread: ${Thread.currentThread().name}")
@@ -80,7 +85,7 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
         }
     }
 
-    private fun findEventUpcome(){
+    fun findEventUpcome(){
         viewModelScope.launch {
             delay(500)
             Log.d(TAG, "findEvent upcome berjalan di thread: ${Thread.currentThread().name}")
@@ -115,9 +120,16 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     fun isUpcomingSuccess(){
         isUpcomingSuccess = true
     }
+    fun isFinishedSuccess(){
+        isFinishedSuccess = true
+    }
 
     fun isHeaderSuccess(){
         isHeaderSuccess = true
+    }
+
+    fun startReload(){
+        _isReload.value = true
     }
 
     fun startRefreshing(){

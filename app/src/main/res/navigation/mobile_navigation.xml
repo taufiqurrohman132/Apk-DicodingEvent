@@ -17,5 +17,13 @@
     <fragment
         android:id="@+id/navigation_finished"
         android:name="com.example.dicodingeventaplication.ui.finished.FinishedFragment"
-        tools:layout="@layout/fragment_finished"/>
+        tools:layout="@layout/fragment_finished">
+        <action
+            android:id="@+id/action_navigation_finished_to_finishedSearchFragment3"
+            app:destination="@id/finishedSearchFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/finishedSearchFragment3"
+        android:name="com.example.dicodingeventaplication.ui.finished.FinishedSearchFragment"
+        android:label="FinishedSearchFragment" />
 </navigation>
