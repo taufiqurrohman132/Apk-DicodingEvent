@@ -123,23 +123,21 @@ class UpcomingFragment : Fragment() {
                     is Resource.Loading -> {
                     }
                     is Resource.Success -> {
-                        adapterUpcoming.submitList(eventList.data){
-                            binding.upcomingSimmmer.stopShimmer()
-                            binding.upcomingSimmmer.visibility = View.INVISIBLE
-                            binding.upcomingLottieEmpty.visibility = View.INVISIBLE
-                            binding.upcomingLottieError.visibility = View.INVISIBLE
-                            binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
-                        }
+                        adapterUpcoming.submitList(eventList.data)
+                        binding.upcomingSimmmer.stopShimmer()
+                        binding.upcomingSimmmer.visibility = View.INVISIBLE
+                        binding.upcomingLottieEmpty.visibility = View.INVISIBLE
+                        binding.upcomingLottieError.visibility = View.INVISIBLE
+                        binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
                         upcomingViewModel.markUpcomingSuccess()
                     }
                     is Resource.Error -> {
-                        adapterUpcoming.submitList(emptyList()){
-                            binding.upcomingSimmmer.stopShimmer()
-                            binding.upcomingSimmmer.visibility = View.INVISIBLE
-                            binding.upcomingLottieEmpty.visibility = View.INVISIBLE
-                            binding.upcomingLottieError.visibility = View.VISIBLE
-                            binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
-                        }
+                        adapterUpcoming.submitList(emptyList())
+                        binding.upcomingSimmmer.stopShimmer()
+                        binding.upcomingSimmmer.visibility = View.INVISIBLE
+                        binding.upcomingLottieEmpty.visibility = View.INVISIBLE
+                        binding.upcomingLottieError.visibility = View.VISIBLE
+                        binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
                     }
                     is Resource.ErrorConection -> {
                         binding.upcomingSimmmer.stopShimmer()
@@ -151,13 +149,12 @@ class UpcomingFragment : Fragment() {
                             binding.upcomingLottieEmpty.visibility = View.VISIBLE
                     }
                     is Resource.Empty -> {
-                        adapterUpcoming.submitList(emptyList()){
-                            binding.upcomingSimmmer.stopShimmer()
-                            binding.upcomingSimmmer.visibility = View.INVISIBLE
-                            binding.upcomingLottieEmpty.visibility = View.VISIBLE
-                            binding.upcomingLottieError.visibility = View.INVISIBLE
-                            binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
-                        }
+                        adapterUpcoming.submitList(emptyList())
+                        binding.upcomingSimmmer.stopShimmer()
+                        binding.upcomingSimmmer.visibility = View.INVISIBLE
+                        binding.upcomingLottieEmpty.visibility = View.VISIBLE
+                        binding.upcomingLottieError.visibility = View.INVISIBLE
+                        binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
                         upcomingViewModel.markUpcomingEmpty()
                     }
                 }
@@ -174,14 +171,13 @@ class UpcomingFragment : Fragment() {
             if (binding.upcomingLottieError.isVisible || binding.upcomingLottieErrorKoneksi.isVisible && isReload){
                 Log.d(TAG, "onViewCreated: stat simmer")
 
-                adapterUpcoming.submitList(emptyList()){
-                    // mulai simer
-                    binding.upcomingLottieError.visibility = View.INVISIBLE
-                    binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
+                adapterUpcoming.submitList(emptyList())
+                // mulai simer
+                binding.upcomingLottieError.visibility = View.INVISIBLE
+                binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
 
-                    binding.upcomingSimmmer.startShimmer()
-                    binding.upcomingSimmmer.visibility = View.VISIBLE
-                }
+                binding.upcomingSimmmer.startShimmer()
+                binding.upcomingSimmmer.visibility = View.VISIBLE
             }
         }
 

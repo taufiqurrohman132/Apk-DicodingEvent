@@ -4,6 +4,7 @@ import android.util.Log
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 object TimeUtils {
@@ -30,10 +31,19 @@ object TimeUtils {
         // konversi string ke local date time
         val eventDateTime = LocalDateTime.parse(eventDate, formatter)
 
+        // ambil zona waktu dari hp
+        val deviceZone = ZoneId.systemDefault()
+
+        // konversi waktu event ke zona waktu perangkat
+        val eventDateTimeDevice = eventDateTime.atZone(deviceZone)
+
         // ambil waktu seakrangdi zona waktu yang sama
-        val now = Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime()
+        val now = ZonedDateTime.now(deviceZone)
+
+        Log.d("EventTime", "Parsed event time: $eventDateTimeDevice")
+        Log.d("CurrentTime", "Current time: $now")
 
         // event selsai jika eent data time sebelum waktu sekarang
-        return eventDateTime.isBefore(now)
+        return eventDateTimeDevice.isBefore(now)
     }
 }

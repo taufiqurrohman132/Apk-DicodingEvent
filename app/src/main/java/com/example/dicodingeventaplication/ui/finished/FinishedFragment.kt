@@ -173,23 +173,22 @@ class FinishedFragment : Fragment() {
                     is Resource.Loading -> {
                     }
                     is Resource.Success -> {
-                        adapterFinished.submitList(event.data){
-                            binding.finishedSimmmer.stopShimmer()
-                            binding.finishedSimmmer.visibility = View.INVISIBLE
-                            binding.finishedLottieError.visibility = View.INVISIBLE
-                            binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
-                        }
+                        adapterFinished.submitList(event.data)
+                        binding.finishedSimmmer.stopShimmer()
+                        binding.finishedSimmmer.visibility = View.INVISIBLE
+                        binding.finishedLottieError.visibility = View.INVISIBLE
+                        binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
 
                         finishedViewModel.markFinishedSuccess()
                         binding.finishedTotalEvent.text = adapterFinished.currentList.size.toString()
                     }
                     is Resource.Error -> {
-                        adapterFinished.submitList(emptyList()){
-                            binding.finishedSimmmer.stopShimmer()
-                            binding.finishedSimmmer.visibility = View.INVISIBLE
-                            binding.finishedLottieError.visibility = View.VISIBLE
-                            binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
-                        }
+                        adapterFinished.submitList(emptyList())
+                        binding.finishedSimmmer.stopShimmer()
+                        binding.finishedSimmmer.visibility = View.INVISIBLE
+                        binding.finishedLottieError.visibility = View.VISIBLE
+                        binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
+
                     }
                     is Resource.ErrorConection -> {
                         binding.finishedSimmmer.stopShimmer()
@@ -199,12 +198,11 @@ class FinishedFragment : Fragment() {
                             binding.finishedLottieErrorKoneksi.visibility = View.VISIBLE
                     }
                     is Resource.Empty -> {
-                        adapterFinished.submitList(emptyList()){
-                            binding.finishedSimmmer.stopShimmer()
-                            binding.finishedSimmmer.visibility = View.INVISIBLE
-                            binding.finishedLottieError.visibility = View.INVISIBLE
-                            binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
-                        }
+                        adapterFinished.submitList(emptyList())
+                        binding.finishedSimmmer.stopShimmer()
+                        binding.finishedSimmmer.visibility = View.INVISIBLE
+                        binding.finishedLottieError.visibility = View.INVISIBLE
+                        binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
                     }
                 }
             }
