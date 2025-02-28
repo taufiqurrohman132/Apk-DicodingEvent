@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication
+package com.example.dicodingeventaplication.viewmodel
 
 import android.app.Application
 import android.content.Context
@@ -9,9 +9,8 @@ import android.net.NetworkRequest
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 
-class NetworkViewModel(private val application: Application) : AndroidViewModel(application) {
+class NetworkViewModel(application: Application) : AndroidViewModel(application) {
     private val _isInternetAvailible = MutableLiveData<Boolean>()
     val isInternetAvailible: LiveData<Boolean> get() = _isInternetAvailible
 

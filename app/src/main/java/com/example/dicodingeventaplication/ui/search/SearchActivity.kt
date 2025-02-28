@@ -19,8 +19,8 @@ import com.example.dicodingeventaplication.data.repository.DicodingEventReposito
 import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.filterDialog.FilterDialogFragment
-import com.example.dicodingeventaplication.EventViewModelFactory
-import com.example.dicodingeventaplication.NetworkViewModel
+import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
+import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.ui.search.filterDialog.DialogListener
 import com.example.dicodingeventaplication.utils.DialogUtils
 

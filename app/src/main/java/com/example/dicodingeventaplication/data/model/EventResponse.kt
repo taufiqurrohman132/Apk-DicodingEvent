@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication.data.respons
+package com.example.dicodingeventaplication.data.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

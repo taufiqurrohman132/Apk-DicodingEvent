@@ -12,17 +12,16 @@ appcompat = "1.7.0"
 loggingInterceptor = "4.12.0"
 lottie = "3.4.4"
 material = "1.12.0"
-constraintlayout = "2.2.0"
+constraintlayout = "2.2.1"
 lifecycleLivedataKtx = "2.8.7"
 lifecycleViewmodelKtx = "2.8.7"
-navigationFragmentKtx = "2.8.7"
-navigationUiKtx = "2.8.7"
+navigationFragmentKtx = "2.8.8"
+navigationUiKtx = "2.8.8"
 retrofit = "2.9.0"
 shimmer = "0.5.0"
-smoothbottombar = "1.7.6"
 swiperefreshlayout = "1.1.0"
 viewpager2 = "1.1.0"
-activity = "1.10.0"
+activity = "1.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,7 +46,6 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
-smoothbottombar = { module = "com.github.ibrahimsn98:SmoothBottomBar", version.ref = "smoothbottombar" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

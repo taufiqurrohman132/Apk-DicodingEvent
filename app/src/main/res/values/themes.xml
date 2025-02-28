@@ -15,6 +15,8 @@
         <item name="elevationOverlayEnabled">true</item>
         <!-- background layout. -->
         <item name="colorSurface">@color/white</item>
+        <item name="colorSurfaceVariant">@color/white</item>
+        <item name="android:colorBackground">@color/white</item>
     </style>
 
     <style name="ActiveIndikatorStyle" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
@@ -29,10 +31,10 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">normal</item>
     </style>
-    <style name="Text.JudulBerita20" parent="Theme.DicodingEventAplication">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">normal</item>
-    </style>
+<!--    <style name="Text.JudulBerita20" parent="Theme.DicodingEventAplication">-->
+<!--        <item name="android:textSize">20sp</item>-->
+<!--        <item name="android:textStyle">normal</item>-->
+<!--    </style>-->
     <style name="Text.Subjudul16" parent="Theme.DicodingEventAplication">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
@@ -56,11 +58,6 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/black</item>
     </style>
-    <style name="Text.TombolCTA16" parent="Theme.DicodingEventAplication">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
 
     <style name="Button.Back" parent="Theme.DicodingEventAplication">
         <item name="android:layout_width">48dp</item>
@@ -88,10 +85,10 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
     </style>
-    <style name="Radius24">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">24dp</item>
-    </style>
+<!--    <style name="Radius24">-->
+<!--        <item name="cornerFamily">rounded</item>-->
+<!--        <item name="cornerSize">24dp</item>-->
+<!--    </style>-->
     <style name="Radius8NoBottomRight">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopRight">8dp</item>

@@ -3,14 +3,13 @@ package com.example.dicodingeventaplication.ui.detailEvent
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
@@ -19,11 +18,11 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.dicodingeventaplication.EventViewModelFactory
-import com.example.dicodingeventaplication.NetworkViewModel
+import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
+import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.respons.Event
+import com.example.dicodingeventaplication.data.model.Event
 import com.example.dicodingeventaplication.databinding.ActivityDetailEventBinding
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.example.dicodingeventaplication.utils.Resource
@@ -81,14 +80,15 @@ class DetailEventActivity : AppCompatActivity() {
 
         //buat status bar custom
         WindowCompat.setDecorFitsSystemWindows(window, false)
-//        window.decorView.systemUiVisibility = (
-//                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-//                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-//                        View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR //icon jadi gelap ketika bg terang
-//                )
+
+        networkViewModel.isInternetAvailible.observe(this) { isAvailible ->
+            if (isAvailible && !viewModel.isDetailSuccess){
+                viewModel.startReload()
+                viewModel.findDetailEvent(itemId)
+            }
+        }
 
         var url: String? = null
-        val eventActive = intent.getIntExtra(EXTRA_EVENT_ACTIVE, 0)
 
         if ( savedInstanceState != null) {
             appBarOffset = savedInstanceState.getInt(APP_BAR_OFFSET, 0)
@@ -114,10 +114,10 @@ class DetailEventActivity : AppCompatActivity() {
         }
 
         viewModel.listEventData.observe(this){ eventData ->
-            if (!viewModel.isRefresing.value!!){
+            if (!viewModel.isReload.value!!){
                 when(eventData){
                     is Resource.Success ->{
-                        setEventData(eventData.data, eventActive)
+                        setEventData(eventData.data)
                         binding.detailSimmmerDes.stopShimmer()
                         binding.detailSimmmerHeader.stopShimmer()
                         binding.detailSimmmerDes.visibility = View.INVISIBLE
@@ -168,11 +168,14 @@ class DetailEventActivity : AppCompatActivity() {
             }
             Log.d(TAG, "onCreate: event data observe $eventData")
         }
-//        viewModel.findDetailEvent(itemId)
+
+        // refresh
         viewModel.isRefresing.observe(this){ isRefresh ->
             binding.detailSwipRefresh.isRefreshing = isRefresh
+        }
 
-            if (!viewModel.isDetailSuccess && isRefresh){
+        viewModel.isReload.observe(this){ isReload ->
+            if (!viewModel.isDetailSuccess && isReload){
                 binding.detailSimmmerHeader.startShimmer()
                 binding.detailSimmmerDes.startShimmer()
                 binding.detailSimmmerHeader.visibility = View.VISIBLE
@@ -194,21 +197,21 @@ class DetailEventActivity : AppCompatActivity() {
             if (!viewModel.isDetailSuccess){
 
                 it.getContentIfNotHandled()?.let { mesage ->
-                    val snackbar = Snackbar.make(window.decorView.rootView, mesage, Snackbar.LENGTH_LONG)
+                    val snackbar = Snackbar.make(window.decorView.rootView, mesage, Snackbar.LENGTH_INDEFINITE)
                     val snackbarView = snackbar.view
 
-                    snackbarView.setBackgroundColor(resources.getColor(R.color.biru_tua))
+                    val background = GradientDrawable()
+                    background.cornerRadius = 40f
 
-                    val text = snackbarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                    text.setTextColor(Color.WHITE)
-                    text.textSize = 16f
-                    text.typeface = Typeface.DEFAULT_BOLD
-
-                    snackbar.setTextColor(resources.getColor(R.color.ungu_neon))
+                    snackbarView.background = background
+                    snackbar.setActionTextColor(resources.getColor(R.color.kuning,null))
+                    snackbar.setBackgroundTint(resources.getColor(R.color.ungu_neon, null))
+                    snackbar.setTextColor(resources.getColor(R.color.white, null))
                     snackbar.setAction("Try Again"){
-                        viewModel.startRefreshing()
+                        viewModel.startReload()
                         viewModel.findDetailEvent(itemId)
                     }
+                    snackbar.setAnchorView(binding.detailBtnRegisterNow.id)
                     snackbar.show()
                 }
             }
@@ -222,11 +225,12 @@ class DetailEventActivity : AppCompatActivity() {
 
         binding.detailSwipRefresh.setOnRefreshListener {
             viewModel.startRefreshing()
+            viewModel.startReload()
             viewModel.findDetailEvent(itemId)
         }
 
         binding.detailBtnLottieErorKoneksi.setOnClickListener {
-            viewModel.startRefreshing()
+            viewModel.startReload()
             viewModel.findDetailEvent(itemId)
         }
 
@@ -235,16 +239,33 @@ class DetailEventActivity : AppCompatActivity() {
         }
 
         binding.detailBtnRegisterNow.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            if (!url.isNullOrEmpty()){
-                startActivity(intent)
+            if (url.isNullOrEmpty()){
+                DialogUtils.showPopUpErrorDialog(it.context, "Failed to load URL. Check your internet connection.")
+
             } else{
-                // tampilakn notif
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                Log.d(TAG, "onCreate: url $url")
+                try {
+                    startActivity(intent)
+                } catch (e: Exception){
+                    val snackbar = Snackbar.make(window.decorView.rootView, "Cannot open link.", Snackbar.LENGTH_LONG)
+                    val snackbarView = snackbar.view
+
+                    val background = GradientDrawable()
+                    background.cornerRadius = 20f
+
+                    snackbarView.background = background
+                    snackbar.setBackgroundTint(resources.getColor(R.color.ungu_neon, null))
+                    snackbar.setTextColor(resources.getColor(R.color.white, null))
+                    snackbar.setAnchorView(binding.detailBtnRegisterNow.id)
+                    snackbar.show()
+                }
+
             }
         }
     }
 
-    private fun setEventData(eventsItem: Event?, eventActive: Int){
+    private fun setEventData(eventsItem: Event?){
 
         var remainingQuota = 0
         if (eventsItem?.registrants != null)
@@ -311,10 +332,7 @@ class DetailEventActivity : AppCompatActivity() {
 
     companion object{
         const val EXTRA_ID = "extra id"
-        const val EXTRA_EVENT_ACTIVE = "EXTRA_EVENT_ACTIVE"
         private const val TAG = "detailactivity"
-        private const val UPCOMING = 1
-        private const val FINISHED = 0
         private const val SCROLL_POSITION = "scrol_position"
         private const val APP_BAR_OFFSET = "app_bar_offset"
     }

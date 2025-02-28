@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication.data.retrofit
+package com.example.dicodingeventaplication.data.network
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

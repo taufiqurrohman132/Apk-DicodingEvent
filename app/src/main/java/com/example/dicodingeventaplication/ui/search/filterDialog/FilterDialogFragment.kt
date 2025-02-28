@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.databinding.FragmentFilterDialogBinding
 import com.example.dicodingeventaplication.ui.search.SearchViewModel
 
-class FilterDialogFragment : DialogFragment() {//private val onBtnClick: (Int) -> Unit // tidak di sarankan pakai construktor
+class FilterDialogFragment : DialogFragment() { // tidak di sarankan pakai construktor
     private var _binding: FragmentFilterDialogBinding? = null
     private val binding get() = _binding!!
 

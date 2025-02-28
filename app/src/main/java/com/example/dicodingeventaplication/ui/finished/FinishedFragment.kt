@@ -21,12 +21,10 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.databinding.FragmentFinishedBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
-import com.example.dicodingeventaplication.EventViewModelFactory
-import com.example.dicodingeventaplication.NetworkViewModel
+import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
+import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.ui.home.HomeFragment
 import com.example.dicodingeventaplication.ui.search.SearchResultRVAdapter
-import com.example.dicodingeventaplication.utils.BounceEdgeEffectFactory
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.google.android.material.R as ResMaterial
@@ -45,7 +43,6 @@ class FinishedFragment : Fragment() {
     private var isCollapseSearch = false
 
     private var appBarOffset = 0
-    private var appBarOffsetSearch = 0
 
     private val networkViewModel: NetworkViewModel by lazy {
         ViewModelProvider(
@@ -165,11 +162,9 @@ class FinishedFragment : Fragment() {
         val adapterFinished = FinishedRVAdapter(requireContext()) { event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
             intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-            intent.putExtra(DetailEventActivity.EXTRA_EVENT_ACTIVE, HomeFragment.FINISHED)
             startActivity(intent)
         }
         binding.rvFinished.adapter = adapterFinished
-        binding.rvFinished.edgeEffectFactory = BounceEdgeEffectFactory()
 
         finishedViewModel.resultEventItemFinished.observe(viewLifecycleOwner){ event ->
             if (!finishedViewModel.isReload.value!!){
@@ -379,6 +374,5 @@ class FinishedFragment : Fragment() {
         private const val SCROLL_POSITION = "scrol_position"
         private const val TAG = "upcomingfrag"
         private const val APP_BAR_OFFSET = "app_bar_offset"
-        private const val IS_SEARCHING = "issearching"
     }
 }

@@ -61,11 +61,8 @@
     <string name="jun">JUN</string>
     <string name="all_events_that_have_taken_place_and_ended">All Events That Have Taken Place and Ended</string>
     <string name="event">Event</string>
-    <string name="_100">100</string>
     <string name="recommendation_event_for_you">Recommendation event for you!</string>
     <string name="descover">Descover</string>
     <string name="cancel">Cancel</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

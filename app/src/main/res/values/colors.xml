@@ -8,20 +8,18 @@
     <color name="abu_abu_gelap">#212121</color>
     <color name="abu_abu">#757575</color>
     <color name="merah">#FF0000</color>
-    <color name="hijau">#39FF14</color>
     <color name="biru_tua">#001C68</color>
     <color name="biru_tua_trans30">#30001C68</color>
     <color name="biru_tua_trans60">#60001C68</color>
 <!--    <color name="biru_tua_trans">#3000144A</color>-->
     <color name="abu_abu_terang">#D3D3D3</color>
     <color name="white_trans">#40FFFFFF</color>
-    <color name="white_trans_20">#20FFFFFF</color>
     <color name="white_trans_60">#80FFFFFF</color>
     <color name="kuning">#EFAB00</color>
     <color name="tranparant">#00000000</color>
     <color name="ungu_neon">#8A2BE2</color>
     <color name="blue_link">#2200CC</color>
-    <color name="ungu_neon_trans60">#608A2BE2</color>
+<!--    <color name="ungu_neon_trans60">#608A2BE2</color>-->
     <color name="abu_abu_terang2">#F7F7F7</color>
     <color name="abu_abu_terang1">#E8E8E8</color>
 </resources>

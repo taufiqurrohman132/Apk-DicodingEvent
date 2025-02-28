@@ -3,12 +3,12 @@ package com.example.dicodingeventaplication.data.repository
 import android.content.Context
 import android.util.Log
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.data.respons.DetailEventResponse
-import com.example.dicodingeventaplication.data.respons.Event
+import com.example.dicodingeventaplication.data.model.DetailEventResponse
+import com.example.dicodingeventaplication.data.model.Event
 import com.example.dicodingeventaplication.utils.Resource
-import com.example.dicodingeventaplication.data.respons.EventItem
-import com.example.dicodingeventaplication.data.respons.EventResponse
-import com.example.dicodingeventaplication.data.retrofit.ApiConfig
+import com.example.dicodingeventaplication.data.model.EventItem
+import com.example.dicodingeventaplication.data.model.EventResponse
+import com.example.dicodingeventaplication.data.network.ApiConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okio.IOException
@@ -18,7 +18,6 @@ import retrofit2.Response
 
 class
 DicodingEventRepository(
-//    private val apiService: ApiService,
     private val context: Context
 ) {
     private val sharedPref = context.getSharedPreferences(SEARCH_HISTORY, Context.MODE_PRIVATE)
@@ -88,6 +87,8 @@ DicodingEventRepository(
                         Log.e(TAG, "onResponse: onsucces ${response.message()}")
                     } else {
                         callback(Resource.Empty(emptyList())) // data kosong
+                        cacheDataSearching = null // kembalikan ke null ketika empty
+
                         Log.e(TAG, "onResponse: onsucces ${response.message()}")
                         Log.e(TAG, "onResponse: onsucces data null")
                     }
@@ -101,9 +102,13 @@ DicodingEventRepository(
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 Log.e(TAG, "onResponse: onfailure ${t.message}")
                 if (t is IOException) {
-//                    callback(Resource.ErrorConection(context.resources.getString(R.string.error_koneksi)))
-                    if (cacheDataSearching != null && querySearch == query && isActive == active)
-                        callback(Resource.Success(cacheDataSearching?.listEvents?.take(8) ?: emptyList()))
+                    if (querySearch == query && isActive == active) {
+                        if (cacheDataSearching != null)
+                            callback(Resource.Success(cacheDataSearching?.listEvents?.take(8) ?: emptyList()))
+                        else{
+                            callback(Resource.Empty(emptyList()))
+                        }
+                    }
                     else
                         callback(Resource.ErrorConection(context.resources.getString(R.string.error_koneksi)))
                 } else {

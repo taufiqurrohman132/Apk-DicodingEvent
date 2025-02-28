@@ -13,5 +13,5 @@ open class SingleEvent<out T>(private val content: T) {
         }
     }
 
-    fun peekContent(): T = content
+//    fun peekContent(): T = content
 }

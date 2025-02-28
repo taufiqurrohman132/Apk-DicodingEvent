@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.utils.Resource
-import com.example.dicodingeventaplication.data.respons.EventItem
+import com.example.dicodingeventaplication.data.model.EventItem
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -75,7 +75,6 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
         job?.cancel() // batalkan proses sebwelum nyua jika ada
 
         if (query.isBlank()){
-//            _searchResultEvenItem.value = Resource.Success(emptyList()) // kosongkan hasil pencarian
             return
         }
 

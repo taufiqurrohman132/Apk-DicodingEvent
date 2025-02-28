@@ -19,15 +19,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.respons.EventItem
+import com.example.dicodingeventaplication.data.model.EventItem
 import com.example.dicodingeventaplication.databinding.FragmentHomeBinding
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.SearchActivity
-import com.example.dicodingeventaplication.EventViewModelFactory
-import com.example.dicodingeventaplication.NetworkViewModel
+import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
+import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.utils.BounceEdgeEffectFactory
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
@@ -88,12 +87,9 @@ class HomeFragment : Fragment() {
         val adapterCorousel = HomeCorouselRVAdaptor(requireActivity()){ event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
             intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-            intent.putExtra(DetailEventActivity.EXTRA_EVENT_ACTIVE, UPCOMING)
             startActivity(intent)
         }
         binding.vpItemCorousel.adapter = adapterCorousel
-        val vpRecyclerView = binding.vpItemCorousel.getChildAt(0) as RecyclerView
-        vpRecyclerView.edgeEffectFactory = BounceEdgeEffectFactory()
 
         // finished
         val linearLayout = LinearLayoutManager(requireActivity()).apply {
@@ -106,7 +102,6 @@ class HomeFragment : Fragment() {
         val adapterFinished = HomeFinishedRVAdapter(requireActivity()) { event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
             intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-            intent.putExtra(DetailEventActivity.EXTRA_EVENT_ACTIVE, FINISHED)
             startActivity(intent)
         }
 

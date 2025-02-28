@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.dicodingeventaplication.utils.TimeUtils
-import com.example.dicodingeventaplication.data.respons.EventItem
+import com.example.dicodingeventaplication.data.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemUpcomingBinding
 
 class UpcomingRVAdapter(

@@ -17,14 +17,11 @@ import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.databinding.FragmentUpcomingBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
-import com.example.dicodingeventaplication.EventViewModelFactory
-import com.example.dicodingeventaplication.NetworkViewModel
+import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
+import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.ui.home.HomeFragment
-import com.example.dicodingeventaplication.utils.BounceEdgeEffectFactory
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.google.android.material.appbar.AppBarLayout
-import kotlin.math.log
 
 class UpcomingFragment : Fragment() {
 
@@ -116,11 +113,9 @@ class UpcomingFragment : Fragment() {
         val adapterUpcoming = UpcomingRVAdapter(requireContext()){ event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
             intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-            intent.putExtra(DetailEventActivity.EXTRA_EVENT_ACTIVE, HomeFragment.UPCOMING)
             startActivity(intent)
         }
         binding.rvUpcoming.adapter = adapterUpcoming
-        binding.rvUpcoming.edgeEffectFactory = BounceEdgeEffectFactory()
 
         upcomingViewModel.resultEventItemUpcome.observe(viewLifecycleOwner){ eventList ->
             if (!upcomingViewModel.isReload.value!!){

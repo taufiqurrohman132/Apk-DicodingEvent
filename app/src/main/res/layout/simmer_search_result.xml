@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:layout_width="match_parent"
+<merge xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,7 +11,8 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="6dp"
         android:background="?attr/selectableItemBackground"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/reulst.img_logo"
             android:layout_width="56dp"
@@ -41,4 +43,4 @@
         </LinearLayout>
 
     </LinearLayout>
-</FrameLayout>
+</merge>

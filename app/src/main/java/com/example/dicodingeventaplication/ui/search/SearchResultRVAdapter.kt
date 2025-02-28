@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.R
-import com.example.dicodingeventaplication.data.respons.EventItem
+import com.example.dicodingeventaplication.data.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemSearchResultBinding
 import java.util.concurrent.Executors
 

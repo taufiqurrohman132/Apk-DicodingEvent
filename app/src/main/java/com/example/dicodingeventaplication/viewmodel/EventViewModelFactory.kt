@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication
+package com.example.dicodingeventaplication.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

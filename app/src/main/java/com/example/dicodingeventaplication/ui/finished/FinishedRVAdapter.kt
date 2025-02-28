@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.example.dicodingeventaplication.data.respons.EventItem
+import com.example.dicodingeventaplication.data.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemFinishedBinding
 
 class FinishedRVAdapter(

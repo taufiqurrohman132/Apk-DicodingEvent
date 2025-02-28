@@ -1,7 +1,7 @@
-package com.example.dicodingeventaplication.data.retrofit
+package com.example.dicodingeventaplication.data.network
 
-import com.example.dicodingeventaplication.data.respons.DetailEventResponse
-import com.example.dicodingeventaplication.data.respons.EventResponse
+import com.example.dicodingeventaplication.data.model.DetailEventResponse
+import com.example.dicodingeventaplication.data.model.EventResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

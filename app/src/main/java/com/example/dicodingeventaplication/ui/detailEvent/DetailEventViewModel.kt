@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.respons.Event
+import com.example.dicodingeventaplication.data.model.Event
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.utils.SingleEvent
 import kotlinx.coroutines.delay
@@ -20,6 +20,9 @@ class DetailEventViewModel(private val repository: DicodingEventRepository, id: 
 
     private val _snackBarEmpty = MutableLiveData<SingleEvent<String?>>()
     val snackbarEmpty: LiveData<SingleEvent<String?>> = _snackBarEmpty
+
+    private val _isReload = MutableLiveData(false)
+    val isReload: LiveData<Boolean> = _isReload
 
     private val _isRefresing = MutableLiveData(false)
     val isRefresing: LiveData<Boolean> = _isRefresing
@@ -54,6 +57,7 @@ class DetailEventViewModel(private val repository: DicodingEventRepository, id: 
             }
 
             _isRefresing.value = false
+            _isReload.value = false
         }
     }
 
@@ -61,33 +65,12 @@ class DetailEventViewModel(private val repository: DicodingEventRepository, id: 
         isDetailSuccess = true
     }
 
+    fun startReload(){
+        _isReload.value = true
+    }
+
     fun startRefreshing(){
         _isRefresing.value = true
     }
-
-//    fun findDetailEvent(id: Int){
-//        val clientEventDetail = ApiConfig.getApiService().getEventDetail(id)
-//        clientEventDetail.enqueue(object : Callback<DetailEventResponse> { // enqueue otomatis berjalan di bg treaad
-//            override fun onResponse(
-//                call: Call<DetailEventResponse>,
-//                response: Response<DetailEventResponse>
-//            ) {
-//                if (response.isSuccessful){
-//                    val responsBody = response.body()
-//                    if (responsBody != null){
-//                        _listEventData.value = responsBody
-//                    }
-//                    Log.d("res", "onResponse: succes $responsBody")
-//                }else{
-//                    Log.e("res", "onResponse: onfailure ${response.message()}")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<DetailEventResponse>, t: Throwable) {
-//                Log.e("res", "onFailure: ${t.message}")
-//            }
-//        })
-//    }
-
 
 }
