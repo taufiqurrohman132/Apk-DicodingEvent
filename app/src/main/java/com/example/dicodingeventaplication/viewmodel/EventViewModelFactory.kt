@@ -1,15 +1,34 @@
 package com.example.dicodingeventaplication.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.dicodingeventaplication.data.di.Injection
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
+//import com.example.dicodingeventaplication.data.repository.FavoritEventRepository
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventViewModel
+import com.example.dicodingeventaplication.ui.favorite.FavoritViewModel
 import com.example.dicodingeventaplication.ui.finished.FinishedViewModel
 import com.example.dicodingeventaplication.ui.home.HomeViewModel
 import com.example.dicodingeventaplication.ui.search.SearchViewModel
 import com.example.dicodingeventaplication.ui.upcoming.UpcomingViewModel
 
-class EventViewModelFactory(private val repository: DicodingEventRepository, private val id: Int? = null) : ViewModelProvider.Factory {
+class EventViewModelFactory(
+    private val repository: DicodingEventRepository,
+//    private val favoritRepository: FavoritEventRepository
+    private val id: Int? = null
+) : ViewModelProvider.NewInstanceFactory() {
+    companion object{
+        @Volatile
+        private var instance: EventViewModelFactory? = null
+
+        fun getInstance(context: Context): EventViewModelFactory =
+            instance?: synchronized(this){
+                instance ?: EventViewModelFactory(Injection.provideRepository(context))
+            }
+    }
+
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         if (modelClass.isAssignableFrom(SearchViewModel::class.java)){
@@ -22,6 +41,8 @@ class EventViewModelFactory(private val repository: DicodingEventRepository, pri
             return FinishedViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(DetailEventViewModel::class.java)){
             return DetailEventViewModel(repository, id) as T
+        }else if (modelClass.isAssignableFrom(FavoritViewModel::class.java)){
+            return FavoritViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknwon Viewmodel Class")
     }

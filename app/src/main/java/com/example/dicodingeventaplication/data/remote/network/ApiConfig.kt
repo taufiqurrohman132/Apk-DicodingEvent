@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication.data.network
+package com.example.dicodingeventaplication.data.remote.network
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiConfig {
     companion object{
-        fun getApiService(): ApiService{
+        fun getApiService(): ApiService {
             val loggingInterceptor =
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             val client = OkHttpClient.Builder()

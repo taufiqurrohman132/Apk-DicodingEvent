@@ -229,21 +229,4 @@
         </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical"-->
-<!--        >-->
-
-<!--        <com.google.android.material.search.SearchView-->
-<!--            android:id="@+id/upcoming.sv"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"/>-->
-<!--    </LinearLayout>-->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/upcoming.rv_search"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="16dp"/>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

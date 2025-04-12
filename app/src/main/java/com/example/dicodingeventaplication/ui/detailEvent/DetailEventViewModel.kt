@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.model.Event
+import com.example.dicodingeventaplication.data.remote.model.Event
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.utils.SingleEvent
 import kotlinx.coroutines.delay

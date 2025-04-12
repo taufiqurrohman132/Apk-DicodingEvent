@@ -7,9 +7,11 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +20,7 @@ import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
+import com.example.dicodingeventaplication.ui.home.HomeViewModel
 import com.example.dicodingeventaplication.ui.search.filterDialog.FilterDialogFragment
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
@@ -34,12 +37,20 @@ class SearchActivity : AppCompatActivity(), DialogListener {
         )[NetworkViewModel::class.java]
     }
 
-    private val repository: DicodingEventRepository by lazy {
-        DicodingEventRepository(this)
+//    private val repository: DicodingEventRepository by lazy {
+//        DicodingEventRepository(this)
+//    }
+//
+//    private val searchViewModel: SearchViewModel by lazy {
+//        ViewModelProvider(this, EventViewModelFactory(repository))[SearchViewModel::class.java]// pengganti get
+//    }
+
+    private val factory: EventViewModelFactory by lazy {
+        EventViewModelFactory.getInstance(this)
     }
 
-    private val searchViewModel: SearchViewModel by lazy {
-        ViewModelProvider(this, EventViewModelFactory(repository))[SearchViewModel::class.java]// pengganti get
+    private val searchViewModel: SearchViewModel by viewModels {
+        factory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

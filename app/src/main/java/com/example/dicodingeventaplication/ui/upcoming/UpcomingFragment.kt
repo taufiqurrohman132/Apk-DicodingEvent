@@ -11,6 +11,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.utils.Resource
@@ -20,6 +21,7 @@ import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.ui.home.HomeViewModel
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.google.android.material.appbar.AppBarLayout
 
@@ -35,11 +37,20 @@ class UpcomingFragment : Fragment() {
         )[NetworkViewModel::class.java]
     }
 
-    private val upcomeRepository: DicodingEventRepository by lazy {
-        DicodingEventRepository(requireContext())
+//    private val upcomeRepository: DicodingEventRepository by lazy {
+//        DicodingEventRepository
+//    }
+//
+//    private val upcomingViewModel: UpcomingViewModel by lazy {
+//        ViewModelProvider(this, EventViewModelFactory(upcomeRepository))[UpcomingViewModel::class.java]// pengganti get
+//    }
+
+    private val factory: EventViewModelFactory by lazy {
+        EventViewModelFactory.getInstance(requireActivity())
     }
-    private val upcomingViewModel: UpcomingViewModel by lazy {
-        ViewModelProvider(this, EventViewModelFactory(upcomeRepository))[UpcomingViewModel::class.java]// pengganti get
+
+    private val upcomingViewModel: UpcomingViewModel by viewModels {
+        factory
     }
 
     private var isExpanned = true
@@ -110,11 +121,21 @@ class UpcomingFragment : Fragment() {
         val linearLayout = LinearLayoutManager(requireContext())
         binding.rvUpcoming.layoutManager = linearLayout
 
-        val adapterUpcoming = UpcomingRVAdapter(requireContext()){ event ->
-            val intent = Intent(requireContext(), DetailEventActivity::class.java)
-            intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-            startActivity(intent)
-        }
+        val adapterUpcoming = UpcomingRVAdapter(
+            requireContext(),
+            onItemClick = { event ->
+                val intent = Intent(requireContext(), DetailEventActivity::class.java)
+                intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+                startActivity(intent)
+            },
+            onBookmarkClick = {favorit ->
+//                if (favorit.isBookmarked){
+//                    upcomingViewModel.deleteNews(favorit)
+//                }else{
+//                    upcomingViewModel.saveNews(favorit)
+//                }
+            }
+        )
         binding.rvUpcoming.adapter = adapterUpcoming
 
         upcomingViewModel.resultEventItemUpcome.observe(viewLifecycleOwner){ eventList ->

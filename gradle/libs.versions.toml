@@ -3,8 +3,9 @@ agp = "8.6.1"
 fragmentKtx = "1.8.6"
 glide = "4.16.0"
 gson = "2.10.1"
+#noinspection GradleDependency
 kotlin = "1.9.0"
-coreKtx = "1.15.0"
+coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -15,9 +16,11 @@ material = "1.12.0"
 constraintlayout = "2.2.1"
 lifecycleLivedataKtx = "2.8.7"
 lifecycleViewmodelKtx = "2.8.7"
-navigationFragmentKtx = "2.8.8"
-navigationUiKtx = "2.8.8"
+navigationFragmentKtx = "2.8.9"
+navigationUiKtx = "2.8.9"
 retrofit = "2.9.0"
+#noinspection GradleDependency
+roomRuntime = "2.6.1"
 shimmer = "0.5.0"
 swiperefreshlayout = "1.1.0"
 viewpager2 = "1.1.0"
@@ -26,6 +29,9 @@ activity = "1.10.1"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }

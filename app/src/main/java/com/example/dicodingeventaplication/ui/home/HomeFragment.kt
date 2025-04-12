@@ -7,9 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +21,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.model.EventItem
+import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.databinding.FragmentHomeBinding
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
@@ -27,6 +29,8 @@ import com.example.dicodingeventaplication.ui.search.SearchActivity
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.ui.favorite.FavoritViewModel
+import com.example.dicodingeventaplication.ui.favorite.FavoriteActivity
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
@@ -43,12 +47,19 @@ class HomeFragment : Fragment() {
         )[NetworkViewModel::class.java]
     }
 
-    private val repository: DicodingEventRepository by lazy {
-        DicodingEventRepository(requireContext())
+//    private val repository: DicodingEventRepository by lazy {
+//        DicodingEventRepository(requireContext())
+//    }
+
+//    private val homeViewModel: HomeViewModel by lazy {
+//        ViewModelProvider(this, EventViewModelFactory(repository))[HomeViewModel::class.java]// pengganti get
+//    }
+    private val factory: EventViewModelFactory by lazy {
+        EventViewModelFactory.getInstance(requireActivity())
     }
 
-    private val homeViewModel: HomeViewModel by lazy {
-        ViewModelProvider(this, EventViewModelFactory(repository))[HomeViewModel::class.java]// pengganti get
+    private val homeViewModel: HomeViewModel by viewModels {
+        factory
     }
 
     override fun onCreateView(
@@ -64,6 +75,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//
+//        val factory: EventViewModelFactory = EventViewModelFactory.getInstance(requireActivity())
+//        val homeViewModel: HomeViewModel by viewModels {
+//            factory
+//        }
 
         binding.homeNestedScroll.scrollTo(0, homeViewModel.scrollY)
 
@@ -314,6 +330,12 @@ class HomeFragment : Fragment() {
             val intent = Intent(requireActivity(), SearchActivity()::class.java)
             startActivity(intent)
         }
+
+        binding.btnFavorit.setOnClickListener {
+            val intent = Intent(requireActivity(), FavoriteActivity()::class.java)
+            startActivity(intent)
+        }
+
     }
 
     override fun onDestroyView() {

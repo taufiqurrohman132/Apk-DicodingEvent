@@ -10,11 +10,13 @@ import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -22,8 +24,9 @@ import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.model.Event
+import com.example.dicodingeventaplication.data.remote.model.Event
 import com.example.dicodingeventaplication.databinding.ActivityDetailEventBinding
+import com.example.dicodingeventaplication.ui.finished.FinishedViewModel
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.utils.TimeUtils
@@ -44,11 +47,19 @@ class DetailEventActivity : AppCompatActivity() {
         intent.getIntExtra(EXTRA_ID, 0)
     }
 
-    private val detailRepository: DicodingEventRepository by lazy {
-        DicodingEventRepository(this)
+//    private val detailRepository: DicodingEventRepository by lazy {
+//        DicodingEventRepository(this)
+//    }
+//    private val viewModel: DetailEventViewModel by lazy {
+//        ViewModelProvider(this, EventViewModelFactory(detailRepository, itemId))[DetailEventViewModel::class.java]
+//    }
+
+    private val factory: EventViewModelFactory by lazy {
+        EventViewModelFactory.getInstance(this)
     }
-    private val viewModel: DetailEventViewModel by lazy {
-        ViewModelProvider(this, EventViewModelFactory(detailRepository, itemId))[DetailEventViewModel::class.java]
+
+    private val viewModel: DetailEventViewModel by viewModels {
+        factory
     }
 
     private var isExpanned = true

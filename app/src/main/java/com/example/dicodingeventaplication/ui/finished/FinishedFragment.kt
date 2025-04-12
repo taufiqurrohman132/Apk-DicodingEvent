@@ -14,6 +14,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +25,7 @@ import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.ui.home.HomeViewModel
 import com.example.dicodingeventaplication.ui.search.SearchResultRVAdapter
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.utils.DialogUtils
@@ -39,7 +41,7 @@ class FinishedFragment : Fragment() {
     private lateinit var backPressedCallback: OnBackPressedCallback
 
     private var isExpanned = true
-//    private var isCollapse = false
+
     private var isCollapseSearch = false
 
     private var appBarOffset = 0
@@ -51,12 +53,20 @@ class FinishedFragment : Fragment() {
         )[NetworkViewModel::class.java]
     }
 
-    private val finishedRepository: DicodingEventRepository by lazy {
-        DicodingEventRepository( requireContext())
+//    private val finishedRepository: DicodingEventRepository by lazy {
+//        DicodingEventRepository( requireContext())
+//    }
+//
+//    private val finishedViewModel: FinishedViewModel by lazy {
+//        ViewModelProvider(this, EventViewModelFactory(finishedRepository))[FinishedViewModel::class.java]
+//    }
+
+    private val factory: EventViewModelFactory by lazy {
+        EventViewModelFactory.getInstance(requireActivity())
     }
 
-    private val finishedViewModel: FinishedViewModel by lazy {
-        ViewModelProvider(this, EventViewModelFactory(finishedRepository))[FinishedViewModel::class.java]
+    private val finishedViewModel: FinishedViewModel by viewModels {
+        factory
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
