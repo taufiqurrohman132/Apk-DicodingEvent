@@ -29,13 +29,14 @@ import com.example.dicodingeventaplication.ui.search.SearchActivity
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.ui.favorite.FavoritViewModel
 import com.example.dicodingeventaplication.ui.favorite.FavoriteActivity
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
 
-    private var eventHeader: EventItem? = null
+    private var eventHeader: FavoritEvent? = null
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -47,13 +48,6 @@ class HomeFragment : Fragment() {
         )[NetworkViewModel::class.java]
     }
 
-//    private val repository: DicodingEventRepository by lazy {
-//        DicodingEventRepository(requireContext())
-//    }
-
-//    private val homeViewModel: HomeViewModel by lazy {
-//        ViewModelProvider(this, EventViewModelFactory(repository))[HomeViewModel::class.java]// pengganti get
-//    }
     private val factory: EventViewModelFactory by lazy {
         EventViewModelFactory.getInstance(requireActivity())
     }
@@ -75,11 +69,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//
-//        val factory: EventViewModelFactory = EventViewModelFactory.getInstance(requireActivity())
-//        val homeViewModel: HomeViewModel by viewModels {
-//            factory
-//        }
 
         binding.homeNestedScroll.scrollTo(0, homeViewModel.scrollY)
 
@@ -145,7 +134,6 @@ class HomeFragment : Fragment() {
                     eventHeader = getImageHeader(event.data)
                     homeViewModel.isHeaderSuccess()
                     binding.homeProgres.isVisible = false
-
                 }
                 is Resource.Error -> {
                     binding.imgpopHeaderHome.setImageResource(0)
@@ -163,6 +151,8 @@ class HomeFragment : Fragment() {
                 }
                 is Resource.Empty -> {
                 }
+
+                else -> {}
             }
             Log.d(TAG, "heder: $event")
         }
@@ -211,7 +201,7 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
-            Log.d(TAG, "upcoming: event is empty ${event.data?.isEmpty()}, is null ${event.data.isNullOrEmpty()}")
+            Log.d(TAG, "upcoming: event is empty ${event?.data?.isEmpty()}, is null ${event?.data.isNullOrEmpty()}")
             Log.d(TAG, "upcoming: ${binding.homeUpcomingSimmmer.isShimmerStarted}")
             Log.d(TAG, "upcoming: observe $event")
 
@@ -256,6 +246,8 @@ class HomeFragment : Fragment() {
                         binding.homeFinishedSimmmer.visibility = View.INVISIBLE
                         binding.homeFinishedSimmmer.stopShimmer()
                     }
+
+                    else -> {}
                 }
             }
             Log.d(TAG, "finished: $event")
@@ -345,12 +337,12 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun getImageHeader(eventData: List<EventItem?>?): EventItem?{
+    private fun getImageHeader(eventData: List<FavoritEvent?>?): FavoritEvent? {
         val event = eventData?.let {
             if (it.size > 6) it[6] else null
         }
         Glide.with(requireActivity())
-            .load(event?.mediaCover)
+            .load(event?.imgCover)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .override(400, 200)
             .thumbnail(0.50f)

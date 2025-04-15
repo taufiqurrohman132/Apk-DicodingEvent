@@ -92,8 +92,9 @@ class UpcomingFragment : Fragment() {
 
         // observer network
         networkViewModel.isInternetAvailible.observe(viewLifecycleOwner) { isAvailible ->
+            Log.d(TAG, "onViewCreated: refres otomatis internet $isAvailible ${!upcomingViewModel.isUpcomingSuccess} ${!upcomingViewModel.isUpcomingEmpty}")
             if (isAvailible && (!upcomingViewModel.isUpcomingSuccess && !upcomingViewModel.isUpcomingEmpty)) {
-                Log.d(TAG, "onViewCreated: refres otomatis")
+                Log.d(TAG, "onViewCreated: is refresh")
                 upcomingViewModel.startReload()
                 upcomingViewModel.findEventUpcome()
             }
@@ -129,16 +130,18 @@ class UpcomingFragment : Fragment() {
                 startActivity(intent)
             },
             onBookmarkClick = {favorit ->
-//                if (favorit.isBookmarked){
-//                    upcomingViewModel.deleteNews(favorit)
-//                }else{
-//                    upcomingViewModel.saveNews(favorit)
-//                }
+                Log.d(TAG, "onViewCreated: isbookmark ${favorit.isBookmarked}")
+                if (favorit.isBookmarked){
+                    upcomingViewModel.deleteFavorit(favorit)
+                }else{
+                    upcomingViewModel.saveFavorit(favorit)
+                }
             }
         )
         binding.rvUpcoming.adapter = adapterUpcoming
 
         upcomingViewModel.resultEventItemUpcome.observe(viewLifecycleOwner){ eventList ->
+            Log.d(TAG, "upcoming: $eventList")
             if (!upcomingViewModel.isReload.value!!){
                 when(eventList){
                     is Resource.Loading -> {
@@ -178,9 +181,9 @@ class UpcomingFragment : Fragment() {
                         binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
                         upcomingViewModel.markUpcomingEmpty()
                     }
+                    else ->{}
                 }
             }
-            Log.d(TAG, "upcoming: $eventList")
         }
 
         // refresh

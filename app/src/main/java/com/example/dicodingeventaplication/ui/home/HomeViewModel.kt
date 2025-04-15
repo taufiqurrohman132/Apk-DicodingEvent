@@ -2,9 +2,11 @@ package com.example.dicodingeventaplication.ui.home
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.remote.model.EventItem
@@ -16,14 +18,14 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel() {
 
-    private val _resultEvenItemFinished = MutableLiveData<Resource<List<EventItem?>>>()
-    val resultEventItemFinished: LiveData<Resource<List<EventItem?>>> = _resultEvenItemFinished
+    private val _resultEvenItemFinished = MediatorLiveData<Resource<List<FavoritEvent?>>?>()
+    val resultEventItemFinished: LiveData<Resource<List<FavoritEvent?>>?> = _resultEvenItemFinished
 
-    private val _resultEvenItemUpcome = MutableLiveData<Resource<List<EventItem?>>>()
-    val resultEventItemUpcome: LiveData<Resource<List<EventItem?>>> = _resultEvenItemUpcome
+    private val _resultEvenItemUpcome = MediatorLiveData<Resource<List<FavoritEvent?>>?>()
+    val resultEventItemUpcome: LiveData<Resource<List<FavoritEvent?>>?> = _resultEvenItemUpcome
 
-    private val _headerEvent = MutableLiveData<Resource<List<EventItem?>>>()
-    val headerEvent: LiveData<Resource<List<EventItem?>>> = _headerEvent
+    private val _headerEvent = MediatorLiveData<Resource<List<FavoritEvent?>>?>()
+    val headerEvent: LiveData<Resource<List<FavoritEvent?>>?> = _headerEvent
 
     private val _dialogNotifError = MutableLiveData<SingleEvent<String?>>()
     val dialogNotifError: LiveData<SingleEvent<String?>> = _dialogNotifError
@@ -55,58 +57,92 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
             delay(1000)
             Log.d(TAG, "findEvent heder berjalan di thread: ${Thread.currentThread().name}")
 
-            repository.findEvent(HomeFragment.FINISHED) { event ->
-                _headerEvent.value = when(event){
-                    is Resource.ErrorConection -> {
-                        _dialogNotifError.value = SingleEvent(event.message)
-                        event
-                    }
-                    is Resource.Error ->{
-                        _dialogNotifError.value = SingleEvent(event.message)
-                        event
-                    }
-                    else -> event
+//            repository.findEvent(HomeFragment.FINISHED) { event ->
+//                _headerEvent.value = when(event){
+//                    is Resource.ErrorConection -> {
+//                        _dialogNotifError.value = SingleEvent(event.message)
+//                        event
+//                    }
+//                    is Resource.Error ->{
+//                        _dialogNotifError.value = SingleEvent(event.message)
+//                        event
+//                    }
+//                    else -> event
+//                }
+//                _isRefreshing.value = false
+//                _isReload.value = false
+//            }
+            val source = repository.findEvent(HomeFragment.FINISHED)
+            _headerEvent.addSource(source){ event ->
+                if (event is Resource.Error || event is Resource.ErrorConection){
+                    _dialogNotifError.value = SingleEvent(event.message)
                 }
+                _headerEvent.value = event
+
                 _isRefreshing.value = false
                 _isReload.value = false
             }
+
             findEventUpcome()
         }
     }
 
-    fun findEventFinished(){
+    fun findEventFinished() =
         viewModelScope.launch {
             delay(500)
             Log.d(TAG, "findEvent finish berjalan di thread: ${Thread.currentThread().name}")
 
-            repository.findEvent(HomeFragment.FINISHED) { event ->
+            val source = repository.findEvent(HomeFragment.FINISHED)
+            _resultEvenItemFinished.addSource(source){ event ->
                 _resultEvenItemFinished.value = event
             }
+        //          { event ->
+//                _resultEvenItemFinished.value = event
+//            }
+
         }
-    }
 
     fun findEventUpcome(){
         viewModelScope.launch {
             delay(500)
             Log.d(TAG, "findEvent upcome berjalan di thread: ${Thread.currentThread().name}")
 
-            repository.findEvent(HomeFragment.UPCOMING) { event ->
-                _resultEvenItemUpcome.value= when(event) {
+//            repository.findEvent(HomeFragment.UPCOMING) { event ->
+//                _resultEvenItemUpcome.value= when(event) {
+//                    is Resource.Success -> {
+//                        val itemFromApi = event.data ?: emptyList()
+//                        if (itemFromApi.size in 1..4){
+//                            Resource.Success(event.data!! + listOf(null))// jika kosong, tambahkan list kosong
+//                        } else {
+//                            event
+//                        }
+//                    }
+//                    is Resource.Error -> {
+//                        event
+//                    }
+//                    is Resource.ErrorConection -> {
+//                        event
+//                    }
+//                    is Resource.Empty -> {
+//                        Resource.Success(listOf(null, null))// jika kosong, tambahkan list kosong
+//                    }
+//                    else -> event
+//                }
+//                Log.d(TAG, "viewmodel upcome: $event")
+//            }
+            val source = repository.findEvent(HomeFragment.UPCOMING)
+            _resultEvenItemUpcome.addSource(source){ event ->
+                _resultEvenItemUpcome.value = when(event){
                     is Resource.Success -> {
                         val itemFromApi = event.data ?: emptyList()
                         if (itemFromApi.size in 1..4){
                             Resource.Success(event.data!! + listOf(null))// jika kosong, tambahkan list kosong
                         } else {
+                            Log.w(TAG, "findEventUpcome: is 5 event", )
                             event
                         }
                     }
-                    is Resource.Error -> {
-                        event
-                    }
-                    is Resource.ErrorConection -> {
-                        event
-                    }
-                    is Resource.Empty -> {
+                    is Resource.Empty ->{
                         Resource.Success(listOf(null, null))// jika kosong, tambahkan list kosong
                     }
                     else -> event

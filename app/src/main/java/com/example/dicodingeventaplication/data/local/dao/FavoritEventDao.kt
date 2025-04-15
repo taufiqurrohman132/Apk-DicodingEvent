@@ -10,14 +10,30 @@ import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 
 @Dao
 interface FavoritEventDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(favoritEvent: FavoritEvent)
+    @Query("SELECT * FROM favorit WHERE isActive = 1 ORDER BY beginTime ASC")
+    fun getEventUpcoming(): LiveData<List<FavoritEvent>?>
+
+    @Query("SELECT * FROM favorit WHERE isActive = 0 ORDER BY beginTime DESC")
+    fun getEventFinished(): LiveData<List<FavoritEvent>?>
+
+    @Query("SELECT * FROM favorit WHERE isActive = -1 ORDER BY beginTime DESC")
+    fun getEventAll(): LiveData<List<FavoritEvent>?>
 
     @Query("SELECT * FROM favorit WHERE bookmarked = 1")
-    fun getBookmarkedFavorit(): LiveData<List<FavoritEvent>>
+    fun getBookmarkedEvent(): LiveData<List<FavoritEvent>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(event: List<FavoritEvent>)
 
     @Update
     suspend fun updateFavorit(favorit: FavoritEvent)
 
+    @Query("DELETE FROM favorit WHERE bookmarked = 0")
+    suspend fun deleteAll()
 
+    @Query("DELETE FROM favorit WHERE isActive = :active")
+    suspend fun deleteAllByActive(active: Int)
+
+    @Query("SELECT EXISTS(SELECT * FROM favorit WHERE id = :id AND bookmarked = 1)")
+    suspend fun isEventFavorit(id: Int): Boolean
 }

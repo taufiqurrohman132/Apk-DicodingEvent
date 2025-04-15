@@ -7,19 +7,20 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemFinishedBinding
 
 class FinishedRVAdapter(
     private val context: Context,
-    private val onItemClick: (EventItem) -> Unit
-) : ListAdapter<EventItem, FinishedRVAdapter.ItemViewHolder>(DIFF_CALLBACK) {
+    private val onItemClick: (FavoritEvent) -> Unit
+) : ListAdapter<FavoritEvent, FinishedRVAdapter.ItemViewHolder>(DIFF_CALLBACK) {
     inner class ItemViewHolder(private val binding: ItemFinishedBinding) : ViewHolder(binding.root) {
-        fun bind(eventItem: EventItem){
+        fun bind(eventItem: FavoritEvent){
 
             binding.finishedTvJudulItem.text = eventItem.name
             Glide.with(context)
-                .load(eventItem.imageLogo)
+                .load(eventItem.imgLogo)
                 .into(binding.finishedImgitem)
 
             itemView.setOnClickListener { onItemClick(eventItem) }
@@ -37,17 +38,17 @@ class FinishedRVAdapter(
     }
 
     companion object{
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EventItem>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<FavoritEvent>() {
             override fun areItemsTheSame(
-                oldItem: EventItem,
-                newItem: EventItem
+                oldItem: FavoritEvent,
+                newItem: FavoritEvent
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: EventItem,
-                newItem: EventItem
+                oldItem: FavoritEvent,
+                newItem: FavoritEvent
             ): Boolean {
                 return oldItem == newItem
             }

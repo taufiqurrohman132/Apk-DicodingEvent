@@ -12,20 +12,21 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemHomeFinishedBinding
 import java.util.concurrent.Executors
 
 class HomeFinishedRVAdapter(
     private val context: Context,
-    private val onItemClick: (EventItem) -> Unit
-) : ListAdapter<EventItem, HomeFinishedRVAdapter.FinishedViewHolder>(
-    AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<EventItem>() {
-        override fun areItemsTheSame(oldItem: EventItem, newItem: EventItem): Boolean {
+    private val onItemClick: (FavoritEvent) -> Unit
+) : ListAdapter<FavoritEvent, HomeFinishedRVAdapter.FinishedViewHolder>(
+    AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<FavoritEvent>() {
+        override fun areItemsTheSame(oldItem: FavoritEvent, newItem: FavoritEvent): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: EventItem, newItem: EventItem): Boolean {
+        override fun areContentsTheSame(oldItem: FavoritEvent, newItem: FavoritEvent): Boolean {
             return oldItem == newItem
         }
 
@@ -37,7 +38,7 @@ class HomeFinishedRVAdapter(
 
     inner class FinishedViewHolder(private val item: ItemHomeFinishedBinding) : ViewHolder(item.root) {
         // inisialisasi data
-        fun bind(eventsItem: EventItem?){
+        fun bind(eventsItem: FavoritEvent?){
             item.tvHomeFinishedError.isVisible = eventsItem == null
             item.itemHomeFinishedItem.isVisible = eventsItem != null
 
@@ -49,7 +50,7 @@ class HomeFinishedRVAdapter(
                 item.homeTvStatusItemVer.text = context.resources.getString(R.string.finished)
 
                 Glide.with(context)
-                    .load(eventsItem.imageLogo)
+                    .load(eventsItem.imgLogo)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .override(200, 200)
                     .thumbnail(0.50f)

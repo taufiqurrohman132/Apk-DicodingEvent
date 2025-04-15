@@ -4,4 +4,9 @@ import android.content.Context
 
 class DefaultResourceProvider(private val context: Context) : ResourceProvider {
     override fun getString(resId: Int): String = context.getString(resId)
+
+}
+
+interface ResourceProvider {
+    fun getString(resId: Int): String
 }

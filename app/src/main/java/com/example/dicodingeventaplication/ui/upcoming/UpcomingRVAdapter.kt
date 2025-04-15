@@ -15,23 +15,23 @@ import com.example.dicodingeventaplication.utils.FavoritHelper
 
 class UpcomingRVAdapter(
     private val context: Context,
-    private val onItemClick: (EventItem) -> Unit,
+    private val onItemClick: (FavoritEvent) -> Unit,
     private val onBookmarkClick: (FavoritEvent) -> Unit
-) : ListAdapter<EventItem, UpcomingRVAdapter.ItemViewHolder>(DIFF_CALLBACK) {
+) : ListAdapter<FavoritEvent, UpcomingRVAdapter.ItemViewHolder>(DIFF_CALLBACK) {
     inner class ItemViewHolder(val item: ItemUpcomingBinding) : ViewHolder(item.root) {
         // inisialize data
-        fun bind(eventItem: EventItem){
+        fun bind(eventItem: FavoritEvent ){
             item.upcomeTvTgl.text = eventItem.formateDate
             item.upcomeTvBulan.text = TimeUtils.getMount(eventItem.formatMount)
             item.upcomingTvJudulItem.text = eventItem.name
             item.upcomingTvSummaryItem.text = eventItem.summary
             item.upcomingTvOwnerItem.text = eventItem.ownerName
             item.upcomingTvSisakuotaItem.text = (eventItem.quota?.minus(
-                eventItem.registrants ?: 0
+                eventItem.registranst ?: 0
             )).toString()
 
             Glide.with(context)
-                .load(eventItem.imageLogo)
+                .load(eventItem.imgLogo)
                 .into(
                     item.upcomingImgitem
                 )
@@ -53,20 +53,24 @@ class UpcomingRVAdapter(
 
         val ivBookmark = holder.item.upcomingBtnFavorit
         FavoritHelper.updateIcon(event, ivBookmark)
+
+        ivBookmark.setOnClickListener {
+            onBookmarkClick(event)
+        }
     }
 
     companion object{
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EventItem>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<FavoritEvent>() {
             override fun areItemsTheSame(
-                oldItem: EventItem,
-                newItem: EventItem
+                oldItem: FavoritEvent,
+                newItem: FavoritEvent
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: EventItem,
-                newItem: EventItem
+                oldItem: FavoritEvent,
+                newItem: FavoritEvent
             ): Boolean {
                 return oldItem == newItem
             }

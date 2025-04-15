@@ -13,14 +13,18 @@ import com.example.dicodingeventaplication.databinding.ItemHomeFinishedBinding
 
 class FavoritAdapter(
     private val context: Context,
-    private val onItemClick: (EventItem) -> Unit
+    private val onItemClick: (FavoritEvent) -> Unit
 ) : ListAdapter<FavoritEvent, FavoritAdapter.ItemViewHolder>(DIFF_CALLBACK) {
     inner class ItemViewHolder(private val binding: ItemHomeFinishedBinding) : ViewHolder(binding.root) {
         fun bind(favorit: FavoritEvent){
             binding.tvJudulItemVer.text = favorit.name
             Glide.with(context)
-                .load(favorit.mediaCover)
+                .load(favorit.imgLogo)
                 .into(binding.imgItemVer)
+
+            itemView.setOnClickListener {
+                onItemClick(favorit)
+            }
         }
     }
 
@@ -30,7 +34,7 @@ class FavoritAdapter(
                 oldItem: FavoritEvent,
                 newItem: FavoritEvent
             ): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id && oldItem.isBookmarked == newItem.isBookmarked
             }
 
             override fun areContentsTheSame(

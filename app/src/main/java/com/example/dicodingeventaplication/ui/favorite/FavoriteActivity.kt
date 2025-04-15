@@ -1,5 +1,6 @@
 package com.example.dicodingeventaplication.ui.favorite
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -10,8 +11,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.databinding.ActivityFavoriteBinding
+import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.home.HomeViewModel
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 
@@ -38,10 +41,21 @@ class FavoriteActivity : AppCompatActivity() {
 
         binding.favoriteBtnBack.setOnClickListener { finish() }
 
-//        val factory: EventViewModelFactory = EventViewModelFactory.getInstance(this)
-//        val viewModel: FavoritViewModel by viewModels {
-//            factory
-//        }
+        val linearLayout = LinearLayoutManager(this)
+        binding.rvFavorite.layoutManager = linearLayout
 
+        val adapter = FavoritAdapter(this) { event ->
+            val intent = Intent(this, DetailEventActivity::class.java)
+            intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+            startActivity(intent)
+        }
+
+        binding.rvFavorite.adapter = adapter
+
+        favoritViewModel.getFavoritBookmark().observe(this){
+            binding.upcomingSimmmer.stopShimmer()
+            binding.upcomingSimmmer.visibility = View.INVISIBLE
+            adapter.submitList(it)
+        }
     }
 }

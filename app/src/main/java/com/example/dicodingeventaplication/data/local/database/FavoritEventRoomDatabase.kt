@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 import com.example.dicodingeventaplication.data.local.dao.FavoritEventDao
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 
-@Database(entities = [FavoritEvent::class], version = 1)
+@Database(entities = [FavoritEvent::class], version = 1, exportSchema = false)
 abstract class FavoritEventRoomDatabase : RoomDatabase() {
     abstract fun favoritEventDao(): FavoritEventDao
 

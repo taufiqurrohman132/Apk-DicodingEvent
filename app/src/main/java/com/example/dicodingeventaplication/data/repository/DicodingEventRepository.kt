@@ -1,9 +1,11 @@
 package com.example.dicodingeventaplication.data.repository
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.liveData
+import androidx.lifecycle.map
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.local.dao.FavoritEventDao
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
@@ -12,17 +14,16 @@ import com.example.dicodingeventaplication.data.remote.model.Event
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.data.remote.model.EventResponse
-import com.example.dicodingeventaplication.data.remote.network.ApiConfig
 import com.example.dicodingeventaplication.data.remote.network.ApiService
 import com.example.dicodingeventaplication.utils.AppExecutors
 import com.example.dicodingeventaplication.utils.ResourceProvider
 import com.example.dicodingeventaplication.utils.SharedPrefHelper
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.flow.first
 import okio.IOException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.Volatile
 
 class
@@ -37,7 +38,7 @@ DicodingEventRepository private constructor(
 //    private val gson = Gson()
 
     // variable chache
-    private var  cacheDataUpcoming: EventResponse? = null
+    private var  cacheDataUpcoming: FavoritEventDao? = null
     private var  cacheDataFinished: EventResponse? = null
     private var  cacheDataSearching: EventResponse? = null
     private var  cacheDataDetail: DetailEventResponse? = null
@@ -47,7 +48,7 @@ DicodingEventRepository private constructor(
     private var querySearch = ""
     private var isActive = -1
 
-    private val result = MediatorLiveData<Resource<List<FavoritEvent>>>()
+    private val result = MediatorLiveData<Resource<List<FavoritEvent?>>>()
 
     companion object{
         const val TAG = "srepo"
@@ -78,15 +79,21 @@ DicodingEventRepository private constructor(
 
     // FAVORIT
     suspend fun setFavoritBookmark(favorit: FavoritEvent, bookmarkState: Boolean){
-//        appExecutors.diskIO.execute {
-//        }
-        favorit.isBookmarked = bookmarkState
-        favoritDao.updateFavorit(favorit)
+//        favorit.isBookmarked = bookmarkState
+        val updateEvent = favorit.copy(isBookmarked = bookmarkState)
+        favoritDao.updateFavorit(updateEvent)
     }
 
     fun getFavoritBookmark(): LiveData<List<FavoritEvent>> {
-        return favoritDao.getBookmarkedFavorit()
+        return favoritDao.getBookmarkedEvent()
     }
+
+    suspend fun deleteAllFavorit() =
+        favoritDao.deleteAll()
+
+    suspend fun updateAll(event: FavoritEvent) =
+        favoritDao.updateFavorit(event)
+
 
     // ambil history dari shered
     fun getSearchHistory(): List<EventItem> =
@@ -187,63 +194,234 @@ DicodingEventRepository private constructor(
         })
     }
 
-    fun findEvent(active: Int, callback: (Resource<List<EventItem?>>) -> Unit) {
-        callback(Resource.Loading())
+//    fun findEvent(active: Int, callback: (Resource<List<EventItem?>>) -> Unit){
+//        callback(Resource.Loading())
+//
+//        apiService.getEventActive(active).enqueue(object : Callback<EventResponse> { // enqueue otomatis berjalan di bg treaad
+//            override fun onResponse(
+//                call: Call<EventResponse>,
+//                response: Response<EventResponse>
+//            ) {
+//                if (response.isSuccessful) {
+//                    val responsBody = response.body()
+//                    val respons = response.body()?.listEvents
+//                    if (responsBody?.listEvents?.isNotEmpty() == true) {
+//                        when(active){
+//                            FINISHED -> cacheDataFinished = responsBody// masukkan chace
+//                            UPCOMING -> cacheDataUpcoming = responsBody
+//                        }
+//
+//                        val limitEvent = responsBody.listEvents//.take(5)
+//                        callback(Resource.Success(limitEvent))
+//                    } else {
+//                        Log.e(TAG, "onResponse: data null}")
+//                        callback(Resource.Empty(List<EventItem?>(2) {null})) // data kosong
+//                    }
+//                } else {
+//                    Log.e(TAG, "onResponse: onfailure ${response.message()}")
+//                    val erroMessage = errorHandling(response.code())
+//                    when(active){
+//                        FINISHED -> callback(Resource.Error(erroMessage, List<EventItem?>(5) {null}))
+//                        UPCOMING -> callback(Resource.Error(erroMessage))
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
+//                Log.e(TAG, "onResponse: onfailure ${t.message}")
+//                if (t is IOException) {
+//                    callback(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi),  List<EventItem?>(5) {null}))
+//                    if (cacheDataUpcoming != null || cacheDataFinished != null) {
+//                        when(active){
+//                            UPCOMING -> {
+//                                if (cacheDataUpcoming != null)
+//                                    callback(Resource.Success(cacheDataUpcoming?.listEvents ?: emptyList()))
+//                                else
+//                                    callback(Resource.Empty(List<EventItem?>(2) {null}))
+//                            }
+//                            FINISHED -> {
+//                                callback(Resource.Success(cacheDataFinished?.listEvents ?: emptyList()))
+//                            }
+//                        }
+//                        Log.d(TAG, "onFailure cace data: tes")
+//                    }
+//                } else {
+//                    when(active){
+//                        FINISHED -> callback(Resource.Error(resourceProvider.getString(R.string.error_takterduga), List<EventItem?>(5) {null}))
+//                        UPCOMING -> callback(Resource.Error(resourceProvider.getString(R.string.error_takterduga)))
+//                    }
+//                }
+//            }
+//        })
+//    }
 
-        apiService.getEventActive(active).enqueue(object : Callback<EventResponse> { // enqueue otomatis berjalan di bg treaad
-            override fun onResponse(
-                call: Call<EventResponse>,
-                response: Response<EventResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val responsBody = response.body()
-                    if (responsBody?.listEvents?.isNotEmpty() == true) {
-                        when(active){
-                            FINISHED -> cacheDataFinished = responsBody// masukkan chace
-                            UPCOMING -> cacheDataUpcoming = responsBody
-                        }
-                        val limitEvent = responsBody.listEvents//.take(5)
-                        callback(Resource.Success(limitEvent))
-                    } else {
-                        Log.e(TAG, "onResponse: data null}")
-                        callback(Resource.Empty(List<EventItem?>(2) {null})) // data kosong
+//    fun findEvent(active: Int, callback: (Resource<List<EventItem?>>) -> Unit): LiveData<Resource<List<EventItem?>>> = liveData {
+//        emit(Resource.Loading())
+//
+//        try {
+//            val response = apiService.getEventActive(active) // suspend function
+//            if (response.isSuccessful) {
+//                val responseBody = response.body()
+//                val events = responseBody?.listEvents
+//
+//                if (!events.isNullOrEmpty()) {
+//                    val newList = events.map { event ->
+//                        val isFavorit = favoritDao.isEventFavorit(event.name.toString())
+//                        FavoritEvent(
+//                            event.id,
+//                            event.name.toString(),
+//                            event.imageLogo,
+//                            event.summary,
+//                            event.category,
+//                            event.ownerName,
+//                            event.cityName,
+//                            event.beginTime,
+//                            event.quota,
+//                            event.registrants,
+//                            event.link,
+//                            isFavorit
+//                        )
+//                    }
+//
+//                    favoritDao.insert(newList)
+//
+//                    when (active) {
+//                        FINISHED -> cacheDataFinished = responseBody
+//                        UPCOMING -> cacheDataUpcoming = responseBody
+//                    }
+//                    emit(Resource.Success(events)) // kalau mau emit juga ke LiveData
+//                    Log.d(TAG, "findEvent: success")
+//                } else {
+//                    emit(Resource.Empty(List(2) { null }))
+//                }
+//            } else {
+//                val errorMsg = errorHandling(response.code())
+//                when (active) {
+//                    FINISHED -> emit(Resource.Error(errorMsg, List(5) { null }))
+//                    UPCOMING -> emit(Resource.Error(errorMsg))
+//                }
+//            }
+//        } catch (e: IOException) {
+//            emit(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi), List(5) { null }))
+//            // fallback ke cache
+//            if (cacheDataUpcoming != null || cacheDataFinished != null) {
+//                when (active) {
+//                    UPCOMING -> {
+//                        if (cacheDataUpcoming != null)
+//                            callback(Resource.Success(cacheDataUpcoming?.listEvents ?: emptyList()))
+//                        else
+//                            callback(Resource.Empty(List<EventItem?>(2) {null}))
+//                    }
+//                    FINISHED -> {
+//                        emit(Resource.Success(cacheDataFinished?.listEvents ?: emptyList()))
+//                    }
+//                }
+//            }
+//        } catch (e: Exception) {
+//            val message = resourceProvider.getString(R.string.error_takterduga)
+//            when (active) {
+//                FINISHED -> emit(Resource.Error(message, List(5) { null }))
+//                UPCOMING -> emit(Resource.Error(message))
+//            }
+//            Log.e(TAG, "findEvent: terjadi eror $e")
+//        }
+//    }
+
+//    callback: (Resource<List<EventItem?>>) -> Unit
+
+    fun findEvent(active: Int): LiveData<Resource<List<FavoritEvent?>>?> = liveData {
+        emit(Resource.Loading())
+        var errorHappened = false
+        var isConnectNet = true
+        var isEmptyList = false
+
+        try {
+            val response = apiService.getEventActive(active) // suspend function
+            if (response.isSuccessful) {
+                val responseBody = response.body()
+                val events = responseBody?.listEvents
+
+                if (!events.isNullOrEmpty()) {
+                    val newList = events.map { event ->
+                        val isFavorit = favoritDao.isEventFavorit(event.id ?: 0)
+                        FavoritEvent(
+                            event.id,
+                            event.name.toString(),
+                            event.imageLogo,
+                            event.mediaCover,
+                            event.summary,
+                            event.category,
+                            event.ownerName,
+                            event.cityName,
+                            event.beginTime,
+                            event.quota,
+                            event.registrants,
+                            event.link,
+                            isFavorit,
+                            active
+                        )
                     }
+
+//                    favoritDao.deleteAll()
+                    favoritDao.deleteAllByActive(active)
+                    favoritDao.insert(newList)
+
+                    Log.d(TAG, "findEvent: success")
                 } else {
-                    Log.e(TAG, "onResponse: onfailure ${response.message()}")
-                    val erroMessage = errorHandling(response.code())
-                    when(active){
-                        FINISHED -> callback(Resource.Error(erroMessage, List<EventItem?>(5) {null}))
-                        UPCOMING -> callback(Resource.Error(erroMessage))
-                    }
+                    isEmptyList = true
+//                    emit(Resource.Empty(List(2) { null }))
+                }
+            } else {
+                val errorMsg = errorHandling(response.code())
+                when (active) {
+                    FINISHED -> emit(Resource.Error(errorMsg, List(5) { null }))
+                    UPCOMING -> emit(Resource.Error(errorMsg))
                 }
             }
+        } catch (e: IOException) {
+            Log.d(TAG, "findEvent: eror connect")
+            isConnectNet = false
+            emit(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi), List(5) { null }))
+        } catch (e: Exception) {
+            errorHappened = true
+            val message = resourceProvider.getString(R.string.error_takterduga)
+            when (active) {
+                FINISHED -> emit(Resource.Error(message, List(5) { null }))
+                UPCOMING -> emit(Resource.Error(message))
+            }
+            Log.e(TAG, "findEvent: terjadi eror $e")
+        } finally {
+            if (!errorHappened ){
+                val raaSource: LiveData<List<FavoritEvent>?> = when (active) {
+                    UPCOMING -> favoritDao.getEventUpcoming()
+                    FINISHED -> favoritDao.getEventFinished()
+                    else -> favoritDao.getEventAll()
+                }
 
-            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-                Log.e(TAG, "onResponse: onfailure ${t.message}")
-                if (t is IOException) {
-                    callback(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi),  List<EventItem?>(5) {null}))
-                    if (cacheDataUpcoming != null || cacheDataFinished != null) {
-                        when(active){
-                            UPCOMING -> {
-                                if (cacheDataUpcoming != null)
-                                    callback(Resource.Success(cacheDataUpcoming?.listEvents ?: emptyList()))
-                                else
-                                    callback(Resource.Empty(List<EventItem?>(2) {null}))
-                            }
-                            FINISHED -> {
-                                callback(Resource.Success(cacheDataFinished?.listEvents ?: emptyList()))
-                            }
+                val source: LiveData<Resource<List<FavoritEvent?>>?> = raaSource.map { list ->
+                    Log.d(TAG, "findEvent: list ${raaSource.value}")
+
+                    when{
+                        !list.isNullOrEmpty() -> {
+                            val result: Resource<List<FavoritEvent?>> = Resource.Success(list)
+                            result
                         }
-                        Log.d(TAG, "onFailure cace data: tes")
-                    }
-                } else {
-                    when(active){
-                        FINISHED -> callback(Resource.Error(resourceProvider.getString(R.string.error_takterduga), List<EventItem?>(5) {null}))
-                        UPCOMING -> callback(Resource.Error(resourceProvider.getString(R.string.error_takterduga)))
+                        !isConnectNet -> {
+                            Log.d(TAG, "findEvent: not connect data local")
+                            isConnectNet = true
+                            Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi), List(5) { null })
+                        }
+                        isEmptyList -> Resource.Empty(List(2) { null })
+                        else -> {
+                            isConnectNet = true
+                            Resource.Loading()
+                        }
                     }
                 }
+
+                emitSource(source)
             }
-        })
+        }
     }
 
     fun findDetailEvent(id: Int?, callback: (Resource<Event?>) -> Unit) {

@@ -11,9 +11,14 @@ import android.widget.TextView
 import com.example.dicodingeventaplication.R
 
 object DialogUtils {
+    private var isPopUpShowing = false
 
     // puo op tengah layar
     fun showPopUpErrorDialog(context: Context, message: String?){
+        if (isPopUpShowing) return
+
+        isPopUpShowing = true
+
         val dialogView = LayoutInflater.from(context).inflate(R.layout.item_error_popup , null)
         val dialog = AlertDialog.Builder(context)
             .setView(dialogView)
@@ -29,6 +34,7 @@ object DialogUtils {
         // auto dismis setelah 2 detrik
         Handler(Looper.getMainLooper()).postDelayed({
             dialog.dismiss()
+            isPopUpShowing = false
         }, 2000)
     }
 }

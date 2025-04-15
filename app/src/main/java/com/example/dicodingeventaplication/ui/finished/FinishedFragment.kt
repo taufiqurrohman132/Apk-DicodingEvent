@@ -214,6 +214,8 @@ class FinishedFragment : Fragment() {
                         binding.finishedLottieError.visibility = View.INVISIBLE
                         binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
                     }
+
+                    else -> {}
                 }
             }
             Log.d(TAG, "onViewCreated: state $event")
@@ -265,7 +267,7 @@ class FinishedFragment : Fragment() {
 
         // SEARCHING
         binding.finishedRvSearch.layoutManager = LinearLayoutManager(requireContext())
-        val adapterSearch = SearchResultRVAdapter(
+        val adapterSearch = FinishedSearchAdapter(
             context = requireActivity(),
             onItemClick = { eventItem ->
                 val intent = Intent(requireContext(), DetailEventActivity::class.java)
@@ -380,7 +382,7 @@ class FinishedFragment : Fragment() {
 
     companion object{
         private const val SCROLL_POSITION = "scrol_position"
-        private const val TAG = "upcomingfrag"
+        const val TAG = "upcomingfrag"
         private const val APP_BAR_OFFSET = "app_bar_offset"
     }
 }
