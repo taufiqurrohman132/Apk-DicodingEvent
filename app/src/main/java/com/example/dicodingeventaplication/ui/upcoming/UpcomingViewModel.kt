@@ -46,20 +46,8 @@ class UpcomingViewModel(
             delay(500)
             Log.d(UpcomingFragment.TAG, "findEvent upcome berjalan di thread: ${Thread.currentThread().name}")
 
-//            repository.findEvent(HomeFragment.UPCOMING) { event ->
-//                _resultEvenItemUpcome.value = when(event){
-//                    is Resource.Error -> {
-//                        _dialogNotifError.value = SingleEvent(event.message)
-//                        event
-//                    }
-//                    is Resource.ErrorConection -> {
-//                        _dialogNotifError.value = SingleEvent(event.message)
-//                        event
-//                    }
-//                    else-> event
-//                }
-//            }
             val sourse = repository.findEvent(HomeFragment.UPCOMING)
+            _resultEvenItemUpcome.removeSource(sourse)
             _resultEvenItemUpcome.addSource(sourse) { event ->
                 if (event is Resource.Error || event is Resource.ErrorConection){
                     _dialogNotifError.value = SingleEvent(event.message)
@@ -74,6 +62,19 @@ class UpcomingViewModel(
             _isReload.value = false
         }
     }
+//            repository.findEvent(HomeFragment.UPCOMING) { event ->
+//                _resultEvenItemUpcome.value = when(event){
+//                    is Resource.Error -> {
+//                        _dialogNotifError.value = SingleEvent(event.message)
+//                        event
+//                    }
+//                    is Resource.ErrorConection -> {
+//                        _dialogNotifError.value = SingleEvent(event.message)
+//                        event
+//                    }
+//                    else-> event
+//                }
+//            }
 
     fun startReload(){
         _isReload.value = true
@@ -95,16 +96,16 @@ class UpcomingViewModel(
     fun onFavoritClicked(favorit: FavoritEvent, isBookmarked: Boolean) {
         FavoritHelper.togleFavorit(viewModelScope, repository, favorit, isBookmarked)
     }
-
-    fun saveFavorit(favorit: FavoritEvent){
-        viewModelScope.launch {
-            repository.setFavoritBookmark(favorit, true)
-        }
-    }
-
-    fun deleteFavorit(favorit: FavoritEvent){
-        viewModelScope.launch {
-            repository.setFavoritBookmark(favorit, false)
-        }
-    }
+//
+//    fun saveFavorit(favorit: FavoritEvent){
+//        viewModelScope.launch {
+//            repository.setFavoritBookmark(favorit, true)
+//        }
+//    }
+//
+//    fun deleteFavorit(favorit: FavoritEvent){
+//        viewModelScope.launch {
+//            repository.setFavoritBookmark(favorit, false)
+//        }
+//    }
 }

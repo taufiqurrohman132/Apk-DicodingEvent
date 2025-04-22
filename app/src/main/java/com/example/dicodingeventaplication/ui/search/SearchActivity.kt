@@ -93,8 +93,10 @@ class SearchActivity : AppCompatActivity(), DialogListener {
             },
             onItemClick = { event ->
                 val intent = Intent(this@SearchActivity, DetailEventActivity::class.java)
-                intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-                startActivity(intent)
+                searchViewModel.getDetailFromSearch(event){ result ->
+                    intent.putExtra(DetailEventActivity.EXTRA_EVENT, result)
+                    startActivity(intent)
+                }
                 Handler(Looper.getMainLooper()).postDelayed({
                     this.searchViewModel.saveToHistory(event)
                     Log.d("actsc", "setEvent Data: onsucces")
@@ -109,8 +111,10 @@ class SearchActivity : AppCompatActivity(), DialogListener {
             context = this,
             onItemClick = {event ->
                 val intent = Intent(this@SearchActivity, DetailEventActivity::class.java)
-                intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-                startActivity(intent)
+                searchViewModel.getDetailFromSearch(event){ result ->
+                    intent.putExtra(DetailEventActivity.EXTRA_EVENT, result)
+                    startActivity(intent)
+                }
                 this.searchViewModel.saveToHistory(event)// save ke hsitory
                 Log.d("actsc", "setEvent Data: onsucces")
             }

@@ -13,20 +13,19 @@ import android.view.animation.DecelerateInterpolator
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.WindowCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
+import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.data.remote.model.Event
 import com.example.dicodingeventaplication.databinding.ActivityDetailEventBinding
-import com.example.dicodingeventaplication.ui.finished.FinishedViewModel
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.utils.TimeUtils
@@ -43,9 +42,13 @@ class DetailEventActivity : AppCompatActivity() {
         )[NetworkViewModel::class.java]
     }
 
-    private val itemId: Int by lazy {
-        intent.getIntExtra(EXTRA_ID, 0)
-    }
+//    private val itemId: Int by lazy {
+//        intent.getIntExtra(EXTRA_ID, 0)
+//    }
+//
+//    private val event: FavoritEvent by lazy {
+//        intent.getParcelableExtra<FavoritEvent>(EXTRA_EVENT)
+//    }
 
 //    private val detailRepository: DicodingEventRepository by lazy {
 //        DicodingEventRepository(this)
@@ -61,6 +64,8 @@ class DetailEventActivity : AppCompatActivity() {
     private val viewModel: DetailEventViewModel by viewModels {
         factory
     }
+
+    private var isPopUpShowing = false
 
     private var isExpanned = true
 
@@ -89,13 +94,17 @@ class DetailEventActivity : AppCompatActivity() {
         binding = ActivityDetailEventBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val event = intent.getParcelableExtra<FavoritEvent>(EXTRA_EVENT)
+
         //buat status bar custom
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        viewModel.findDetailEvent(event?.id ?: 0)
 
         networkViewModel.isInternetAvailible.observe(this) { isAvailible ->
             if (isAvailible && !viewModel.isDetailSuccess){
                 viewModel.startReload()
-                viewModel.findDetailEvent(itemId)
+                viewModel.findDetailEvent(event?.id ?: 0)
             }
         }
 
@@ -124,7 +133,7 @@ class DetailEventActivity : AppCompatActivity() {
             !isExpanned // cegah swip jika colap
         }
 
-        viewModel.listEventData.observe(this){ eventData ->
+        viewModel.eventData.observe(this){ eventData ->
             if (!viewModel.isReload.value!!){
                 when(eventData){
                     is Resource.Success ->{
@@ -205,7 +214,9 @@ class DetailEventActivity : AppCompatActivity() {
         }
 
         viewModel.snackbarEmpty.observe(this){
+            isPopUpShowing = true
             if (!viewModel.isDetailSuccess){
+                if (isPopUpShowing) return@observe
 
                 it.getContentIfNotHandled()?.let { mesage ->
                     val snackbar = Snackbar.make(window.decorView.rootView, mesage, Snackbar.LENGTH_INDEFINITE)
@@ -220,7 +231,8 @@ class DetailEventActivity : AppCompatActivity() {
                     snackbar.setTextColor(resources.getColor(R.color.white, null))
                     snackbar.setAction("Try Again"){
                         viewModel.startReload()
-                        viewModel.findDetailEvent(itemId)
+                        viewModel.findDetailEvent(event?.id ?: 0)
+                        isPopUpShowing = false
                     }
                     snackbar.setAnchorView(binding.detailBtnRegisterNow.id)
                     snackbar.show()
@@ -228,21 +240,23 @@ class DetailEventActivity : AppCompatActivity() {
             }
         }
 
-        Log.d(TAG, "item id = $itemId")
+        Log.d(TAG, "item id = ${event?.id}")
+        Log.d(TAG, "item = ${event}")
 
-        binding.detailSwipRefresh.setColorSchemeColors(resources.getColor(R.color.biru_tua))
-        binding.detailSwipRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.white))
+        // swip
+        binding.detailSwipRefresh.setColorSchemeColors(ContextCompat.getColor(this, R.color.biru_tua))
+        binding.detailSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this, R.color.icon))
         binding.detailSwipRefresh.setProgressViewOffset(true, 0, 200)
 
         binding.detailSwipRefresh.setOnRefreshListener {
             viewModel.startRefreshing()
             viewModel.startReload()
-            viewModel.findDetailEvent(itemId)
+            viewModel.findDetailEvent(event?.id ?: 0)
         }
 
         binding.detailBtnLottieErorKoneksi.setOnClickListener {
             viewModel.startReload()
-            viewModel.findDetailEvent(itemId)
+            viewModel.findDetailEvent(event?.id ?: 0)
         }
 
         binding.detailBtnBack.setOnClickListener {
@@ -274,6 +288,14 @@ class DetailEventActivity : AppCompatActivity() {
 
             }
         }
+
+        binding.detailBtnAddFavorit.setOnClickListener {
+            if (event != null) {
+                viewModel.onFavoritClicked(event, !event.isBookmarked)
+            }else{
+
+            }
+        }
     }
 
     private fun setEventData(eventsItem: Event?){
@@ -291,8 +313,12 @@ class DetailEventActivity : AppCompatActivity() {
 
             // remaining quota
             binding.detailProgres.max = eventsItem.quota ?: 0
-            binding.detailProgres.progress = eventsItem.registrants ?: 0
-            val animatorRemainingProgress = ObjectAnimator.ofInt(binding.detailProgres, "progress",0, eventsItem.registrants ?: 0)
+            // Set progress ke 0 untuk awal animasi
+            binding.detailProgres.progress = 0
+
+            // jalankan animasi dari 0 ke jumlah registrants
+            val targetProgress = eventsItem.registrants ?: 0
+            val animatorRemainingProgress = ObjectAnimator.ofInt(binding.detailProgres, "progress",0, targetProgress)
             animatorRemainingProgress.duration = 1000
             animatorRemainingProgress.interpolator = DecelerateInterpolator() // efek Perlambatan
             animatorRemainingProgress.start()
@@ -336,6 +362,8 @@ class DetailEventActivity : AppCompatActivity() {
         }
     }
 
+
+
     private fun cleanHtml(html: String): String{
         return html
             .replace(Regex("<img[^>]*>"), "")
@@ -343,6 +371,8 @@ class DetailEventActivity : AppCompatActivity() {
 
     companion object{
         const val EXTRA_ID = "extra id"
+        const val EXTRA_EVENT = "extra objek"
+        const val EXTRA_BOOKMARKED = "extra bookmark"
         private const val TAG = "detailactivity"
         private const val SCROLL_POSITION = "scrol_position"
         private const val APP_BAR_OFFSET = "app_bar_offset"

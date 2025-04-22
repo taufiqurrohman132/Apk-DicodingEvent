@@ -36,4 +36,7 @@ interface FavoritEventDao {
 
     @Query("SELECT EXISTS(SELECT * FROM favorit WHERE id = :id AND bookmarked = 1)")
     suspend fun isEventFavorit(id: Int): Boolean
+
+    @Query("SELECT * FROM favorit WHERE id = :id")
+    suspend fun getById(id: Int?): FavoritEvent
 }

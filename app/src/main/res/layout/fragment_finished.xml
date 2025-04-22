@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<FrameLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,7 +33,7 @@
                 app:scrimAnimationDuration="300"
                 app:statusBarScrim="@color/white"
                 app:expandedTitleMarginBottom="138dp"
-                app:expandedTitleTextColor="@color/white"
+                app:expandedTitleTextColor="@color/icon"
                 app:collapsedTitleTextColor="@color/black"
                 app:expandedTitleTextAppearance="@style/Text.Header38_appbar"
                 app:collapsedTitleTextAppearance="@style/Text.Header22_appbar"
@@ -68,7 +68,7 @@
                         android:layout_toEndOf="@id/finished.tv_descover"
                         android:layout_marginBottom="70dp"
                         android:layout_marginStart="6dp"
-                        android:textColor="@color/white"
+                        android:textColor="@color/icon"
                         android:textStyle="bold"
                         android:textSize="34sp"/>
                     <TextView
@@ -82,7 +82,7 @@
                         android:textColor="@color/abu_abu_terang2"/>
                 </RelativeLayout>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/finished.cv_total"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,13 +90,15 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginHorizontal="16dp"
                     app:cardCornerRadius="16dp"
+                    app:cardElevation="8dp"
+                    app:strokeColor="@color/surface_strok"
                     android:alpha="0.0"
                     >
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:background="@color/white"
+                        android:background="@color/surface"
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="12dp"
                         android:gravity="center_vertical"
@@ -127,7 +129,7 @@
 
 
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/finished.toolbar"
                     android:layout_width="match_parent"
@@ -178,6 +180,7 @@
                             <include layout="@layout/simmer_finished" />
 
                             <include layout="@layout/simmer_finished" />
+
                         </LinearLayout>
                     </androidx.core.widget.NestedScrollView>
                 </com.facebook.shimmer.ShimmerFrameLayout>
@@ -270,50 +273,50 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="84dp"
+                android:background="@color/biru_tua"
                 android:orientation="horizontal"
                 android:paddingTop="24dp"
-                android:background="@color/biru_tua"
-                >
+                tools:ignore="UselessParent">
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/finished.sv"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
                     android:layout_marginVertical="10dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_searchview_finished"
                     android:queryHint="Search"
                     app:autoShowKeyboard="true"
-                    app:queryBackground="@color/tranparant"
                     app:iconifiedByDefault="false"
-                    android:background="@drawable/bg_searchview_finished"
-                    />
+                    app:queryBackground="@color/tranparant"
+                    tools:ignore="TooDeepLayout" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/finished.btn_cancel_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
                     android:layout_gravity="bottom"
-                    android:text="@string/cancel"
-                    android:paddingHorizontal="0dp"
+                    android:layout_marginBottom="3dp"
                     android:backgroundTint="@color/biru_tua"
+                    android:paddingHorizontal="0dp"
+                    android:text="@string/cancel"
                     android:textColor="@color/kuning"
                     android:textStyle="bold"
-                    app:cornerRadius="8dp"/>
+                    app:cornerRadius="8dp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/finished.rv_search"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
+                android:layout_height="match_parent" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/finished.search.lottie_not_result"
             android:layout_width="match_parent"

@@ -27,7 +27,7 @@
             android:theme="@style/Theme.Material3.DayNight"
             app:statusBarScrim="@color/white"
             app:expandedTitleMarginBottom="40dp"
-            app:expandedTitleTextColor="@color/white"
+            app:expandedTitleTextColor="@color/icon"
             app:collapsedTitleTextColor="@color/black"
             app:expandedTitleTextAppearance="@style/Text.Header38_appbar"
             app:collapsedTitleTextAppearance="@style/Text.Header22_appbar"
@@ -58,7 +58,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_toEndOf="@id/tv_descover"
                     android:layout_marginBottom="70dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/icon"
                     android:layout_marginStart="6dp"
                     android:textStyle="bold"
                     android:textSize="34sp"/>

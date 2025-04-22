@@ -11,9 +11,9 @@ import retrofit2.http.Query
 interface ApiService {
     // detail
     @GET("events/{id}")
-    fun getEventDetail(
+    suspend fun getEventDetail(
         @Path("id") id: Int
-    ): Call<DetailEventResponse>
+    ): Response<DetailEventResponse>
 
     // get event aktive
     @GET("events")
@@ -23,8 +23,8 @@ interface ApiService {
 
     // search event
     @GET("events")
-    fun searchEvent(
+    suspend fun searchEvent(
         @Query("active") active: Int = -1,
         @Query("q") query: String
-    ): Call<EventResponse>
+    ): Response<EventResponse>
 }

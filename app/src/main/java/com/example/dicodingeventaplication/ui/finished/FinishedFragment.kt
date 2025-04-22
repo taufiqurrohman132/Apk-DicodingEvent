@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
@@ -27,6 +28,7 @@ import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.ui.home.HomeViewModel
 import com.example.dicodingeventaplication.ui.search.SearchResultRVAdapter
+import com.example.dicodingeventaplication.ui.upcoming.UpcomingFragment
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.google.android.material.R as ResMaterial
@@ -150,7 +152,7 @@ class FinishedFragment : Fragment() {
             // view if colaps
             val iconSearch = binding.finishedToolbar.menu.findItem(R.id.app_search).icon
             if (finishedViewModel.isCollapse)
-                iconSearch?.setTint(Color.BLACK)
+                iconSearch?.setTint(requireContext().getColor(R.color.black))
             else
                 iconSearch?.setTint(Color.WHITE)
 
@@ -166,14 +168,20 @@ class FinishedFragment : Fragment() {
             !isExpanned // cegah swip refrash jika colap
         }
 
-        val stragledLayout = StaggeredGridLayoutManager(2,  StaggeredGridLayoutManager.VERTICAL)
+        val stragledLayout = GridLayoutManager(requireContext(), 2)
         binding.rvFinished.layoutManager = stragledLayout
 
-        val adapterFinished = FinishedRVAdapter(requireContext()) { event ->
-            val intent = Intent(requireContext(), DetailEventActivity::class.java)
-            intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-            startActivity(intent)
-        }
+        val adapterFinished = FinishedRVAdapter(requireContext(),
+            onItemClick = { event ->
+                val intent = Intent(requireContext(), DetailEventActivity::class.java)
+                intent.putExtra(DetailEventActivity.EXTRA_EVENT, event)
+                startActivity(intent)
+            },
+            onBookmarkClick = { favorit ->
+                Log.d(UpcomingFragment.TAG, "onViewCreated: isbookmark ${favorit.isBookmarked}")
+                finishedViewModel.onFavoritClicked(favorit, !favorit.isBookmarked)
+            }
+        )
         binding.rvFinished.adapter = adapterFinished
 
         finishedViewModel.resultEventItemFinished.observe(viewLifecycleOwner){ event ->
@@ -183,6 +191,7 @@ class FinishedFragment : Fragment() {
                     is Resource.Loading -> {
                     }
                     is Resource.Success -> {
+
                         adapterFinished.submitList(event.data)
                         binding.finishedSimmmer.stopShimmer()
                         binding.finishedSimmmer.visibility = View.INVISIBLE
@@ -256,7 +265,7 @@ class FinishedFragment : Fragment() {
 
         // swip
         binding.finishedSwipRefresh.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.biru_tua))
-        binding.finishedSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(requireContext(), R.color.white))
+        binding.finishedSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(requireContext(), R.color.icon))
         binding.finishedSwipRefresh.setProgressViewOffset(true, 0, 200)
 
         binding.finishedSwipRefresh.setOnRefreshListener {
@@ -271,7 +280,7 @@ class FinishedFragment : Fragment() {
             context = requireActivity(),
             onItemClick = { eventItem ->
                 val intent = Intent(requireContext(), DetailEventActivity::class.java)
-                intent.putExtra(DetailEventActivity.EXTRA_ID, eventItem.id)
+                intent.putExtra(DetailEventActivity.EXTRA_EVENT, eventItem)
                 startActivity(intent)
                 Log.d("actsc", "setEvent Data: onsucces")
             },

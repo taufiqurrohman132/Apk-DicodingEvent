@@ -1,9 +1,12 @@
 package com.example.dicodingeventaplication.data.local.entity
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = "favorit")
 data class FavoritEvent(
     @PrimaryKey(autoGenerate = false)
@@ -26,7 +29,7 @@ data class FavoritEvent(
 
     @field:ColumnInfo(name = "isActive")
     var isActive: Int
-){
+) : Parcelable {
     val formatYear: String?
         get() = beginTime?.split(" ")?.getOrNull(0)
 

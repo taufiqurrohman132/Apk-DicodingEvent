@@ -94,6 +94,9 @@ DicodingEventRepository private constructor(
     suspend fun updateAll(event: FavoritEvent) =
         favoritDao.updateFavorit(event)
 
+    suspend fun getDetailFromSearch(eventItem: EventItem) =
+        favoritDao.getById(eventItem.id)
+
 
     // ambil history dari shered
     fun getSearchHistory(): List<EventItem> =
@@ -146,52 +149,138 @@ DicodingEventRepository private constructor(
 //        Log.d(TAG, "remoseSearchHistory: $json")
 //    }
 
-    // mencari event
-    fun searchEvent(query: String, active: Int, callback: (Resource<List<EventItem>>) -> Unit) {
+//     mencari event
+//    fun searchEvent(query: String, active: Int, callback: (Resource<List<EventItem>>) -> Unit) {
+//        callback(Resource.Loading()) // tampilkan loding dulu
+//
+//        apiService.searchEvent(active, query).enqueue(object : Callback<EventResponse> {
+//            override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
+//                if (response.isSuccessful) {
+//                    val responsBody = response.body()
+//                    querySearch = query
+//
+//                    if (responsBody?.listEvents?.isNotEmpty() == true) {
+//                        callback(Resource.Success(responsBody.listEvents.take(8)))
+//                        cacheDataSearching = responsBody
+//                        isActive = active
+//                        Log.e(TAG, "onResponse: onsucces ${response.message()}")
+//                    } else {
+//                        callback(Resource.Empty(emptyList())) // data kosong
+//                        cacheDataSearching = null // kembalikan ke null ketika empty
+//
+//                        Log.e(TAG, "onResponse: onsucces ${response.message()}")
+//                        Log.e(TAG, "onResponse: onsucces data null")
+//                    }
+//                } else {
+//                    Log.e(TAG, "onResponse: onfailure ${response.message()}")
+//                    val erroMessage = errorHandling(response.code())
+//                    callback(Resource.Error(erroMessage))
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
+//                Log.e(TAG, "onResponse: onfailure ${t.message}")
+//                if (t is IOException) {
+//                    if (querySearch == query && isActive == active) {
+//                        if (cacheDataSearching != null)
+//                            callback(Resource.Success(cacheDataSearching?.listEvents?.take(8) ?: emptyList()))
+//                        else{
+//                            callback(Resource.Empty(emptyList()))
+//                        }
+//                    }
+//                    else
+//                        callback(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi)))
+//                } else {
+//                    callback(Resource.Error(resourceProvider.getString(R.string.error_takterduga)))
+//                }
+//            }
+//        })
+//    }
+
+
+    suspend fun searchEvent(query: String, active: Int, callback: (Resource<List<EventItem>>) -> Unit) {
         callback(Resource.Loading()) // tampilkan loding dulu
+        try {
+            val response = apiService.searchEvent(active, query)
+            if (response.isSuccessful){
+                val responseBody = response.body()
+                val event = responseBody?.listEvents
+                querySearch = query
 
-        apiService.searchEvent(active, query).enqueue(object : Callback<EventResponse> {
-            override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
-                if (response.isSuccessful) {
-                    val responsBody = response.body()
-                    querySearch = query
+                if (!event.isNullOrEmpty())  {
+                    isActive = active
+                    callback(Resource.Success(responseBody.listEvents.take(8)))
+                    cacheDataSearching = responseBody
+                    Log.e(TAG, "onResponse: onsucces ${response.message()}")
+                }else{
+                    callback(Resource.Empty(emptyList())) // data kosong
+                    cacheDataSearching = null // kembalikan ke null ketika empty
 
-                    if (responsBody?.listEvents?.isNotEmpty() == true) {
-                        callback(Resource.Success(responsBody.listEvents.take(8)))
-                        cacheDataSearching = responsBody
-                        isActive = active
-                        Log.e(TAG, "onResponse: onsucces ${response.message()}")
-                    } else {
-                        callback(Resource.Empty(emptyList())) // data kosong
-                        cacheDataSearching = null // kembalikan ke null ketika empty
+                    Log.e(TAG, "onResponse: onsucces ${response.message()}")
+                    Log.e(TAG, "onResponse: onsucces data null")
+                }
 
-                        Log.e(TAG, "onResponse: onsucces ${response.message()}")
-                        Log.e(TAG, "onResponse: onsucces data null")
-                    }
-                } else {
-                    Log.e(TAG, "onResponse: onfailure ${response.message()}")
-                    val erroMessage = errorHandling(response.code())
-                    callback(Resource.Error(erroMessage))
+            }else {
+                Log.e(TAG, "onResponse: onfailure ${response.message()}")
+                val erroMessage = errorHandling(response.code())
+                callback(Resource.Error(erroMessage))
+            }
+        } catch (e: IOException){
+            if (querySearch == query && isActive == active) {
+                if (cacheDataSearching != null)
+                    callback(Resource.Success(cacheDataSearching?.listEvents?.take(8) ?: emptyList()))
+                else{
+                    callback(Resource.Empty(emptyList()))
                 }
             }
-
-            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-                Log.e(TAG, "onResponse: onfailure ${t.message}")
-                if (t is IOException) {
-                    if (querySearch == query && isActive == active) {
-                        if (cacheDataSearching != null)
-                            callback(Resource.Success(cacheDataSearching?.listEvents?.take(8) ?: emptyList()))
-                        else{
-                            callback(Resource.Empty(emptyList()))
-                        }
-                    }
-                    else
-                        callback(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi)))
-                } else {
-                    callback(Resource.Error(resourceProvider.getString(R.string.error_takterduga)))
-                }
-            }
-        })
+            else
+                callback(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi)))
+        } catch (e: Exception){
+            callback(Resource.Error(resourceProvider.getString(R.string.error_takterduga)))
+            Log.d(TAG, "searchEvent: respoms $e")
+        }
+//        apiService.searchEvent(active, query).enqueue(object : Callback<EventResponse> {
+//            override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
+//                if (response.isSuccessful) {
+//                    val responsBody = response.body()
+//                    querySearch = query
+//
+//                    if (responsBody?.listEvents?.isNotEmpty() == true) {
+//                        callback(Resource.Success(responsBody.listEvents.take(8)))
+//                        cacheDataSearching = responsBody
+//                        isActive = active
+//                        Log.e(TAG, "onResponse: onsucces ${response.message()}")
+//                    } else {
+//                        callback(Resource.Empty(emptyList())) // data kosong
+//                        cacheDataSearching = null // kembalikan ke null ketika empty
+//
+//                        Log.e(TAG, "onResponse: onsucces ${response.message()}")
+//                        Log.e(TAG, "onResponse: onsucces data null")
+//                    }
+//                } else {
+//                    Log.e(TAG, "onResponse: onfailure ${response.message()}")
+//                    val erroMessage = errorHandling(response.code())
+//                    callback(Resource.Error(erroMessage))
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
+//                Log.e(TAG, "onResponse: onfailure ${t.message}")
+//                if (t is IOException) {
+//                    if (querySearch == query && isActive == active) {
+//                        if (cacheDataSearching != null)
+//                            callback(Resource.Success(cacheDataSearching?.listEvents?.take(8) ?: emptyList()))
+//                        else{
+//                            callback(Resource.Empty(emptyList()))
+//                        }
+//                    }
+//                    else
+//                        callback(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi)))
+//                } else {
+//                    callback(Resource.Error(resourceProvider.getString(R.string.error_takterduga)))
+//                }
+//            }
+//        })
     }
 
 //    fun findEvent(active: Int, callback: (Resource<List<EventItem?>>) -> Unit){
@@ -346,7 +435,7 @@ DicodingEventRepository private constructor(
                         val isFavorit = favoritDao.isEventFavorit(event.id ?: 0)
                         FavoritEvent(
                             event.id,
-                            event.name.toString(),
+                            event.name,
                             event.imageLogo,
                             event.mediaCover,
                             event.summary,
@@ -424,53 +513,98 @@ DicodingEventRepository private constructor(
         }
     }
 
-    fun findDetailEvent(id: Int?, callback: (Resource<Event?>) -> Unit) {
-        callback(Resource.Loading())
+//    fun findDetailEvent(id: Int?, callback: (Resource<Event?>) -> Unit) {
+//        callback(Resource.Loading())
+//
+//        if (id != null){
+//            apiService.getEventDetail(id).enqueue(object : Callback<DetailEventResponse> { // enqueue otomatis berjalan di bg treaad
+//                override fun onResponse(
+//                    call: Call<DetailEventResponse>,
+//                    response: Response<DetailEventResponse>
+//                ) {
+//                    if (response.isSuccessful){
+//                        val responsBody = response.body()
+//                        if (responsBody?.event != null){
+//                            cacheDataDetail = responsBody
+//                            callback(Resource.Success(responsBody.event))
+//                        }else{
+//                            Log.e(TAG, "onResponse: data null}")
+//                            callback(Resource.Empty(
+//                                null,
+//                                resourceProvider.getString(R.string.data_not_available_please_try_again_later)
+//                            ))
+//                        }
+//                        Log.d("res", "onResponse: succes $responsBody")
+//                    }else{
+//                        Log.e("res", "onResponse: onfailure ${response.message()}")
+//                        val errorMessage = errorHandling(response.code())
+//                        callback(Resource.Error(errorMessage))
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<DetailEventResponse>, t: Throwable) {
+//                    Log.e(TAG, "detail onResponse: onfailure ${t.message}")
+//                    if (t is IOException) {
+//                        callback(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi)))
+//                        if (cacheDataDetail != null ){
+//                            Log.d(TAG, "onFailure: cache != null ")
+//                            callback(Resource.Success(cacheDataDetail?.event))
+//                        }
+////                    else
+////                        callback(Resource.ErrorConection(context.resources.getString(R.string.error_koneksi)))
+//                    } else {
+//                        callback(Resource.Error(resourceProvider.getString(R.string.error_takterduga)))
+//                    }
+//                }
+//            })
+//        } else{
+//            callback(Resource.Empty(null))
+//        }
+//    }
 
-        if (id != null){
-            apiService.getEventDetail(id).enqueue(object : Callback<DetailEventResponse> { // enqueue otomatis berjalan di bg treaad
-                override fun onResponse(
-                    call: Call<DetailEventResponse>,
-                    response: Response<DetailEventResponse>
-                ) {
-                    if (response.isSuccessful){
-                        val responsBody = response.body()
-                        if (responsBody?.event != null){
-                            cacheDataDetail = responsBody
-                            callback(Resource.Success(responsBody.event))
-                        }else{
-                            Log.e(TAG, "onResponse: data null}")
-                            callback(Resource.Empty(
+//    callback: (Resource<Event?>) -> Unit
+
+    fun findDetailEvent(id: Int):  LiveData<Resource<Event?>> = liveData{
+        emit(Resource.Loading())
+
+        Log.d(TAG, "findDetailEvent: id $id")
+//        if (id != null){
+            try {
+                val response = apiService.getEventDetail(id)// enqueue otomatis berjalan di bg treaad
+
+                if (response.isSuccessful) {
+                    val responsBody = response.body()
+                    if (responsBody?.event != null) {
+                        cacheDataDetail = responsBody
+                        emit(Resource.Success(responsBody.event))
+                    } else {
+                        Log.e(TAG, "onResponse: data null}")
+                        emit(
+                            Resource.Empty(
                                 null,
                                 resourceProvider.getString(R.string.data_not_available_please_try_again_later)
-                            ))
-                        }
-                        Log.d("res", "onResponse: succes $responsBody")
-                    }else{
-                        Log.e("res", "onResponse: onfailure ${response.message()}")
-                        val errorMessage = errorHandling(response.code())
-                        callback(Resource.Error(errorMessage))
+                            )
+                        )
                     }
-                }
+                    Log.d("res", "onResponse: succes $responsBody")
+                } else {
+                    Log.e("res", "onResponse: onfailure ${response.message()}")
+                    val errorMessage = errorHandling(response.code())
+                    emit(Resource.Error(errorMessage))
 
-                override fun onFailure(call: Call<DetailEventResponse>, t: Throwable) {
-                    Log.e(TAG, "detail onResponse: onfailure ${t.message}")
-                    if (t is IOException) {
-                        callback(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi)))
-                        if (cacheDataDetail != null ){
-                            Log.d(TAG, "onFailure: cache != null ")
-                            callback(Resource.Success(cacheDataDetail?.event))
-                        }
-//                    else
-//                        callback(Resource.ErrorConection(context.resources.getString(R.string.error_koneksi)))
-                    } else {
-                        callback(Resource.Error(resourceProvider.getString(R.string.error_takterduga)))
-                    }
                 }
-            })
-        } else{
-            callback(Resource.Empty(null))
-        }
+            }catch (e: IOException){
+                Log.d(TAG, "findDetailEvent: eror konek")
+                emit(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi)))
+                if (cacheDataDetail?.event?.id == id && cacheDataDetail != null ){
+                    Log.d(TAG, "onFailure: cache != null ")
+                    emit(Resource.Success(cacheDataDetail?.event))
+                }
+            }catch (e: Exception){
+                emit(Resource.Error(resourceProvider.getString(R.string.error_takterduga)))
+            }
+
+//        }
     }
 
     private fun errorHandling(code: Int): String {
@@ -482,6 +616,18 @@ DicodingEventRepository private constructor(
             500 -> resourceProvider.getString(R.string.error_500)
             503 -> resourceProvider.getString(R.string.error_503)
             else -> resourceProvider.getString(R.string.error_else)
+        }
+    }
+
+    suspend fun fetchNearestEvent(): EventItem?{
+        val response = apiService.getEventActive(UPCOMING)
+
+        if (response.isSuccessful){
+            val lisEvent = response.body()?.listEvents
+            val event = lisEvent?.get(lisEvent.size - 1)
+            return event
+        }else{
+            throw Exception("Gagal ambil event: ${response.code()}")
         }
     }
 

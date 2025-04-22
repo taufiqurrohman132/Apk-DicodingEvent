@@ -2,10 +2,12 @@ package com.example.dicodingeventaplication.ui.search
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
@@ -14,14 +16,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
+
 class SearchViewModel(private val repository: DicodingEventRepository) : ViewModel() {
 //    private var cacheResult: List<EventItem>? = null
 //    private var lastQuery: String? = null
 
     private val _searchResultEvenItem = MutableLiveData<Resource<List<EventItem>>>(
         Resource.Success(
-        emptyList()
-    ))
+            emptyList()
+        ))
     val searchResultEventItem: LiveData<Resource<List<EventItem>>> = _searchResultEvenItem
 
     private val _listHistory = MutableLiveData<List<EventItem>>()
@@ -32,6 +35,9 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
 
     private val _activeQuery = MutableLiveData<Int>().apply { value = -1 } // default
     val activeQuery: LiveData<Int> get() =  _activeQuery
+
+//    private val _detailEvent = MutableLiveData<FavoritEvent>()
+//    val detailEvent: LiveData<FavoritEvent> = _detailEvent
 
     var isSearchSuccess = false
 
@@ -88,14 +94,23 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
 
             if (!isActive || query.isBlank()) return@launch // tidak lanjut jika job dibatalkan
             try {
-                repository.searchEvent(query, active) { result ->
+                repository.searchEvent(query, active){ event ->
                     if (queryTimestamp == latestQueryTimestamp)
-                        _searchResultEvenItem.value = result
+                        _searchResultEvenItem.value = event
                 }
+
             } catch (e: Exception){
+                Log.e(TAG, "searchEvent: ${e.message}", )
                 if (queryTimestamp == latestQueryTimestamp)
                     _searchResultEvenItem.value = Resource.Error(e.message ?: "Sedang Bermasalah")
             }
+        }
+    }
+
+    fun getDetailFromSearch(eventItem: EventItem, onResult: (FavoritEvent) -> Unit){
+        viewModelScope.launch {
+            val value = repository.getDetailFromSearch(eventItem)
+            onResult(value)
         }
     }
 

@@ -26,7 +26,7 @@
             app:title="Favorite"
             android:theme="@style/Theme.Material3.DayNight"
             app:statusBarScrim="@color/white"
-            app:expandedTitleMarginBottom="34dp"
+            app:expandedTitleMarginBottom="38dp"
             app:expandedTitleMarginStart="116dp"
             app:expandedTitleTextColor="@color/black"
             app:collapsedTitleTextColor="@color/black"
@@ -35,14 +35,15 @@
             >
             <View
                 android:layout_width="match_parent"
-                android:layout_height="140dp"/>
+                android:layout_height="150dp"/>
             <TextView
+                android:id="@+id/favorite.size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="36 Favorite"
+                android:text="@string/favorit_size"
                 android:layout_gravity="bottom"
                 style="@style/Text.Konten14"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="14dp"
                 android:layout_marginStart="16dp"
                 android:textColor="@color/black"/>
 
@@ -54,7 +55,7 @@
                 android:text="Event"
                 android:layout_gravity="bottom"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="28dp"
                 android:textColor="@color/ungu_neon"
                 android:textStyle="bold"
                 style="@style/Text.Header38_appbar"/>
@@ -80,8 +81,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Edit"
-                    android:textColor="@color/biru_tua"
+                    android:text="@string/edit"
+                    android:textColor="@color/ungu_neon"
                     style="@style/Text.JudulBerita18"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="10dp"
@@ -97,28 +98,28 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/upcoming.simmmer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            app:shimmer_auto_start="true"
-            app:shimmer_duration="1500"
-            app:shimmer_repeat_count="3"
-            app:shimmer_direction="left_to_right">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp">
+<!--        <com.facebook.shimmer.ShimmerFrameLayout-->
+<!--            android:id="@+id/upcoming.simmmer"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="16dp"-->
+<!--            app:shimmer_auto_start="true"-->
+<!--            app:shimmer_duration="1500"-->
+<!--            app:shimmer_repeat_count="3"-->
+<!--            app:shimmer_direction="left_to_right">-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                android:paddingHorizontal="16dp">-->
 
-                <include layout="@layout/simmer_upcoming" />
+<!--                <include layout="@layout/simmer_upcoming" />-->
 
-                <include layout="@layout/simmer_upcoming" />
+<!--                <include layout="@layout/simmer_upcoming" />-->
 
-                <include layout="@layout/simmer_upcoming" />
-            </LinearLayout>
-        </com.facebook.shimmer.ShimmerFrameLayout>
+<!--                <include layout="@layout/simmer_upcoming" />-->
+<!--            </LinearLayout>-->
+<!--        </com.facebook.shimmer.ShimmerFrameLayout>-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_favorite"

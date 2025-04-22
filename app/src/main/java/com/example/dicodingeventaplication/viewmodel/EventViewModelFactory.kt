@@ -3,7 +3,6 @@ package com.example.dicodingeventaplication.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.dicodingeventaplication.data.di.Injection
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 //import com.example.dicodingeventaplication.data.repository.FavoritEventRepository
@@ -16,7 +15,6 @@ import com.example.dicodingeventaplication.ui.upcoming.UpcomingViewModel
 
 class EventViewModelFactory(
     private val repository: DicodingEventRepository,
-//    private val favoritRepository: FavoritEventRepository
     private val id: Int? = null
 ) : ViewModelProvider.NewInstanceFactory() {
     companion object{

@@ -12,6 +12,7 @@ import com.example.dicodingeventaplication.data.repository.DicodingEventReposito
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.ui.home.HomeFragment
 import com.example.dicodingeventaplication.ui.upcoming.UpcomingFragment
+import com.example.dicodingeventaplication.utils.FavoritHelper
 import com.example.dicodingeventaplication.utils.SingleEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -62,10 +63,12 @@ class FinishedViewModel(private val repository: DicodingEventRepository) : ViewM
 //                }
 //            }
             val sourse = repository.findEvent(HomeFragment.FINISHED)
+            _resultEvenItemFinished.removeSource(sourse)
             _resultEvenItemFinished.addSource(sourse) { event ->
                 if (event is Resource.Error || event is Resource.ErrorConection){
                     _dialogNotifError.value = SingleEvent(event.message)
                 }
+
                 _resultEvenItemFinished.value = event
                 Log.d(FinishedFragment.TAG, "findEventUpcome: event is $event")
             }
@@ -94,6 +97,11 @@ class FinishedViewModel(private val repository: DicodingEventRepository) : ViewM
                 }
             }
 
+    }
+
+    // Favorit
+    fun onFavoritClicked(favorit: FavoritEvent, isBookmarked: Boolean) {
+        FavoritHelper.togleFavorit(viewModelScope, repository, favorit, isBookmarked)
     }
 
     fun startReload(){

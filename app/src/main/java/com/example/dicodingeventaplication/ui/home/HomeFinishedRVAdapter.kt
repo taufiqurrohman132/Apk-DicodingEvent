@@ -42,6 +42,8 @@ class HomeFinishedRVAdapter(
             item.tvHomeFinishedError.isVisible = eventsItem == null
             item.itemHomeFinishedItem.isVisible = eventsItem != null
 
+            item.swipLayout.isEnabledSwipe = false
+
             if (eventsItem != null){
                 item.tvOwnerItemVer.text = eventsItem.ownerName
                 item.tvJudulItemVer.text = eventsItem.name
@@ -56,7 +58,7 @@ class HomeFinishedRVAdapter(
                     .thumbnail(0.50f)
                     .into(item.imgItemVer)
 
-                itemView.setOnClickListener {
+                item.dragItem.setOnClickListener {
                     onItemClick(eventsItem)
                 }
             } else {

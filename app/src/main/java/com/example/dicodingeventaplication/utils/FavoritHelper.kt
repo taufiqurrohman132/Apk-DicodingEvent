@@ -2,6 +2,7 @@ package com.example.dicodingeventaplication.utils
 
 import android.util.Log
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.example.dicodingeventaplication.R
@@ -26,13 +27,15 @@ object FavoritHelper {
         }
     }
 
-    fun updateIcon(event: FavoritEvent, icon: ImageButton){
-        if (event.isBookmarked){
-            icon.setImageDrawable(ContextCompat.getDrawable(icon.context, R.drawable.ic_favorit))
-        } else {
-            icon.setImageDrawable(ContextCompat.getDrawable(icon.context, R.drawable.ic_favorit_not))
+    fun updateIcon(event: FavoritEvent?, icon: ImageView?){
+        if (event != null && icon != null){
+            if (event.isBookmarked){
+                icon.setImageDrawable(ContextCompat.getDrawable(icon.context, R.drawable.ic_favorit))
+            } else {
+                icon.setImageDrawable(ContextCompat.getDrawable(icon.context, R.drawable.ic_favorit_not))
+            }
+            Log.d(UpcomingFragment.TAG, "updateIcon: ${event.isBookmarked}")
         }
-        Log.d(UpcomingFragment.TAG, "updateIcon: ${event.isBookmarked}")
     }
 
 //    fun updateAll(

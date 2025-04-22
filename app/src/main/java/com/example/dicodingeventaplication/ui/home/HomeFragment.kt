@@ -1,12 +1,16 @@
 package com.example.dicodingeventaplication.ui.home
 
+import android.Manifest
 import android.content.Intent
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -32,6 +36,8 @@ import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.ui.favorite.FavoritViewModel
 import com.example.dicodingeventaplication.ui.favorite.FavoriteActivity
+import com.example.dicodingeventaplication.ui.upcoming.UpcomingFragment
+import com.example.dicodingeventaplication.ui.upcoming.UpcomingFragment.Companion
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
@@ -56,6 +62,17 @@ class HomeFragment : Fragment() {
         factory
     }
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                Toast.makeText(requireContext(), "Notifications permission granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Notifications permission rejected", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,6 +86,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // reques permision
+        if (Build.VERSION.SDK_INT >= 33) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
 
         binding.homeNestedScroll.scrollTo(0, homeViewModel.scrollY)
 
@@ -87,13 +109,20 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+//        homeViewModel.findImageHeader()
 
         // inisialize adapter
-        val adapterCorousel = HomeCorouselRVAdaptor(requireActivity()){ event ->
-            val intent = Intent(requireContext(), DetailEventActivity::class.java)
-            intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
-            startActivity(intent)
-        }
+        val adapterCorousel = HomeCorouselRVAdaptor(requireActivity(),
+            onItemClick = { event ->
+                val intent = Intent(requireContext(), DetailEventActivity::class.java)
+                intent.putExtra(DetailEventActivity.EXTRA_EVENT, event)
+                startActivity(intent)
+            },
+            onBookmarkClick = {favorit ->
+                Log.d(UpcomingFragment.TAG, "onViewCreated: isbookmark ${favorit.isBookmarked}")
+                homeViewModel.onFavoritClicked(favorit, !favorit.isBookmarked)
+            }
+        )
         binding.vpItemCorousel.adapter = adapterCorousel
 
         // finished
@@ -106,7 +135,7 @@ class HomeFragment : Fragment() {
 
         val adapterFinished = HomeFinishedRVAdapter(requireActivity()) { event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
-            intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+            intent.putExtra(DetailEventActivity.EXTRA_EVENT, event)
             startActivity(intent)
         }
 
@@ -136,16 +165,18 @@ class HomeFragment : Fragment() {
                     binding.homeProgres.isVisible = false
                 }
                 is Resource.Error -> {
-                    binding.imgpopHeaderHome.setImageResource(0)
-                    binding.homeHeaderRefresh.visibility = View.VISIBLE
-                    binding.homeHeaderBtnFavorit.visibility = View.INVISIBLE
-                    binding.imgpopHeaderHome.foreground = null
                     binding.homeProgres.isVisible = false
-                    binding.homeHeaderRefresh.isVisible = true
+                    if (!homeViewModel.hasLocalData.value){
+                        binding.imgpopHeaderHome.setImageResource(0)
+                        binding.homeHeaderRefresh.visibility = View.VISIBLE
+                        binding.homeHeaderBtnFavorit.visibility = View.INVISIBLE
+                        binding.imgpopHeaderHome.foreground = null
+                    }
+//                    binding.homeHeaderRefresh.isVisible = true
                 }
                 is Resource.ErrorConection -> {
                     binding.homeProgres.isVisible = false
-                    if (!homeViewModel.isHeaderSuccess)
+                    if (!homeViewModel.isHeaderSuccess && !homeViewModel.hasLocalData.value)
                         binding.homeHeaderRefresh.isVisible = true
                     Log.d(TAG, "onViewCreated: header event data ${event.data}")
                 }
@@ -178,7 +209,8 @@ class HomeFragment : Fragment() {
                                 binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
                                 binding.homeLottieCorousel.visibility = View.INVISIBLE
                                 binding.homeUpcomingSimmmer.stopShimmer()
-                                binding.homeLottieErrorCorousel.visibility = View.VISIBLE
+                                if (!homeViewModel.hasLocalData.value)
+                                    binding.homeLottieErrorCorousel.visibility = View.VISIBLE
                             }
                         }
                     }
@@ -189,7 +221,7 @@ class HomeFragment : Fragment() {
                         binding.homeUpcomingSimmmer.stopShimmer()
                         binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
 
-                        if (adapterCorousel.currentList.isEmpty() && !homeViewModel.isUpcomingSuccess){
+                        if (adapterCorousel.currentList.isEmpty() && !homeViewModel.isUpcomingSuccess && !homeViewModel.hasLocalData.value){
                             binding.homeLottieCorousel.visibility = View.VISIBLE
                             Log.d(
                                 TAG,
@@ -293,7 +325,7 @@ class HomeFragment : Fragment() {
 
         // swip refres
         binding.homeSwipRefresh.setColorSchemeColors(resources.getColor(R.color.biru_tua))
-        binding.homeSwipRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.white))
+        binding.homeSwipRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.icon))
         binding.homeSwipRefresh.setProgressViewOffset(true, 0, 200)
 
         binding.homeSwipRefresh.setOnRefreshListener {
@@ -313,7 +345,7 @@ class HomeFragment : Fragment() {
         binding.imgHeaderHome.setOnClickListener {
             if (homeViewModel.isHeaderSuccess && eventHeader != null){
                 val intent = Intent(requireContext(), DetailEventActivity::class.java)
-                intent.putExtra(DetailEventActivity.EXTRA_ID, eventHeader?.id)
+                intent.putExtra(DetailEventActivity.EXTRA_EVENT, eventHeader)
                 startActivity(intent)
             }
         }

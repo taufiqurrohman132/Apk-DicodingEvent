@@ -10,12 +10,14 @@ import com.bumptech.glide.Glide
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemFinishedBinding
+import com.example.dicodingeventaplication.utils.FavoritHelper
 
 class FinishedRVAdapter(
     private val context: Context,
-    private val onItemClick: (FavoritEvent) -> Unit
+    private val onItemClick: (FavoritEvent) -> Unit,
+    private val onBookmarkClick: (FavoritEvent) -> Unit
 ) : ListAdapter<FavoritEvent, FinishedRVAdapter.ItemViewHolder>(DIFF_CALLBACK) {
-    inner class ItemViewHolder(private val binding: ItemFinishedBinding) : ViewHolder(binding.root) {
+    inner class ItemViewHolder( val binding: ItemFinishedBinding) : ViewHolder(binding.root) {
         fun bind(eventItem: FavoritEvent){
 
             binding.finishedTvJudulItem.text = eventItem.name
@@ -35,6 +37,13 @@ class FinishedRVAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val event = getItem(position)
         holder.bind(event)
+
+        val ivBookmark = holder.binding.finishedBtnFavorit
+        FavoritHelper.updateIcon(event, ivBookmark)
+
+        ivBookmark.setOnClickListener {
+            onBookmarkClick(event)
+        }
     }
 
     companion object{

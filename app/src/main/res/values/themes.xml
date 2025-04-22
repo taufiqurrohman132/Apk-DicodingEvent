@@ -1,13 +1,11 @@
 <resources >
     <!-- Base application theme. -->
-    <style name="Theme.DicodingEventAplication" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.DicodingEventAplication" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/biru_tua</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-<!--        <item name="colorSecondary">@color/teal_200</item>-->
-<!--        <item name="colorSecondaryVariant">@color/teal_200</item>-->
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/biru_tua_trans60</item>
@@ -16,7 +14,8 @@
         <!-- background layout. -->
         <item name="colorSurface">@color/white</item>
         <item name="colorSurfaceVariant">@color/white</item>      <!-- search bar color dll . -->
-        <item name="android:colorBackground">@color/white</item>>
+        <item name="android:colorBackground">@color/baground</item>>
+
     </style>
 
     <style name="ActiveIndikatorStyle" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
@@ -62,7 +61,7 @@
     <style name="Button.Back" parent="Theme.DicodingEventAplication">
         <item name="android:layout_width">48dp</item>
         <item name="android:layout_height">48dp</item>
-        <item name="android:backgroundTint">@color/white_trans</item>
+<!--        <item name="android:backgroundTint">@color/white_trans</item>-->
     </style>
     <style name="Button.Back.Nobg" parent="Theme.DicodingEventAplication">
         <item name="android:layout_width">48dp</item>

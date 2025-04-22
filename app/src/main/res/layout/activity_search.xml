@@ -63,15 +63,15 @@
                         android:paddingStart="8dp"
                         android:paddingEnd="0dp"
                         app:icon="@drawable/ic_filter_add"
-                        app:iconTint="@color/biru_tua"
+                        app:iconTint="@color/bottom_nav_icon"
                         app:iconSize="22dp"
                         android:text="@string/filter"
-                        android:textColor="@color/biru_tua"
+                        android:textColor="@color/bottom_nav_icon"
                         app:iconPadding="0.00dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginStart="0dp"
                         android:background="@color/tranparant"
-                        app:tint="@color/biru_tua" />
+                        app:tint="@color/bottom_nav_icon" />
 
                 </LinearLayout>
             </com.google.android.material.appbar.MaterialToolbar>
@@ -107,7 +107,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/all"
-                            android:textColor="@color/white"
+                            android:textColor="@color/icon"
                             style="@style/Text.Subjudul16"
                             android:textStyle="bold"/>
                     </FrameLayout>

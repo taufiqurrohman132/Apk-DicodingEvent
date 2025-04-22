@@ -19,4 +19,9 @@
         android:name="com.example.dicodingeventaplication.ui.finished.FinishedFragment"
         tools:layout="@layout/fragment_finished">
     </fragment>
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.dicodingeventaplication.ui.settings.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
 </navigation>

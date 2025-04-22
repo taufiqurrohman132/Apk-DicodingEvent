@@ -34,12 +34,12 @@
             android:padding="16dp"
             app:cornerRadius="12dp"
             app:strokeWidth="2dp"
-            app:strokeColor="@color/biru_tua"
-            android:backgroundTint="@color/white"
+            app:strokeColor="@color/bottom_nav_icon"
+            android:backgroundTint="@color/surface"
             android:text="@string/add_to_favorit"
             style="@style/Text.Subjudul16"
             android:textStyle="bold"
-            android:textColor="@color/biru_tua"/>
+            android:textColor="@color/bottom_nav_icon"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/detail.btn_register_now"
             android:layout_width="0dp"
@@ -48,11 +48,11 @@
             android:layout_marginStart="8dp"
             android:padding="16dp"
             app:cornerRadius="12dp"
-            android:backgroundTint="@color/biru_tua"
+            android:backgroundTint="@color/bottom_nav_icon"
             android:text="@string/register_now"
             style="@style/Text.Subjudul16"
             android:textStyle="bold"
-            android:textColor="@color/white"/>
+            android:textColor="@color/icon"/>
 
     </LinearLayout>
 
@@ -118,7 +118,7 @@
                         android:text=""
                         android:layout_marginEnd="60dp"
                         android:layout_marginBottom="196dp"
-                        android:textColor="@color/white"
+                        android:textColor="@color/icon"
                         style="@style/Text.Header24"
                         android:layout_marginStart="16dp"
                         app:layout_collapseMode="parallax"
@@ -247,7 +247,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 app:indicatorSize="100dp"
-                                app:indicatorColor="@color/biru_tua"
+                                app:indicatorColor="@color/hijau"
                                 app:trackThickness="8dp"
                                 app:trackColor="@color/ungu_neon"
                                 app:trackCornerRadius="4dp"
@@ -565,7 +565,7 @@
                             android:layout_height="0dp"
                             android:layout_marginVertical="3dp"
                             android:layout_marginEnd="16dp"
-                            android:backgroundTint="@color/biru_tua"
+                            android:backgroundTint="@color/hijau"
                             android:background="@drawable/img_btn_filter_radius12"
                             app:layout_constraintTop_toTopOf="@id/detail.tv_pendafter"
                             app:layout_constraintBottom_toBottomOf="@id/detail.tv_pendafter"

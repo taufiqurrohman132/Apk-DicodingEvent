@@ -5,11 +5,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="22dp"
     android:layout_marginTop="16dp"
-    android:backgroundTint="@color/white">
+    android:backgroundTint="@color/surface">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/upcoming.imgitem"
@@ -84,7 +85,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.00"
-            app:tint="@color/biru_tua" />
+            app:tint="@color/bottom_nav_icon" />
 
         <TextView
             android:id="@+id/upcoming.tv_judul_item"
@@ -92,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="@color/white"
+            android:textColor="@color/icon"
             android:textStyle="bold"
             android:ellipsize="end"
             android:maxLines="3"
@@ -128,7 +129,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/dicoding_event"
-            android:textColor="@color/white"
+            android:textColor="@color/icon"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
@@ -144,7 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/remaining_quota_item_upcome"
-            android:textColor="@color/white"
+            android:textColor="@color/icon"
             android:textStyle="bold"
             android:layout_marginHorizontal="12dp"
             app:layout_constraintBottom_toBottomOf="@id/upcoming.tv_owner_item"

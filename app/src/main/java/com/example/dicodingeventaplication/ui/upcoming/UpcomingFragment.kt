@@ -14,6 +14,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.dicodingeventaplication.EventWorker
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.databinding.FragmentUpcomingBinding
@@ -24,6 +28,7 @@ import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.ui.home.HomeViewModel
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.google.android.material.appbar.AppBarLayout
+import java.util.concurrent.TimeUnit
 
 class UpcomingFragment : Fragment() {
 
@@ -126,16 +131,12 @@ class UpcomingFragment : Fragment() {
             requireContext(),
             onItemClick = { event ->
                 val intent = Intent(requireContext(), DetailEventActivity::class.java)
-                intent.putExtra(DetailEventActivity.EXTRA_ID, event.id)
+                intent.putExtra(DetailEventActivity.EXTRA_EVENT, event)
                 startActivity(intent)
             },
             onBookmarkClick = {favorit ->
                 Log.d(TAG, "onViewCreated: isbookmark ${favorit.isBookmarked}")
-                if (favorit.isBookmarked){
-                    upcomingViewModel.deleteFavorit(favorit)
-                }else{
-                    upcomingViewModel.saveFavorit(favorit)
-                }
+                upcomingViewModel.onFavoritClicked(favorit, !favorit.isBookmarked)
             }
         )
         binding.rvUpcoming.adapter = adapterUpcoming
@@ -221,7 +222,7 @@ class UpcomingFragment : Fragment() {
 
         // swip
         binding.upcomingSwipRefresh.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.biru_tua))
-        binding.upcomingSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(requireContext(), R.color.white))
+        binding.upcomingSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(requireContext(), R.color.icon))
         binding.upcomingSwipRefresh.setProgressViewOffset(true, 0, 200)
 
         binding.upcomingSwipRefresh.setOnRefreshListener {
@@ -230,6 +231,18 @@ class UpcomingFragment : Fragment() {
             upcomingViewModel.findEventUpcome()
         }
     }
+//
+//    private fun startDailyReminderEvent(){
+//        val periodicRequest = PeriodicWorkRequestBuilder<EventWorker>(
+//            1, TimeUnit.DAYS
+//        ).build()
+//
+//        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
+//            "percobaan",
+//            ExistingPeriodicWorkPolicy.REPLACE,
+//            periodicRequest
+//        )
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

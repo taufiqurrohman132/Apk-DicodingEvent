@@ -1,6 +1,6 @@
 <resources >
     <!-- Base application theme. -->
-    <style name="Theme.DicodingEventAplication" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.DicodingEventAplication" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/biru_tua</item>
@@ -16,7 +16,7 @@
          <!-- background layout. -->
         <item name="colorSurface">@color/white</item>
         <item name="colorSurfaceVariant">@color/white</item>      <!-- search bar color dll . -->
-        <item name="android:colorBackground">@color/white</item>
+        <item name="android:colorBackground">@color/baground</item>
     </style>
 
     <style name="ActiveIndikatorStyle" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
@@ -73,7 +73,7 @@
         <item name="android:layout_height">48dp</item>
     </style>
 
-    <style name="SearchViewStyle" parent="ThemeOverlay.MaterialComponents.Light">
+    <style name="SearchViewStyle" parent="ThemeOverlay.MaterialComponents.Dark">
         <item name="android:textAppearance">@style/SearchViewTextApperance</item>
     </style>
     <style name="SearchViewTextApperance" parent="TextAppearance.AppCompat.Medium">

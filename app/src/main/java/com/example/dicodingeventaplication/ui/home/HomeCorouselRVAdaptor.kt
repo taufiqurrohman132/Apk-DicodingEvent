@@ -14,11 +14,13 @@ import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.utils.TimeUtils
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemHomeCorouselBinding
+import com.example.dicodingeventaplication.utils.FavoritHelper
 import java.util.concurrent.Executors
 
 class HomeCorouselRVAdaptor(
     private val context: Context,
-    private val onItemClick: (FavoritEvent) -> Unit
+    private val onItemClick: (FavoritEvent) -> Unit,
+    private val onBookmarkClick: (FavoritEvent) -> Unit
 ) : ListAdapter<FavoritEvent, HomeCorouselRVAdaptor.ItemViewHolder>(
     AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<FavoritEvent>() {
         override fun areItemsTheSame(oldItem: FavoritEvent, newItem: FavoritEvent): Boolean {
@@ -33,7 +35,7 @@ class HomeCorouselRVAdaptor(
         .setBackgroundThreadExecutor(Executors.newSingleThreadExecutor()) // jalankan di bg tred
         .build()
 ){
-    inner class ItemViewHolder(private val item: ItemHomeCorouselBinding) : ViewHolder(item.root) {
+    inner class ItemViewHolder( val item: ItemHomeCorouselBinding) : ViewHolder(item.root) {
         // inisialisasi data
         fun bind(eventsItem: FavoritEvent?){
             item.itemCorousel.isVisible = eventsItem != null
@@ -66,6 +68,14 @@ class HomeCorouselRVAdaptor(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val event = getItem(position)
+
         holder.bind(event)
+
+        val ivBookmark = holder.item.ivFavorit
+        FavoritHelper.updateIcon(event, ivBookmark)
+
+        ivBookmark.setOnClickListener {
+            onBookmarkClick(event)
+        }
     }
 }

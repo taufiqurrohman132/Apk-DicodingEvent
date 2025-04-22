@@ -66,5 +66,21 @@
     <string name="cancel">Cancel</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="settings">Settings</string>
+    <string name="next">next</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="dicoding_event_v2_54_1_678">Dicoding Event v2.54.1+678</string>
+    <string name="faq">FAQ</string>
+    <string name="ask_a_question">Ask a Question</string>
+    <string name="english">English</string>
+    <string name="leanguage">Leanguage</string>
+    <string name="appearance">Appearance</string>
+    <string name="security">Security</string>
+    <string name="privacy">Privacy</string>
+    <string name="notification">Notification</string>
+    <string name="applications">Applications</string>
+    <string name="edit">Edit</string>
+    <string name="favorit_size">%s Favorite</string>
+    <string name="favorit_null">0 Favorite</string>
 
 </resources>
