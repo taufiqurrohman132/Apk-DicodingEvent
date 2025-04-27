@@ -112,16 +112,16 @@ class DetailEventActivity : AppCompatActivity() {
             if (isAvailible && !viewModel.isDetailSuccess){
                 viewModel.startReload()
                 Log.d(TAG, "onCreate: internet dipanggil ")
-                viewModel.findDetailEvent(event?.id ?: 0, event)
+                viewModel.findDetailEvent(event?.id ?: 0)
             } else if (!isAvailible)
                 Log.d(TAG, "onCreate: no internet dipanggil ")
-                viewModel.findDetailEvent(event?.id ?: 0, event)
+                viewModel.findDetailEvent(event?.id ?: 0)
         }
 
         // akses find detail ketika pertama launch
         if (isLaunch){
             Log.d(TAG, "onCreate: instance dipanggil ")
-            viewModel.findDetailEvent(event?.id ?: 0,event)
+            viewModel.findDetailEvent(event?.id ?: 0)
         }
 
         var url: String? = null
@@ -247,7 +247,7 @@ class DetailEventActivity : AppCompatActivity() {
                     snackbar.setTextColor(resources.getColor(R.color.white, null))
                     snackbar.setAction("Try Again"){
                         viewModel.startReload()
-                        viewModel.findDetailEvent(event?.id ?: 0, event)
+                        viewModel.findDetailEvent(event?.id ?: 0)
                         isPopUpShowing = false
                     }
                     snackbar.setAnchorView(binding.detailBtnRegisterNow.id)
@@ -267,12 +267,12 @@ class DetailEventActivity : AppCompatActivity() {
         binding.detailSwipRefresh.setOnRefreshListener {
             viewModel.startRefreshing()
             viewModel.startReload()
-            viewModel.findDetailEvent(event?.id ?: 0, event)
+            viewModel.findDetailEvent(event?.id ?: 0)
         }
 
         binding.detailBtnLottieErorKoneksi.setOnClickListener {
             viewModel.startReload()
-            viewModel.findDetailEvent(event?.id ?: 0, event)
+            viewModel.findDetailEvent(event?.id ?: 0)
         }
 
         binding.detailBtnBack.setOnClickListener {

@@ -4,7 +4,7 @@
     <!--    <color name="teal_700">#FF018786</color>-->
     <color name="icon">#FFFFFFFF</color>
     <color name="text_tersiery">#D3D3D3</color>
-    <color name="biru_tua_second">#757575</color>
+<!--    <color name="biru_tua_second">#757575</color>-->
 <!--    <color name="surface">#3E1E52   </color> &lt;!&ndash; cardungu, dialog&ndash;&gt;-->
 <!--    <color name="surface">#1A1F3C</color> &lt;!&ndash; card biru, dialog&ndash;&gt;-->
     <color name="surface">#2A2A2A</color> <!-- card abu, dialog-->
@@ -14,7 +14,7 @@
 
     <color name="bottom_nav_icon">#8A2BE2</color>
 
-    <color name="ic_favorit_white_trans">#40FFFFFF</color>
+<!--    <color name="ic_favorit_white_trans">#40FFFFFF</color>-->
     <color name="ic_favorit_white_trans_60">#80FFFFFF</color>
 
     <color name="blue_link">#00FFFF</color>
@@ -23,12 +23,12 @@
 
     <color name="notif_eror">#608A2BE2</color>
 
-    <color name="hitam">#FF000000</color>
+<!--    <color name="hitam">#FF000000</color>-->
 
     <color name="black">#FFFFFFFF</color>
     <color name="black_trans80">#80000000</color>
     <color name="white">#121212</color>
-    <color name="abu_abu_gelap">#212121</color>
+<!--    <color name="abu_abu_gelap">#212121</color>-->
     <color name="abu_abu">#757575</color>
     <color name="merah">#FF0000</color>
     <color name="hijau">#1CCB00</color>

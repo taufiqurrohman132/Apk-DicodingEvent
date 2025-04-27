@@ -21,8 +21,8 @@ class EventWorker(
     companion object{
         private const val TAG = "work"
         const val NOTIFICATION_ID = 1
-        const val CHANNEL_ID = "channel_02"
-        const val CHANNEL_NAME = "event channel new"
+        const val CHANNEL_ID = "channel_03"
+        const val CHANNEL_NAME = "event channel 03"
     }
 
     override suspend fun doWork(): Result {

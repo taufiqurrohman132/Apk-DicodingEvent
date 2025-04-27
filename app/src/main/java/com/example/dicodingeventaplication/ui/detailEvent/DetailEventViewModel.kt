@@ -32,7 +32,7 @@ class DetailEventViewModel(private val repository: DicodingEventRepository) : Vi
 
     var isDetailSuccess = false
 
-    fun findDetailEvent(id: Int, event: FavoritEvent?){
+    fun findDetailEvent(id: Int){
         viewModelScope.launch {
             delay(500)
 
