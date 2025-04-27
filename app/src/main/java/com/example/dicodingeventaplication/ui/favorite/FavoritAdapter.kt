@@ -48,6 +48,7 @@ class FavoritAdapter(
                     .load(favorit.imgLogo)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .override(200, 200)
+                    .placeholder(R.drawable.placeholder_view_vector)
                     .thumbnail(0.50f)
                     .into(binding.imgItemVer)
 

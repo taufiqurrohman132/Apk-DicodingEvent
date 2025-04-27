@@ -1,21 +1,17 @@
 package com.example.dicodingeventaplication.ui.favorite
 
 import android.content.Intent
-import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.SettingPreferences
 import com.example.dicodingeventaplication.dataStore

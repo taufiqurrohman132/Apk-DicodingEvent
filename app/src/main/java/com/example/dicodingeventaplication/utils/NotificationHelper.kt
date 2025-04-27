@@ -28,7 +28,7 @@ class NotificationHelper(private val context: Context) {
         notificationId: Int
     ){
         Log.d("notif", "showNotification: jalan")
-        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_apps)
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.mipmap.ic_apps_mipmap)
         val title = "[H-$calculateDateEvent] $name"
 
         val intent = Intent(context, DetailEventActivity::class.java).apply {

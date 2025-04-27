@@ -2,7 +2,6 @@ package com.example.dicodingeventaplication.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.example.dicodingeventaplication.R
