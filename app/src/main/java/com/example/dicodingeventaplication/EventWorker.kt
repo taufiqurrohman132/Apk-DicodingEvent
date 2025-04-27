@@ -5,11 +5,10 @@ import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.CoroutineWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.dicodingeventaplication.data.di.Injection
-import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.utils.NotificationHelper
+import com.example.dicodingeventaplication.utils.TimeUtils
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 
@@ -17,19 +16,20 @@ class EventWorker(
     context: Context,
     workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams) {
-    private var resultStatus: Result? = null
+//    private var resultStatus: Result? = null
 
     companion object{
-        private val TAG = "work"
-        const val EXTRA_TIME = "time"
+        private const val TAG = "work"
         const val NOTIFICATION_ID = 1
-        const val CHANNEL_ID = "channel_01"
-        const val CHANNEL_NAME = "event channel"
+        const val CHANNEL_ID = "channel_02"
+        const val CHANNEL_NAME = "event channel new"
     }
 
     override suspend fun doWork(): Result {
         return try {
-            val today = LocalDate.now().toString()
+            // tidak mengulangi jika dihari yang sama
+            val todayDate = LocalDate.now()
+            val today = todayDate.toString()
             val notifKey = stringPreferencesKey("last_notif_date")
 
             val pref = applicationContext.dataStore.data.first()
@@ -40,11 +40,17 @@ class EventWorker(
             val nearestEvent = repository.fetchNearestEvent()
             Log.d(TAG, "doWork: event $nearestEvent")
 
+            Log.d(TAG, "doWork: today $today")
             if (today != lastNotif){
                 nearestEvent?.let { event ->
                     Log.d(TAG, "doWork: tampilkan notifikasi")
                     val notificationHelper = NotificationHelper(applicationContext)
+                    val eventData = repository.getDetailFromSearch(event)
+
+                    val dateEvent = TimeUtils.calculateDaysToEvent(event.formatYear.toString())
                     notificationHelper.showNotification(
+                        dateEvent.toString(),
+                        eventData,
                         event.name ?: "Dicoding Event",
                         event.beginTime ?: "Menunggu jadwal",
                         CHANNEL_ID,
@@ -52,25 +58,23 @@ class EventWorker(
                         NOTIFICATION_ID
                     )
 
-                // simpan tanggal hari ini
+                    // simpan tanggal hari ini
                     applicationContext.dataStore.edit { prefEdit ->
                         prefEdit[notifKey] = today
                     }
                 }
+
             }else{
                 Log.d(TAG, "doWork: notifikasi hari ini sudah di kirim")
             }
 
             Result.success()
         }catch (e: Exception){
-            Log.e(TAG, "doWork: failure", )
+            Log.e(TAG, "doWork: failure")
             Result.retry()
         }
     }
 
-    private fun getNearestActiveEvent(repository: DicodingEventRepository){
-
-    }
 
 
 }

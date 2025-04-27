@@ -38,5 +38,12 @@ interface FavoritEventDao {
     suspend fun isEventFavorit(id: Int): Boolean
 
     @Query("SELECT * FROM favorit WHERE id = :id")
-    suspend fun getById(id: Int?): FavoritEvent
+    suspend fun getById(id: Int?): FavoritEvent // ketika mengamati terus itu tidak butuh suspand
+
+    @Query("SELECT * FROM favorit WHERE id = :id")
+    fun observeById(id: Int?): LiveData<FavoritEvent>
+
+    // ubah state favorit
+    @Query("UPDATE favorit SET bookmarked = :isFavorit WHERE id = :id")
+    suspend fun updateFavoritState(id: Int?, isFavorit: Boolean)
 }

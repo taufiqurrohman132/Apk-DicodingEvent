@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
-import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemFinishedBinding
 import com.example.dicodingeventaplication.utils.FavoritHelper
 
@@ -23,6 +23,7 @@ class FinishedRVAdapter(
             binding.finishedTvJudulItem.text = eventItem.name
             Glide.with(context)
                 .load(eventItem.imgLogo)
+                .placeholder(R.drawable.placeholder_view_vector)
                 .into(binding.finishedImgitem)
 
             itemView.setOnClickListener { onItemClick(eventItem) }

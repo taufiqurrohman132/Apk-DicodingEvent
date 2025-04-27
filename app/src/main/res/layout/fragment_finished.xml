@@ -98,7 +98,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:background="@color/surface"
+                        android:background="@color/white"
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="12dp"
                         android:gravity="center_vertical"
@@ -118,12 +118,12 @@
                             style="@style/Text.JudulBerita18"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/abu_abu_terang1"
+                            android:backgroundTint="@color/abu_abu_terang_trans"
                             android:minWidth="60dp"
                             android:paddingHorizontal="16dp"
                             android:paddingVertical="16dp"
                             android:text="@string/_0"
-                            android:textColor="@color/biru_tua"
+                            android:textColor="@color/black"
                             android:textStyle="bold"
                             app:cornerRadius="16dp" />
 
@@ -254,7 +254,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:backgroundTint="@color/biru_tua"
+                        android:textColor="@color/icon"
+                        android:backgroundTint="@color/bottom_nav_icon"
                         android:text="@string/try_again"/>
                 </LinearLayout>
             </FrameLayout>

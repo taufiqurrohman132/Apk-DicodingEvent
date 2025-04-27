@@ -9,9 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.ui.home.HomeFragment
-import com.example.dicodingeventaplication.ui.upcoming.UpcomingFragment
 import com.example.dicodingeventaplication.utils.FavoritHelper
 import com.example.dicodingeventaplication.utils.SingleEvent
 import kotlinx.coroutines.delay

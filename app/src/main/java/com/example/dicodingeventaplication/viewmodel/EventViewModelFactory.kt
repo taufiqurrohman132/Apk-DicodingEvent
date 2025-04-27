@@ -15,7 +15,7 @@ import com.example.dicodingeventaplication.ui.upcoming.UpcomingViewModel
 
 class EventViewModelFactory(
     private val repository: DicodingEventRepository,
-    private val id: Int? = null
+//    private val id: Int? = null
 ) : ViewModelProvider.NewInstanceFactory() {
     companion object{
         @Volatile
@@ -38,7 +38,7 @@ class EventViewModelFactory(
         } else if (modelClass.isAssignableFrom(FinishedViewModel::class.java)){
             return FinishedViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(DetailEventViewModel::class.java)){
-            return DetailEventViewModel(repository, id) as T
+            return DetailEventViewModel(repository) as T
         }else if (modelClass.isAssignableFrom(FavoritViewModel::class.java)){
             return FavoritViewModel(repository) as T
         }

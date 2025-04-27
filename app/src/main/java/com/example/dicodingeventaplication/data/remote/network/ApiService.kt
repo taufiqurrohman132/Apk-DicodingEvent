@@ -2,7 +2,6 @@ package com.example.dicodingeventaplication.data.remote.network
 
 import com.example.dicodingeventaplication.data.remote.model.DetailEventResponse
 import com.example.dicodingeventaplication.data.remote.model.EventResponse
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

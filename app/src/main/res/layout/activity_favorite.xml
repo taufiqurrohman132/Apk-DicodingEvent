@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_collapseMode="parallax"
-                android:text="Event"
+                android:text="@string/event"
                 android:layout_gravity="bottom"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="28dp"
@@ -79,6 +79,7 @@
                     android:background="@color/tranparant"
                     app:tint="@color/black" />
                 <TextView
+                    android:id="@+id/favorit.btn_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/edit"
@@ -126,6 +127,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
+
+        <TextView
+            android:id="@+id/favorit.tv_not_favorit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/not_favorit_event"
+            android:visibility="invisible"
+            style="@style/Text.Subjudul16"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"/>
 
         <LinearLayout
             android:id="@+id/favorite.lottie_empty"

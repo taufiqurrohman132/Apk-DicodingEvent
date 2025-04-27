@@ -1,17 +1,18 @@
 package com.example.dicodingeventaplication.ui.search
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.android.material.R
+import com.example.dicodingeventaplication.R
+import com.google.android.material.R as RMaterial
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemSearchResultBinding
 import java.util.concurrent.Executors
@@ -19,8 +20,8 @@ import java.util.concurrent.Executors
 class SearchResultRVAdapter(
     private val context: Context,
     private val onItemClick: (EventItem) -> Unit,
-    private val textColor: Int = Color.BLACK,
-    private val theme: Int = R.style.ThemeOverlay_MaterialComponents_Light
+    private val textColor: Int = ContextCompat.getColor(context, R.color.black),
+    private val theme: Int = RMaterial.style.ThemeOverlay_MaterialComponents_Light
 ) : ListAdapter<EventItem, SearchResultRVAdapter.ItemViewHolder>(
     AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<EventItem>() {
         override fun areItemsTheSame(oldItem: EventItem, newItem: EventItem): Boolean {

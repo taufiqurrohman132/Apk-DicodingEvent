@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.ui.home.HomeFragment.Companion.TAG
 import com.example.dicodingeventaplication.utils.DataStatehelper
 import com.example.dicodingeventaplication.utils.FavoritHelper
@@ -49,8 +48,6 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     var isUpcomingSuccess = false
     var isFinishedSuccess = false
     var isHeaderSuccess = false
-
-    private var isHasLocalData = false
 
     private var job: Job? = null
 
@@ -95,12 +92,20 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
             _headerEvent.addSource(source){ event ->
                 if (event is Resource.Error || event is Resource.ErrorConection){
                     _dialogNotifError.value = SingleEvent(event.message)
-                }
+                } else if (event is Resource.Success)
+                    viewModelScope.launch {
+                        DataStatehelper.setHasLocalData(true)
+                    }
                 _headerEvent.value = event
 
                 _isRefreshing.value = false
                 _isReload.value = false
             }
+//            if (isHasLocalData){
+//                Log.d("statehelper", "findEventheader: finis state helper")
+//                DataStatehelper.setHasLocalData( true)
+//                isHasLocalData = false
+//            }
 
             findEventUpcome()
         }
@@ -115,16 +120,19 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
             _resultEvenItemFinished.removeSource(source)
             _resultEvenItemFinished.addSource(source){ event ->
                 if (event is Resource.Success)
-                    isHasLocalData = true
+                    viewModelScope.launch {
+                        DataStatehelper.setHasLocalData(true)
+                    }
                 _resultEvenItemFinished.value = event
             }
         //          { event ->
 //                _resultEvenItemFinished.value = event
 //            }
-            if (isHasLocalData){
-                DataStatehelper.setHasLocalData( true)
-                isHasLocalData = false
-            }
+//            if (isHasLocalData){
+//                Log.d("statehelper", "findEventUpcome: finis state helper")
+//                DataStatehelper.setHasLocalData( true)
+//                isHasLocalData = false
+//            }
 
         }
 
@@ -163,10 +171,12 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
                     is Resource.Success -> {
                         val itemFromApi = event.data ?: emptyList()
                         if (itemFromApi.size in 1..4){
-                            isHasLocalData = true
+                            viewModelScope.launch {
+                                DataStatehelper.setHasLocalData(true)
+                            }
                             Resource.Success(event.data!! + listOf(null))// jika kosong, tambahkan list kosong
                         } else {
-                            Log.w(TAG, "findEventUpcome: is 5 event", )
+                            Log.w(TAG, "findEventUpcome: is 5 event")
                             event
                         }
                     }
@@ -177,10 +187,11 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
                 }
                 Log.d(TAG, "viewmodel upcome: $event")
             }
-            if (isHasLocalData){
-                DataStatehelper.setHasLocalData( true)
-                isHasLocalData = false
-            }
+//            if (isHasLocalData){
+//                Log.d("statehelper", "findEventUpcome: upcome state helper")
+//                DataStatehelper.setHasLocalData( true)
+//                isHasLocalData = false
+//            }
             findEventFinished()
         }
     }
@@ -189,7 +200,6 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     fun onFavoritClicked(favorit: FavoritEvent, isBookmarked: Boolean) {
         FavoritHelper.togleFavorit(viewModelScope, repository, favorit, isBookmarked)
     }
-
 
 
     fun isUpcomingSuccess(){

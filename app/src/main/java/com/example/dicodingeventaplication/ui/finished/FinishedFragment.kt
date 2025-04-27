@@ -19,15 +19,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.databinding.FragmentFinishedBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.ui.home.HomeViewModel
-import com.example.dicodingeventaplication.ui.search.SearchResultRVAdapter
 import com.example.dicodingeventaplication.ui.upcoming.UpcomingFragment
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.utils.DialogUtils

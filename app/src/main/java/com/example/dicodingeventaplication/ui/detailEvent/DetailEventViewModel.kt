@@ -9,14 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.remote.model.Event
-import com.example.dicodingeventaplication.ui.home.HomeFragment
-import com.example.dicodingeventaplication.utils.FavoritHelper
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.utils.SingleEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class DetailEventViewModel(private val repository: DicodingEventRepository, id: Int?) : ViewModel() {
+class DetailEventViewModel(private val repository: DicodingEventRepository) : ViewModel() {
     private val _eventData = MediatorLiveData<Resource<Event?>>()
     val eventData: LiveData<Resource<Event?>> = _eventData
 
@@ -34,29 +32,29 @@ class DetailEventViewModel(private val repository: DicodingEventRepository, id: 
 
     var isDetailSuccess = false
 
-    init {
-//        findDetailEvent(id )
-    }
-
-    fun findDetailEvent(id: Int){
+    fun findDetailEvent(id: Int, event: FavoritEvent?){
         viewModelScope.launch {
             delay(500)
 
             Log.d("detailvm", "findDetailEvent: jalan")
             val sourse = repository.findDetailEvent(id)
-//            _eventData.removeSource(sourse)
+            _eventData.removeSource(sourse)
             _eventData.addSource(sourse){ data ->
-                if (
-                    data is Resource.Error ||
-                    data is Resource.ErrorConection ||
-                    data is Resource.Empty
-                ){
-                    _snackBarEmpty.value = SingleEvent(data.message)
-                    _eventData.value = data
-                    Log.d("detailvm", "findDetailEvent: eror $data")
-                }else{
-                    Log.d("detailvm", "findDetailEvent: data $data")
-                    _eventData.value = data
+                when (data) {
+                    is Resource.Error, is Resource.ErrorConection -> {
+                        _dialogNotifError.value = SingleEvent(data.message)
+                        _eventData.value = data
+                        Log.d("detailvm", "findDetailEvent: eror $data")
+                    }
+
+                    is Resource.Empty -> {
+                        _snackBarEmpty.value = SingleEvent(data.message)
+                    }
+
+                    else -> {
+                        Log.d("detailvm", "findDetailEvent: data $data")
+                        _eventData.value = data
+                    }
                 }
             }
 //            repository.findDetailEvent(id){ eventData ->
@@ -96,8 +94,14 @@ class DetailEventViewModel(private val repository: DicodingEventRepository, id: 
     }
 
     // favorit
-    fun onFavoritClicked(favoritEvent: FavoritEvent, isBookmark: Boolean){
-        FavoritHelper.togleFavorit(viewModelScope, repository, favoritEvent, isBookmark)
+    fun onFavoritClicked(favoritEvent: FavoritEvent){
+//        FavoritHelper.togleFavorit(viewModelScope, repository, favoritEvent, isBookmark)
+        viewModelScope.launch {
+            repository.setFavoritState(favoritEvent.id)
+//            _isFavoritState.value = isBookmark
+        }
     }
 
+    fun getFavoritById(id: Int): LiveData<FavoritEvent> =
+        repository.observeFavoritById(id)
 }

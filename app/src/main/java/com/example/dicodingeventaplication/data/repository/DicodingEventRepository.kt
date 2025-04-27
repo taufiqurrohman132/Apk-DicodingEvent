@@ -3,7 +3,6 @@ package com.example.dicodingeventaplication.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.example.dicodingeventaplication.R
@@ -15,15 +14,11 @@ import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.data.remote.model.EventResponse
 import com.example.dicodingeventaplication.data.remote.network.ApiService
-import com.example.dicodingeventaplication.utils.AppExecutors
+//import com.example.dicodingeventaplication.utils.AppExecutors
+//import com.example.dicodingeventaplication.utils.AppExecutors
 import com.example.dicodingeventaplication.utils.ResourceProvider
 import com.example.dicodingeventaplication.utils.SharedPrefHelper
-import kotlinx.coroutines.flow.first
 import okio.IOException
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.Volatile
 
 class
@@ -32,14 +27,12 @@ DicodingEventRepository private constructor(
     private val sharedPrefHelper: SharedPrefHelper,
     private val apiService: ApiService,
     private val favoritDao: FavoritEventDao,
-    private val appExecutors: AppExecutors
+//    private val appExecutors: AppExecutors
 ) {
 //    private val sharedPref = context.getSharedPreferences(SEARCH_HISTORY, Context.MODE_PRIVATE)
 //    private val gson = Gson()
 
     // variable chache
-    private var  cacheDataUpcoming: FavoritEventDao? = null
-    private var  cacheDataFinished: EventResponse? = null
     private var  cacheDataSearching: EventResponse? = null
     private var  cacheDataDetail: DetailEventResponse? = null
 
@@ -47,8 +40,6 @@ DicodingEventRepository private constructor(
 
     private var querySearch = ""
     private var isActive = -1
-
-    private val result = MediatorLiveData<Resource<List<FavoritEvent?>>>()
 
     companion object{
         const val TAG = "srepo"
@@ -64,7 +55,7 @@ DicodingEventRepository private constructor(
             sharedPrefHelper: SharedPrefHelper,
             apiService: ApiService,
             favoritDao: FavoritEventDao,
-            appExecutors: AppExecutors
+//            appExecutors: AppExecutors
         ): DicodingEventRepository =
             instance ?: synchronized(this){
                 instance ?: DicodingEventRepository(
@@ -72,7 +63,7 @@ DicodingEventRepository private constructor(
                     sharedPrefHelper,
                     apiService,
                     favoritDao,
-                    appExecutors
+//                    appExecutors
                 )
             }.also { instance = it }
     }
@@ -87,12 +78,6 @@ DicodingEventRepository private constructor(
     fun getFavoritBookmark(): LiveData<List<FavoritEvent>> {
         return favoritDao.getBookmarkedEvent()
     }
-
-    suspend fun deleteAllFavorit() =
-        favoritDao.deleteAll()
-
-    suspend fun updateAll(event: FavoritEvent) =
-        favoritDao.updateFavorit(event)
 
     suspend fun getDetailFromSearch(eventItem: EventItem) =
         favoritDao.getById(eventItem.id)
@@ -605,6 +590,16 @@ DicodingEventRepository private constructor(
             }
 
 //        }
+    }
+
+    suspend fun setFavoritState(id: Int?) {
+        val item = favoritDao.getById(id)
+        val newBookmark = !item.isBookmarked
+        favoritDao.updateFavoritState(id, newBookmark)
+    }
+
+    fun observeFavoritById(id: Int?): LiveData<FavoritEvent> = liveData{
+        emitSource(favoritDao.observeById(id))
     }
 
     private fun errorHandling(code: Int): String {

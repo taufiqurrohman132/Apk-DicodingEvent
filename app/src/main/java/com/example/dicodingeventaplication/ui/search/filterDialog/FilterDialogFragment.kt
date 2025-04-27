@@ -64,7 +64,7 @@ class FilterDialogFragment : DialogFragment() { // tidak di sarankan pakai const
                 viewModel.selectButton(button.id)
                 button.setBackgroundColor(
                     if(button.isSelected){
-                        ContextCompat.getColor(requireContext(), R.color.biru_tua)
+                        ContextCompat.getColor(requireContext(), R.color.bottom_nav_icon)
                     }else{
                         ContextCompat.getColor(requireContext(), R.color.abu_abu_terang2)
                     }

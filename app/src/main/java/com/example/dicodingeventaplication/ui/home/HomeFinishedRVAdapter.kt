@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
-import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemHomeFinishedBinding
 import java.util.concurrent.Executors
 
@@ -54,9 +53,39 @@ class HomeFinishedRVAdapter(
                 Glide.with(context)
                     .load(eventsItem.imgLogo)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .placeholder(R.drawable.placeholder_view_vector)
                     .override(200, 200)
                     .thumbnail(0.50f)
                     .into(item.imgItemVer)
+
+//                Glide.with(context)
+//                    .load(eventsItem.imgLogo)
+//                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+//                    .listener(object : RequestListener<Drawable> {
+//                        override fun onLoadFailed(
+//                            e: GlideException?,
+//                            model: Any?,
+//                            target: Target<Drawable>,
+//                            isFirstResource: Boolean
+//                        ): Boolean {
+//                            item.progressBar.visibility = View.INVISIBLE
+//                            return false
+//                        }
+//
+//                        override fun onResourceReady(
+//                            resource: Drawable,
+//                            model: Any,
+//                            target: Target<Drawable>?,
+//                            dataSource: DataSource,
+//                            isFirstResource: Boolean
+//                        ): Boolean {
+//                            item.progressBar.visibility = View.INVISIBLE
+//                            return false
+//                        }
+//
+//                    })
+//                    .into(item.imgItemVer)
+
 
                 item.dragItem.setOnClickListener {
                     onItemClick(eventsItem)

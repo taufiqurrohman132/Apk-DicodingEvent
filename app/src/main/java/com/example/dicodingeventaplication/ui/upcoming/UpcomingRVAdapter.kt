@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.utils.TimeUtils
-import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemUpcomingBinding
 import com.example.dicodingeventaplication.utils.FavoritHelper
 

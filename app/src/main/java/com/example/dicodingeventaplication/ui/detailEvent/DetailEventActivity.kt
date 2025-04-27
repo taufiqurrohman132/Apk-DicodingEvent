@@ -10,6 +10,7 @@ import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -70,6 +71,7 @@ class DetailEventActivity : AppCompatActivity() {
     private var isExpanned = true
 
     private var appBarOffset = 0
+    private var previewsProgress = -1
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -95,17 +97,31 @@ class DetailEventActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val event = intent.getParcelableExtra<FavoritEvent>(EXTRA_EVENT)
+        var isLaunch = true
+
+        binding.detailSimmmerDes.startShimmer()
+        binding.detailSimmmerHeader.startShimmer()
+        binding.detailSimmmerDes.visibility = View.VISIBLE
+        binding.detailSimmmerHeader.visibility = View.VISIBLE
 
         //buat status bar custom
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        viewModel.findDetailEvent(event?.id ?: 0)
-
         networkViewModel.isInternetAvailible.observe(this) { isAvailible ->
+            isLaunch = false
             if (isAvailible && !viewModel.isDetailSuccess){
                 viewModel.startReload()
-                viewModel.findDetailEvent(event?.id ?: 0)
-            }
+                Log.d(TAG, "onCreate: internet dipanggil ")
+                viewModel.findDetailEvent(event?.id ?: 0, event)
+            } else if (!isAvailible)
+                Log.d(TAG, "onCreate: no internet dipanggil ")
+                viewModel.findDetailEvent(event?.id ?: 0, event)
+        }
+
+        // akses find detail ketika pertama launch
+        if (isLaunch){
+            Log.d(TAG, "onCreate: instance dipanggil ")
+            viewModel.findDetailEvent(event?.id ?: 0,event)
         }
 
         var url: String? = null
@@ -231,7 +247,7 @@ class DetailEventActivity : AppCompatActivity() {
                     snackbar.setTextColor(resources.getColor(R.color.white, null))
                     snackbar.setAction("Try Again"){
                         viewModel.startReload()
-                        viewModel.findDetailEvent(event?.id ?: 0)
+                        viewModel.findDetailEvent(event?.id ?: 0, event)
                         isPopUpShowing = false
                     }
                     snackbar.setAnchorView(binding.detailBtnRegisterNow.id)
@@ -241,7 +257,7 @@ class DetailEventActivity : AppCompatActivity() {
         }
 
         Log.d(TAG, "item id = ${event?.id}")
-        Log.d(TAG, "item = ${event}")
+        Log.d(TAG, "item = $event")
 
         // swip
         binding.detailSwipRefresh.setColorSchemeColors(ContextCompat.getColor(this, R.color.biru_tua))
@@ -251,12 +267,12 @@ class DetailEventActivity : AppCompatActivity() {
         binding.detailSwipRefresh.setOnRefreshListener {
             viewModel.startRefreshing()
             viewModel.startReload()
-            viewModel.findDetailEvent(event?.id ?: 0)
+            viewModel.findDetailEvent(event?.id ?: 0, event)
         }
 
         binding.detailBtnLottieErorKoneksi.setOnClickListener {
             viewModel.startReload()
-            viewModel.findDetailEvent(event?.id ?: 0)
+            viewModel.findDetailEvent(event?.id ?: 0, event)
         }
 
         binding.detailBtnBack.setOnClickListener {
@@ -291,10 +307,27 @@ class DetailEventActivity : AppCompatActivity() {
 
         binding.detailBtnAddFavorit.setOnClickListener {
             if (event != null) {
-                viewModel.onFavoritClicked(event, !event.isBookmarked)
+                viewModel.onFavoritClicked(event)
+                Log.d(TAG, "onCreate: add favorit clicked event is ${event.isBookmarked}")
             }else{
-
+                Log.d(TAG, "onCreate: add favorit event null")
+                Toast.makeText(this, "Event tidak Tersedia", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        viewModel.getFavoritById(event?.id ?: 0).observe(this){ isFavorit ->
+            binding.detailBtnAddFavorit.text = if (isFavorit.isBookmarked){
+                resources.getString(R.string.unfavorit_now)
+            }else{
+                resources.getString(R.string.add_to_favorit)
+            }
+
+            binding.detailBtnAddFavorit.icon = if (isFavorit.isBookmarked){
+                ContextCompat.getDrawable(this, R.drawable.ic_favorit)
+            }else{
+                null
+            }
+            Log.d(TAG, "onCreate: add favorit click is favorit ${isFavorit.isBookmarked}")
         }
     }
 
@@ -313,15 +346,23 @@ class DetailEventActivity : AppCompatActivity() {
 
             // remaining quota
             binding.detailProgres.max = eventsItem.quota ?: 0
-            // Set progress ke 0 untuk awal animasi
-            binding.detailProgres.progress = 0
+//            // Set progress ke 0 untuk awal animasi
+            Log.d(TAG, "setEventData: detail progres  ${binding.detailProgres.progress}")
 
             // jalankan animasi dari 0 ke jumlah registrants
             val targetProgress = eventsItem.registrants ?: 0
-            val animatorRemainingProgress = ObjectAnimator.ofInt(binding.detailProgres, "progress",0, targetProgress)
-            animatorRemainingProgress.duration = 1000
-            animatorRemainingProgress.interpolator = DecelerateInterpolator() // efek Perlambatan
-            animatorRemainingProgress.start()
+//            val before
+            // biar tidak inisial ulang progres
+            if (targetProgress != previewsProgress){
+                Log.d(TAG, "setEventData: progress regris ")
+                binding.detailProgres.progress = 0
+                val animatorRemainingProgress = ObjectAnimator.ofInt(binding.detailProgres, "progress",0, targetProgress)
+                animatorRemainingProgress.duration = 1000
+                animatorRemainingProgress.interpolator = DecelerateInterpolator() // efek Perlambatan
+                animatorRemainingProgress.start()
+
+                previewsProgress = targetProgress
+            }
 
             // event status
             val eventIsFinished = TimeUtils.isEventFinished(eventsItem.endTime.toString())
@@ -364,15 +405,14 @@ class DetailEventActivity : AppCompatActivity() {
 
 
 
+
     private fun cleanHtml(html: String): String{
         return html
             .replace(Regex("<img[^>]*>"), "")
     }
 
     companion object{
-        const val EXTRA_ID = "extra id"
         const val EXTRA_EVENT = "extra objek"
-        const val EXTRA_BOOKMARKED = "extra bookmark"
         private const val TAG = "detailactivity"
         private const val SCROLL_POSITION = "scrol_position"
         private const val APP_BAR_OFFSET = "app_bar_offset"

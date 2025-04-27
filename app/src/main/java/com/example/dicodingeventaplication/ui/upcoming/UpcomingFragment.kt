@@ -14,21 +14,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import com.example.dicodingeventaplication.EventWorker
 import com.example.dicodingeventaplication.utils.Resource
-import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.databinding.FragmentUpcomingBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.ui.home.HomeViewModel
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.google.android.material.appbar.AppBarLayout
-import java.util.concurrent.TimeUnit
 
 class UpcomingFragment : Fragment() {
 

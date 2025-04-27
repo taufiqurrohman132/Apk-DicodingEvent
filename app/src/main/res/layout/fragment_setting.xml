@@ -113,7 +113,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:text="@string/notification"
+                android:text="@string/daily_reminder"
                 android:layout_weight="1"
                 style="@style/Text.Subjudul16"
                 android:layout_gravity="center_vertical"

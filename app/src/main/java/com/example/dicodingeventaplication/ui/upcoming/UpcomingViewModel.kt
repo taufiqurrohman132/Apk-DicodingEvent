@@ -6,12 +6,9 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-//import com.example.dicodingeventaplication.data.FavoritUseCase
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.remote.model.EventItem
-//import com.example.dicodingeventaplication.data.repository.FavoritEventRepository
 import com.example.dicodingeventaplication.ui.home.HomeFragment
 import com.example.dicodingeventaplication.utils.FavoritHelper
 import com.example.dicodingeventaplication.utils.SingleEvent
@@ -20,7 +17,6 @@ import kotlinx.coroutines.launch
 
 class UpcomingViewModel(
     private val repository: DicodingEventRepository,
-//    private val favoritRepository: FavoritEventRepository
 ) : ViewModel() {
     private val _resultEvenItemUpcome = MediatorLiveData<Resource<List<FavoritEvent?>>?>()
     val resultEventItemUpcome: LiveData<Resource<List<FavoritEvent?>>?> = _resultEvenItemUpcome

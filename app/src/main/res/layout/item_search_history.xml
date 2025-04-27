@@ -44,6 +44,6 @@
             android:src="@drawable/ic_clear"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_gravity="center_vertical"
-            app:tint="@color/abu_abu_gelap" />
+            app:tint="@color/text_tersiery" />
     </LinearLayout>
 </FrameLayout>

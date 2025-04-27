@@ -1,10 +1,12 @@
 package com.example.dicodingeventaplication.utils
 
 import android.util.Log
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 object TimeUtils {
 
@@ -44,5 +46,13 @@ object TimeUtils {
 
         // event selsai jika eent data time sebelum waktu sekarang
         return eventDateTimeDevice.isBefore(now)
+    }
+
+    fun calculateDaysToEvent(eventDate: String): Long{
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val nowDate = LocalDate.now()
+        val event = LocalDate.parse(eventDate, formatter)
+
+        return ChronoUnit.DAYS.between(nowDate, event)
     }
 }

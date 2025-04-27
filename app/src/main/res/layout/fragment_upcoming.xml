@@ -222,7 +222,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:backgroundTint="@color/biru_tua"
+                    android:textColor="@color/icon"
+                    android:backgroundTint="@color/bottom_nav_icon"
                     android:text="@string/try_again"/>
             </LinearLayout>
 

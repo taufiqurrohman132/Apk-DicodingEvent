@@ -35,6 +35,8 @@
             app:cornerRadius="12dp"
             app:strokeWidth="2dp"
             app:strokeColor="@color/bottom_nav_icon"
+            app:iconPadding="0dp"
+            app:iconTint="@color/bottom_nav_icon"
             android:backgroundTint="@color/surface"
             android:text="@string/add_to_favorit"
             style="@style/Text.Subjudul16"
@@ -91,7 +93,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="404dp"
                         android:layout_marginBottom="100dp"
-                        android:background="@color/abu_abu_terang1"
+                        android:background="@color/header_home"
                         android:contentDescription="@string/img_header_detail"
                         android:scaleType="centerCrop"
                         app:layout_collapseMode="parallax"
@@ -201,7 +203,7 @@
                                 style="@style/Button.Back.Nobg"
                                 android:layout_marginBottom="12dp"
                                 android:background="@drawable/img_btn_radius"
-                                android:backgroundTint="@color/abu_abu_terang2"
+                                android:backgroundTint="@color/abu_abu_terang_trans"
                                 android:contentDescription="@string/img"
                                 android:src="@drawable/ic_date"
                                 app:layout_constraintBottom_toTopOf="@id/detail.tv_tanggal"
@@ -210,7 +212,7 @@
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintVertical_bias="0.99"
-                                app:tint="@color/biru_tua" />
+                                app:tint="@color/bottom_nav_icon" />
 
                             <TextView
                                 android:id="@+id/detail.tv_tanggal"
@@ -337,7 +339,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:backgroundTint="@color/biru_tua"
+                            android:backgroundTint="@color/bottom_nav_icon"
+                            android:textColor="@color/icon"
                             android:text="@string/try_again"/>
                     </LinearLayout>
 

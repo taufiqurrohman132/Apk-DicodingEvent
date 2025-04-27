@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -85,9 +87,14 @@ class SettingFragment : Fragment() {
 
     private fun startDailyReminderEvent(){
         Log.d(TAG, "startDailyReminderEvent: dipanggil")
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
         periodicWorkRequest = PeriodicWorkRequestBuilder<EventWorker>(
-            15, TimeUnit.MINUTES
-        ).build()
+            1, TimeUnit.DAYS
+        ).setConstraints(constraints)
+            .build()
 
         WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
             "upcoming_event_check",
@@ -101,7 +108,7 @@ class SettingFragment : Fragment() {
     }
 
     companion object{
-        private val TAG = "settingfrag"
+        private const val TAG = "settingfrag"
     }
 
 }

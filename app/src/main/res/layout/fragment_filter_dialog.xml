@@ -7,15 +7,16 @@
     android:clipChildren="false"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.search.filterDialog.FilterDialogFragment">
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:strokeColor="@color/surface_strok"
         app:cardCornerRadius="16dp">
         <LinearLayout
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:background="@color/white"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
             android:orientation="vertical">
@@ -34,7 +35,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/select_birutua_white"
                 android:backgroundTint="@color/select_white_birutua"
-                app:strokeColor="@color/biru_tua"
+                app:strokeColor="@color/bottom_nav_icon"
                 app:strokeWidth="2dp"
                 style="@style/Text.JudulBerita18"/>
             <com.google.android.material.button.MaterialButton
@@ -45,7 +46,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/select_birutua_white"
                 android:backgroundTint="@color/select_white_birutua"
-                app:strokeColor="@color/biru_tua"
+                app:strokeColor="@color/bottom_nav_icon"
                 app:strokeWidth="2dp"
                 style="@style/Text.JudulBerita18"/>
             <com.google.android.material.button.MaterialButton
@@ -56,11 +57,11 @@
                 android:textStyle="bold"
                 android:textColor="@color/select_birutua_white"
                 android:backgroundTint="@color/select_white_birutua"
-                app:strokeColor="@color/biru_tua"
+                app:strokeColor="@color/bottom_nav_icon"
                 app:strokeWidth="2dp"
                 style="@style/Text.JudulBerita18"/>
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </FrameLayout>

@@ -1,16 +1,10 @@
 package com.example.dicodingeventaplication.ui.main
 
-import android.Manifest
-import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.ViewModelFactoryDsl
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
@@ -19,7 +13,6 @@ import com.example.dicodingeventaplication.SettingPreferences
 import com.example.dicodingeventaplication.dataStore
 import com.example.dicodingeventaplication.databinding.ActivityMainBinding
 import com.example.dicodingeventaplication.viewmodel.MainViewModelFactory
-import com.google.android.material.switchmaterial.SwitchMaterial
 
 class MainActivity : AppCompatActivity() {
 

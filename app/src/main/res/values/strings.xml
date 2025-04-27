@@ -29,6 +29,7 @@
     <string name="img_header_detail">IMG Header</string>
     <string name="not_event_result">Not Event Result</string>
     <string name="favorit_now">Favorit Now</string>
+    <string name="favorited">Favorited</string>
     <string name="all">All</string>
     <string name="delete_item">Delete Item</string>
     <string name="try_again">Try Again</string>
@@ -38,6 +39,7 @@
     <string name="registrants">Registrants</string>
     <string name="register_now">Register Now</string>
     <string name="add_to_favorit">Add To Favorit</string>
+    <string name="unfavorit_now">Unfavorit</string>
     <string name="_0">0</string>
     <string name="remaining_nquota">Remaining\nQuota</string>
     <string name="hash">-</string>
@@ -65,7 +67,6 @@
     <string name="descover">Descover</string>
     <string name="cancel">Cancel</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="settings">Settings</string>
     <string name="next">next</string>
     <string name="dark_mode">Dark Mode</string>
@@ -77,10 +78,12 @@
     <string name="appearance">Appearance</string>
     <string name="security">Security</string>
     <string name="privacy">Privacy</string>
-    <string name="notification">Notification</string>
     <string name="applications">Applications</string>
     <string name="edit">Edit</string>
+    <string name="selesai">Selesai</string>
     <string name="favorit_size">%s Favorite</string>
     <string name="favorit_null">0 Favorite</string>
+    <string name="not_favorit_event">Not Favorit Event</string>
+    <string name="daily_reminder">Daily Reminder</string>
 
 </resources>

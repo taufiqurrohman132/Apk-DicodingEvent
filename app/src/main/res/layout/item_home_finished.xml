@@ -62,34 +62,48 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/item_home_finished_item"
                     android:layout_width="match_parent"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:foreground="?attr/selectableItemBackground">
+
+<!--                    <ProgressBar-->
+<!--                        android:id="@+id/progressBar"-->
+<!--                        android:layout_width="48dp"-->
+<!--                        android:layout_height="48dp"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:visibility="visible"-->
+<!--                        android:elevation="4dp"-->
+<!--                        app:layout_constraintBottom_toBottomOf="@id/img_item_ver"-->
+<!--                        app:layout_constraintEnd_toEndOf="@id/img_item_ver"-->
+<!--                        app:layout_constraintHorizontal_bias="0.5"-->
+<!--                        app:layout_constraintStart_toStartOf="@id/img_item_ver"-->
+<!--                        app:layout_constraintTop_toTopOf="@id/img_item_ver"-->
+<!--                        app:layout_constraintVertical_bias="0.5" />-->
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/img_item_ver"
                         android:layout_width="130dp"
                         android:layout_height="130dp"
+                        android:background="@color/abu_abu_terang"
                         android:scaleType="centerCrop"
                         android:src="@drawable/dbs_blur"
-                        android:background="@color/abu_abu_terang"
-                        app:shapeAppearanceOverlay="@style/RadiusTopRight16"
-                        app:layout_constraintHorizontal_bias="0.00"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.00"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:shapeAppearanceOverlay="@style/RadiusTopRight16" />
 
                     <TextView
                         android:id="@+id/tv_owner_item_ver"
                         style="@style/Text.Metadata12"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginStart="10dp"
                         android:layout_marginVertical="8dp"
-                        android:text="@string/hello_home"
-                        android:maxLines="1"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="16dp"
                         android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/hello_home"
                         android:textColor="@color/text_tersiery"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -103,10 +117,10 @@
                         style="@style/Text.Subjudul16"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
                         android:layout_marginStart="10dp"
-                        android:maxLines="2"
+                        android:layout_marginEnd="16dp"
                         android:ellipsize="end"
+                        android:maxLines="2"
                         android:text="@string/sample"
                         android:textColor="@color/black"
                         android:textStyle="bold"
@@ -122,12 +136,12 @@
                         style="@style/Text.Metadata12"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginStart="10dp"
                         android:layout_marginVertical="4dp"
-                        android:text="@string/sample"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="16dp"
                         android:ellipsize="end"
                         android:maxLines="2"
+                        android:text="@string/sample"
                         android:textColor="@color/text_tersiery"
                         app:layout_constraintBottom_toTopOf="@id/home.tv_status_item_ver"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -159,12 +173,12 @@
                         style="@style/Text.Metadata12"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="2"
                         android:layout_marginEnd="24dp"
+                        android:maxLines="2"
                         android:text=""
+                        android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:textAlignment="textEnd"
                         app:layout_constraintBottom_toBottomOf="@id/home.tv_status_item_ver"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.00"

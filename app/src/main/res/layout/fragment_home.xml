@@ -168,7 +168,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/abu_abu_terang2"
+                    android:background="@color/header_home"
                     >
                     <ImageView
                         android:id="@+id/imgpop_header_home"
@@ -184,7 +184,7 @@
                         android:layout_gravity="center"
                         android:visibility="invisible"
                         android:src="@drawable/ic_refresh"
-                        android:tint="@color/white"
+                        android:tint="@color/icon"
                         app:shapeAppearanceOverlay="@style/Circular"
                         android:background="@color/black_trans80"/>
 
@@ -236,8 +236,9 @@
                 android:elevation="4dp"
                 android:visibility="invisible"
                 android:indeterminate="true"
-                app:indicatorColor="@color/biru_tua"
+                app:indicatorColor="@color/black"
                 app:indicatorSize="60dp"
+                app:trackThickness="2dp"
                 app:layout_constraintBottom_toBottomOf="@id/img_header_home"
                 app:layout_constraintEnd_toEndOf="@id/img_header_home"
                 app:layout_constraintStart_toStartOf="@id/img_header_home"

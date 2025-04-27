@@ -27,10 +27,12 @@
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".ui.detailEvent.DetailEventActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity"/>
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="adjustNothing"> <!-- buat layout tetap full scren meski muncul keyboard -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

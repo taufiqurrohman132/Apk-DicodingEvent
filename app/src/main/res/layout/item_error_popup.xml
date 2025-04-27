@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:paddingVertical="12dp"
-            android:background="@color/biru_tua_trans60"
+            android:background="@color/notif_eror"
             android:minHeight="100dp">
             <TextView
                 android:id="@+id/tv_error_msg"

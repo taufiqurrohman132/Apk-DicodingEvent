@@ -2,7 +2,6 @@ package com.example.dicodingeventaplication.ui.search
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -36,6 +35,7 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
     private val _activeQuery = MutableLiveData<Int>().apply { value = -1 } // default
     val activeQuery: LiveData<Int> get() =  _activeQuery
 
+//    val isDarkModeFlow: Flow<Boolean> = appli
 //    private val _detailEvent = MutableLiveData<FavoritEvent>()
 //    val detailEvent: LiveData<FavoritEvent> = _detailEvent
 
@@ -100,7 +100,7 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
                 }
 
             } catch (e: Exception){
-                Log.e(TAG, "searchEvent: ${e.message}", )
+                Log.e(TAG, "searchEvent: ${e.message}")
                 if (queryTimestamp == latestQueryTimestamp)
                     _searchResultEvenItem.value = Resource.Error(e.message ?: "Sedang Bermasalah")
             }

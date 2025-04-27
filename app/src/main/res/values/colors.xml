@@ -4,20 +4,28 @@
 <!--    <color name="teal_700">#FF018786</color>-->
     <color name="icon">#FFFFFFFF</color>
     <color name="text_tersiery">#757575</color>
-    <color name="biru_tua_second">#757575</color>
+<!--    <color name="biru_tua_second">#757575</color>-->
     <color name="surface">#FFFFFF</color> <!-- card, dialog-->
     <color name="surface_strok">#FFFFFF</color>
     <color name="baground">#FFFFFF</color>
 
     <color name="bottom_nav_icon">#001C68</color>
 
-    <color name="ic_favorit_white_trans">#40FFFFFF</color>
+<!--    <color name="ic_favorit_white_trans">#40FFFFFF</color>-->
     <color name="ic_favorit_white_trans_60">#80FFFFFF</color>
+
+    <color name="blue_link">#2200CC</color>
+
+    <color name="header_home">#F7F7F7</color>
+
+    <color name="notif_eror">#60001C68</color>
+
+<!--    <color name="hitam">#FF000000</color>-->
 
     <color name="black">#FF000000</color>
     <color name="black_trans80">#80000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="abu_abu_gelap">#212121</color>
+<!--    <color name="abu_abu_gelap">#212121</color>-->
     <color name="abu_abu">#757575</color>
     <color name="merah">#FF0000</color>
     <color name="hijau">#1CCB00</color>
@@ -25,12 +33,12 @@
     <color name="biru_tua_trans30">#30001C68</color>
     <color name="biru_tua_trans60">#60001C68</color>
     <color name="abu_abu_terang">#D3D3D3</color>
+    <color name="abu_abu_terang_trans">#40D3D3D3</color>
     <color name="white_trans">#40FFFFFF</color>
     <color name="white_trans_60">#80FFFFFF</color>
     <color name="kuning">#EFAB00</color>
     <color name="tranparant">#00000000</color>
     <color name="ungu_neon">#8A2BE2</color>
-    <color name="blue_link">#2200CC</color>
     <color name="abu_abu_terang2">#F7F7F7</color>
     <color name="abu_abu_terang1">#E8E8E8</color>
 </resources>

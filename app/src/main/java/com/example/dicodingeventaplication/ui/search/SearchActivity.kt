@@ -1,6 +1,7 @@
 package com.example.dicodingeventaplication.ui.search
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,21 +12,23 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.R
+import com.example.dicodingeventaplication.SettingPreferences
 import com.example.dicodingeventaplication.utils.Resource
-import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
+import com.example.dicodingeventaplication.dataStore
 import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
-import com.example.dicodingeventaplication.ui.home.HomeViewModel
 import com.example.dicodingeventaplication.ui.search.filterDialog.FilterDialogFragment
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.ui.search.filterDialog.DialogListener
 import com.example.dicodingeventaplication.utils.DialogUtils
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity(), DialogListener {
     private lateinit var binding: ActivitySearchBinding
@@ -59,8 +62,13 @@ class SearchActivity : AppCompatActivity(), DialogListener {
         setContentView(binding.root)
 
         window.statusBarColor = ContextCompat.getColor(this, R.color.white)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+
+        // icon status bar
+        val preferences = SettingPreferences.getInstance(dataStore)
+        lifecycleScope.launch {
+            val theme = preferences.getThemeSetting().first()
+            applyStatusBarTheme(theme)
+        }
 
         var activeQuery: Int = -1
         var search = ""
@@ -305,6 +313,17 @@ class SearchActivity : AppCompatActivity(), DialogListener {
 
     override fun showToant(message: String) {
         Toast.makeText(this, "Switch to $message Event", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun applyStatusBarTheme(isDark: Boolean) {
+        if (isDark) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            window.statusBarColor = Color.BLACK
+        } else {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            window.statusBarColor = Color.WHITE
+        }
     }
 
     companion object{

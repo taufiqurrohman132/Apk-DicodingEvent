@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -24,8 +23,6 @@ import androidx.viewpager2.widget.MarginPageTransformer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.utils.Resource
-import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
-import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.databinding.FragmentHomeBinding
 import com.example.dicodingeventaplication.utils.DialogUtils
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
@@ -34,10 +31,9 @@ import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
-import com.example.dicodingeventaplication.ui.favorite.FavoritViewModel
 import com.example.dicodingeventaplication.ui.favorite.FavoriteActivity
 import com.example.dicodingeventaplication.ui.upcoming.UpcomingFragment
-import com.example.dicodingeventaplication.ui.upcoming.UpcomingFragment.Companion
+import com.example.dicodingeventaplication.utils.FavoritHelper
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
@@ -62,6 +58,7 @@ class HomeFragment : Fragment() {
         factory
     }
 
+    private var shouldShowPermission = true
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -88,8 +85,14 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // reques permision
-        if (Build.VERSION.SDK_INT >= 33) {
-            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        view.post {
+            if (Build.VERSION.SDK_INT >= 33) {
+                if (shouldShowPermission){
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    shouldShowPermission = false
+                    Log.d(TAG, "onViewCreated: permision di panggil")
+                }
+            }
         }
 
         binding.homeNestedScroll.scrollTo(0, homeViewModel.scrollY)
@@ -163,6 +166,8 @@ class HomeFragment : Fragment() {
                     eventHeader = getImageHeader(event.data)
                     homeViewModel.isHeaderSuccess()
                     binding.homeProgres.isVisible = false
+
+                    FavoritHelper.updateButtonText(eventHeader?.isBookmarked, binding.homeHeaderBtnFavorit)
                 }
                 is Resource.Error -> {
                     binding.homeProgres.isVisible = false
@@ -347,6 +352,15 @@ class HomeFragment : Fragment() {
                 val intent = Intent(requireContext(), DetailEventActivity::class.java)
                 intent.putExtra(DetailEventActivity.EXTRA_EVENT, eventHeader)
                 startActivity(intent)
+            }
+        }
+
+        // btn favorit header
+        binding.homeHeaderBtnFavorit.setOnClickListener {
+            eventHeader?.let{
+                Log.d(UpcomingFragment.TAG, "onViewCreated: isbookmark ${eventHeader?.isBookmarked}")
+                homeViewModel.onFavoritClicked(eventHeader!!, !eventHeader!!.isBookmarked)
+                FavoritHelper.updateButtonText(!eventHeader!!.isBookmarked, binding.homeHeaderBtnFavorit)
             }
         }
 

@@ -11,16 +11,22 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
-import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.databinding.ItemHomeFinishedBinding
+import com.zerobranch.layout.SwipeLayout
+import com.zerobranch.layout.SwipeLayout.SwipeActionsListener
+
 //import com.example.dicodingeventaplication.ui.home.HomeFinishedRVAdapter.Companion.TAG
 
 class FavoritAdapter(
     private val context: Context,
     private val onItemClick: (FavoritEvent) -> Unit,
-    private val onDelete: (FavoritEvent) -> Unit
+    private val onDelete: (FavoritEvent) -> Unit,
+    private val onSwipeChanged: () -> Unit
 ) : ListAdapter<FavoritEvent, FavoritAdapter.ItemViewHolder>(DIFF_CALLBACK) {
-    inner class ItemViewHolder(private val binding: ItemHomeFinishedBinding) : ViewHolder(binding.root) {
+    val swipeLayouts = mutableListOf<SwipeLayout>()
+    var isAllOpenItem = false
+
+    inner class ItemViewHolder( val binding: ItemHomeFinishedBinding) : ViewHolder(binding.root) {
         fun bind(favorit: FavoritEvent?){
 //            binding.tvJudulItemVer.text = favorit.name
 //            Glide.with(context)
@@ -53,6 +59,8 @@ class FavoritAdapter(
                     binding.swipLayout.close() // tutup swip
                     onDelete(favorit)
                 }
+
+
             } else {
 //                item.tvHomeFinishedError.text = errorMessage
 //                Log.d(TAG, "bind: $errorMessage")
@@ -87,13 +95,30 @@ class FavoritAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val event = getItem(position)
         holder.bind(event)
+
+        holder.binding.swipLayout.setOnActionsListener(object : SwipeActionsListener{
+            override fun onOpen(direction: Int, isContinuous: Boolean) {
+                if (direction == SwipeLayout.LEFT)
+                    onSwipeChanged()
+            }
+
+            override fun onClose() {
+                onSwipeChanged()
+            }
+        })
+
+        if (!swipeLayouts.contains(holder.binding.swipLayout)){// contains = menhindari duplikat
+            swipeLayouts.add(holder.binding.swipLayout)
+        }
+
+        Log.d("favorit list", "onBindViewHolder: list $swipeLayouts")
+        Log.d("favorit list", "onBindViewHolder: item is open ${holder.binding.swipLayout.isEnabledSwipe}")
     }
 
-    // remove
-    fun removeItem(position: Int){
-        val currentList = currentList.toMutableList()
-        currentList.removeAt(position)
-        submitList(currentList)
+    override fun onViewRecycled(holder: ItemViewHolder) {
+        super.onViewRecycled(holder)
+        if (holder.binding.swipLayout.isRightOpen) {
+            holder.binding.swipLayout.close(false) // false = tidak ada animasi
+        }
     }
-
 }
