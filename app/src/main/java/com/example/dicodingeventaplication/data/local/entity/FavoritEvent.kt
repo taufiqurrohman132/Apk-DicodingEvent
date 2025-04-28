@@ -28,7 +28,12 @@ data class FavoritEvent(
     var isBookmarked: Boolean,
 
     @field:ColumnInfo(name = "isActive")
-    var isActive: Int
+    var isActive: Int,
+
+    @field:ColumnInfo(name = "createAt")
+    var createAt: Long? = null
+
+
 ) : Parcelable {
     val formatYear: String?
         get() = beginTime?.split(" ")?.getOrNull(0)

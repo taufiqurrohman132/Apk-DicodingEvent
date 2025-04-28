@@ -112,7 +112,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-//        homeViewModel.findImageHeader()
 
         // inisialize adapter
         val adapterCorousel = HomeCorouselRVAdaptor(requireActivity(),
@@ -123,7 +122,7 @@ class HomeFragment : Fragment() {
             },
             onBookmarkClick = {favorit ->
                 Log.d(UpcomingFragment.TAG, "onViewCreated: isbookmark ${favorit.isBookmarked}")
-                homeViewModel.onFavoritClicked(favorit, !favorit.isBookmarked)
+                homeViewModel.onFavoritClicked(favorit, !favorit.isBookmarked, System.currentTimeMillis())
             }
         )
         binding.vpItemCorousel.adapter = adapterCorousel
@@ -171,7 +170,7 @@ class HomeFragment : Fragment() {
                 }
                 is Resource.Error -> {
                     binding.homeProgres.isVisible = false
-                    if (!homeViewModel.hasLocalData.value){
+                    if (!homeViewModel.hasLocalDataFinish.value){
                         binding.imgpopHeaderHome.setImageResource(0)
                         binding.homeHeaderRefresh.visibility = View.VISIBLE
                         binding.homeHeaderBtnFavorit.visibility = View.INVISIBLE
@@ -181,7 +180,7 @@ class HomeFragment : Fragment() {
                 }
                 is Resource.ErrorConection -> {
                     binding.homeProgres.isVisible = false
-                    if (!homeViewModel.isHeaderSuccess && !homeViewModel.hasLocalData.value)
+                    if (!homeViewModel.isHeaderSuccess && !homeViewModel.hasLocalDataFinish.value)
                         binding.homeHeaderRefresh.isVisible = true
                     Log.d(TAG, "onViewCreated: header event data ${event.data}")
                 }
@@ -214,7 +213,7 @@ class HomeFragment : Fragment() {
                                 binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
                                 binding.homeLottieCorousel.visibility = View.INVISIBLE
                                 binding.homeUpcomingSimmmer.stopShimmer()
-                                if (!homeViewModel.hasLocalData.value)
+                                if (!homeViewModel.hasLocalDataFinish.value)
                                     binding.homeLottieErrorCorousel.visibility = View.VISIBLE
                             }
                         }
@@ -226,7 +225,7 @@ class HomeFragment : Fragment() {
                         binding.homeUpcomingSimmmer.stopShimmer()
                         binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
 
-                        if (adapterCorousel.currentList.isEmpty() && !homeViewModel.isUpcomingSuccess && !homeViewModel.hasLocalData.value){
+                        if (adapterCorousel.currentList.isEmpty() && !homeViewModel.isUpcomingSuccess && !homeViewModel.hasLocalDataUpcome.value){
                             binding.homeLottieCorousel.visibility = View.VISIBLE
                             Log.d(
                                 TAG,
@@ -359,7 +358,7 @@ class HomeFragment : Fragment() {
         binding.homeHeaderBtnFavorit.setOnClickListener {
             eventHeader?.let{
                 Log.d(UpcomingFragment.TAG, "onViewCreated: isbookmark ${eventHeader?.isBookmarked}")
-                homeViewModel.onFavoritClicked(eventHeader!!, !eventHeader!!.isBookmarked)
+                homeViewModel.onFavoritClicked(eventHeader!!, !eventHeader!!.isBookmarked, System.currentTimeMillis())
                 FavoritHelper.updateButtonText(!eventHeader!!.isBookmarked, binding.homeHeaderBtnFavorit)
             }
         }

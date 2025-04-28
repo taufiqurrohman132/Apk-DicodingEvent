@@ -33,8 +33,11 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     private val _headerEvent = MediatorLiveData<Resource<List<FavoritEvent?>>?>()
     val headerEvent: LiveData<Resource<List<FavoritEvent?>>?> = _headerEvent
 
-    private val _hasLocalData = MutableStateFlow(false)
-    val hasLocalData: StateFlow<Boolean> = _hasLocalData.asStateFlow()
+    private val _hasLocalDataFinish = MutableStateFlow(false)
+    val hasLocalDataFinish: StateFlow<Boolean> = _hasLocalDataFinish.asStateFlow()
+
+    private val _hasLocalDataUpcome = MutableStateFlow(false)
+    val hasLocalDataUpcome: StateFlow<Boolean> = _hasLocalDataUpcome.asStateFlow()
 
     private val _dialogNotifError = MutableLiveData<SingleEvent<String?>>()
     val dialogNotifError: LiveData<SingleEvent<String?>> = _dialogNotifError
@@ -57,10 +60,17 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
         findImageHeader()
 
         // Pantau status data lokal dari DataStore
-        DataStatehelper.getHasLocalState()
+        DataStatehelper.getHasLocaFinishedlState()
             .onEach {
-                _hasLocalData.value = it
+                _hasLocalDataFinish.value = it
             }.launchIn(viewModelScope)
+
+        DataStatehelper.getHasLocaUpcomelState()
+            .onEach {
+                _hasLocalDataUpcome.value = it
+            }.launchIn(viewModelScope)
+
+
     }
 
     fun findImageHeader(){ //callback: (() -> Unit)? = null
@@ -94,7 +104,7 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
                     _dialogNotifError.value = SingleEvent(event.message)
                 } else if (event is Resource.Success)
                     viewModelScope.launch {
-                        DataStatehelper.setHasLocalData(true)
+                        DataStatehelper.setHasLocalDataFinished(true)
                     }
                 _headerEvent.value = event
 
@@ -121,7 +131,7 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
             _resultEvenItemFinished.addSource(source){ event ->
                 if (event is Resource.Success)
                     viewModelScope.launch {
-                        DataStatehelper.setHasLocalData(true)
+                        DataStatehelper.setHasLocalDataFinished(true)
                     }
                 _resultEvenItemFinished.value = event
             }
@@ -172,7 +182,7 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
                         val itemFromApi = event.data ?: emptyList()
                         if (itemFromApi.size in 1..4){
                             viewModelScope.launch {
-                                DataStatehelper.setHasLocalData(true)
+                                DataStatehelper.setHasLocalDataUpcome(true)
                             }
                             Resource.Success(event.data!! + listOf(null))// jika kosong, tambahkan list kosong
                         } else {
@@ -197,8 +207,8 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     }
 
     // Favorit
-    fun onFavoritClicked(favorit: FavoritEvent, isBookmarked: Boolean) {
-        FavoritHelper.togleFavorit(viewModelScope, repository, favorit, isBookmarked)
+    fun onFavoritClicked(favorit: FavoritEvent, isBookmarked: Boolean, createAt: Long) {
+        FavoritHelper.togleFavorit(viewModelScope, repository, favorit, isBookmarked, createAt)
     }
 
 

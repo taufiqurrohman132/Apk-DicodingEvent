@@ -16,10 +16,11 @@ object FavoritHelper {
         scope: CoroutineScope,
         repository: DicodingEventRepository,
         favorit: FavoritEvent,
-        isBookmarked: Boolean
+        isBookmarked: Boolean,
+        createAt: Long
     ){
         scope.launch {
-            repository.setFavoritBookmark(favorit, isBookmarked)
+            repository.setFavoritBookmark(favorit, isBookmarked, createAt)
         }
     }
 

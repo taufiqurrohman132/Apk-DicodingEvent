@@ -10,20 +10,35 @@ import kotlinx.coroutines.flow.map
 
 object DataStatehelper {
 
-    private val HAS_LOCAL_DATA_KEY = booleanPreferencesKey("has_local_data")
+    private val HAS_LOCAL_DATA_FINISHED_KEY = booleanPreferencesKey("has_local_data_finish")
+    private val HAS_LOCAL_DATA_UPCOME_KEY = booleanPreferencesKey("has_local_data_upcome")
 
     // myapp instance = pengganti context
-    suspend fun setHasLocalData(isLocal: Boolean){
+    suspend fun setHasLocalDataFinished(isLocal: Boolean){
         MyApp.instance.dataStore.edit { preferences ->
-            preferences[HAS_LOCAL_DATA_KEY] = isLocal
+            preferences[HAS_LOCAL_DATA_FINISHED_KEY] = isLocal
+        }
+        Log.d("islocal", "setHasLocalData: islocal $isLocal")
+    }
+    suspend fun setHasLocalDataUpcome(isLocal: Boolean){
+        MyApp.instance.dataStore.edit { preferences ->
+            preferences[HAS_LOCAL_DATA_UPCOME_KEY] = isLocal
         }
         Log.d("islocal", "setHasLocalData: islocal $isLocal")
     }
 
 
-    fun getHasLocalState(): Flow<Boolean> {
+    fun getHasLocaFinishedlState(): Flow<Boolean> {
         return MyApp.instance.dataStore.data.map { preferences ->
-            val value = preferences[HAS_LOCAL_DATA_KEY] ?: false
+            val value = preferences[HAS_LOCAL_DATA_FINISHED_KEY] ?: false
+            Log.d("islocal", "getHasLocalState: is $value")
+            value
+        }
+    }
+
+    fun getHasLocaUpcomelState(): Flow<Boolean> {
+        return MyApp.instance.dataStore.data.map { preferences ->
+            val value = preferences[HAS_LOCAL_DATA_UPCOME_KEY] ?: false
             Log.d("islocal", "getHasLocalState: is $value")
             value
         }

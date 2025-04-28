@@ -13,7 +13,7 @@ class FavoritViewModel(private val favoritRepository: DicodingEventRepository) :
 
     fun deleteFavorit(favorit: FavoritEvent){
         viewModelScope.launch {
-            favoritRepository.setFavoritBookmark(favorit, false)
+            favoritRepository.setFavoritBookmark(favorit, false, 0)
         }
     }
 

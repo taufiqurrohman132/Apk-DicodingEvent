@@ -19,7 +19,7 @@ interface FavoritEventDao {
     @Query("SELECT * FROM favorit WHERE isActive = -1 ORDER BY beginTime DESC")
     fun getEventAll(): LiveData<List<FavoritEvent>?>
 
-    @Query("SELECT * FROM favorit WHERE bookmarked = 1")
+    @Query("SELECT * FROM favorit WHERE bookmarked = 1 ORDER BY createAt DESC")
     fun getBookmarkedEvent(): LiveData<List<FavoritEvent>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

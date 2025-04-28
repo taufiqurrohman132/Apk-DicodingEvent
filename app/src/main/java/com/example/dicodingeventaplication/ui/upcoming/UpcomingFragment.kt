@@ -129,7 +129,7 @@ class UpcomingFragment : Fragment() {
             },
             onBookmarkClick = {favorit ->
                 Log.d(TAG, "onViewCreated: isbookmark ${favorit.isBookmarked}")
-                upcomingViewModel.onFavoritClicked(favorit, !favorit.isBookmarked)
+                upcomingViewModel.onFavoritClicked(favorit, !favorit.isBookmarked, System.currentTimeMillis())
             }
         )
         binding.rvUpcoming.adapter = adapterUpcoming
@@ -161,9 +161,9 @@ class UpcomingFragment : Fragment() {
                         binding.upcomingSimmmer.stopShimmer()
                         binding.upcomingSimmmer.visibility = View.INVISIBLE
                         binding.upcomingLottieError.visibility = View.INVISIBLE
-                        if (!upcomingViewModel.isUpcomingSuccess && (!upcomingViewModel.isUpcomingEmpty))
+                        if (!upcomingViewModel.isUpcomingSuccess && !upcomingViewModel.isUpcomingEmpty && !upcomingViewModel.hasLocalDataUpcome.value)
                             binding.upcomingLottieErrorKoneksi.visibility = View.VISIBLE
-                        else if (!upcomingViewModel.isUpcomingSuccess)
+                        else if (!upcomingViewModel.isUpcomingSuccess && !upcomingViewModel.hasLocalDataUpcome.value)
                             binding.upcomingLottieEmpty.visibility = View.VISIBLE
                     }
                     is Resource.Empty -> {

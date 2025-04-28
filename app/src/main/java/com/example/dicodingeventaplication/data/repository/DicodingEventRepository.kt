@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.local.dao.FavoritEventDao
 import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
@@ -17,8 +18,10 @@ import com.example.dicodingeventaplication.data.remote.network.ApiService
 //import com.example.dicodingeventaplication.utils.AppExecutors
 import com.example.dicodingeventaplication.utils.ResourceProvider
 import com.example.dicodingeventaplication.utils.SharedPrefHelper
+import kotlinx.coroutines.delay
 import okio.IOException
 import kotlin.concurrent.Volatile
+import kotlin.math.log
 
 class
 DicodingEventRepository private constructor(
@@ -68,9 +71,9 @@ DicodingEventRepository private constructor(
     }
 
     // FAVORIT
-    suspend fun setFavoritBookmark(favorit: FavoritEvent, bookmarkState: Boolean){
+    suspend fun setFavoritBookmark(favorit: FavoritEvent, bookmarkState: Boolean, createAt: Long){
 //        favorit.isBookmarked = bookmarkState
-        val updateEvent = favorit.copy(isBookmarked = bookmarkState)
+        val updateEvent = favorit.copy(isBookmarked = bookmarkState, createAt = createAt)
         favoritDao.updateFavorit(updateEvent)
     }
 
@@ -405,12 +408,14 @@ DicodingEventRepository private constructor(
     fun findEvent(active: Int): LiveData<Resource<List<FavoritEvent?>>?> = liveData {
         emit(Resource.Loading())
         var errorHappened = false
-        var isConnectNet = true
-        var isEmptyList = false
+        var isConnectNet = false
+        var isLoad = false
 
         try {
+            isLoad = true
             val response = apiService.getEventActive(active) // suspend function
             if (response.isSuccessful) {
+
                 val responseBody = response.body()
                 val events = responseBody?.listEvents
 
@@ -431,7 +436,8 @@ DicodingEventRepository private constructor(
                             event.registrants,
                             event.link,
                             isFavorit,
-                            active
+                            active,
+                            0
                         )
                     }
 
@@ -441,7 +447,7 @@ DicodingEventRepository private constructor(
 
                     Log.d(TAG, "findEvent: success")
                 } else {
-                    isEmptyList = true
+//                    isEmptyList = true
 //                    emit(Resource.Empty(List(2) { null }))
                 }
             } else {
@@ -457,6 +463,7 @@ DicodingEventRepository private constructor(
             emit(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi), List(5) { null }))
         } catch (e: Exception) {
             errorHappened = true
+            isConnectNet = true
             val message = resourceProvider.getString(R.string.error_takterduga)
             when (active) {
                 FINISHED -> emit(Resource.Error(message, List(5) { null }))
@@ -471,31 +478,146 @@ DicodingEventRepository private constructor(
                     else -> favoritDao.getEventAll()
                 }
 
-                val source: LiveData<Resource<List<FavoritEvent?>>?> = raaSource.map { list ->
-                    Log.d(TAG, "findEvent: list ${raaSource.value}")
-
-                    when{
+                val source:LiveData<Resource<List<FavoritEvent?>>?> = raaSource.map { list ->
+                    when {
                         !list.isNullOrEmpty() -> {
-                            val result: Resource<List<FavoritEvent?>> = Resource.Success(list)
-                            result
+                            Log.d(TAG, "findEvent: local succes")
+//                            isConnectNet = true
+                            Resource.Success(list)
                         }
                         !isConnectNet -> {
-                            Log.d(TAG, "findEvent: not connect data local")
                             isConnectNet = true
+                            Log.d(TAG, "findEvent: local eror conect")
                             Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi), List(5) { null })
                         }
-                        isEmptyList -> Resource.Empty(List(2) { null })
                         else -> {
                             isConnectNet = true
+                            Log.d(TAG, "findEvent: local loading")
                             Resource.Loading()
                         }
                     }
                 }
 
                 emitSource(source)
+
+
+//                val source: LiveData<Resource<List<FavoritEvent?>>?> = raaSource.switchMap { list ->
+//                    Log.d(TAG, "findEvent: list ${raaSource.value}")
+////
+////                    try {
+////                        Log.d(TAG, "findEvent: succes local")
+////                        val result: Resource<List<FavoritEvent?>> = Resource.Success(list!!)
+////                        Log.d(TAG, "findEvent: list local is null ${list.isNullOrEmpty()}")
+////                        result
+////
+////                    }catch (e: IOException){
+////                        Log.d(TAG, "findEvent: not connect data local")
+////                        isConnectNet = true
+////                        Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi), List(5) { null })
+////                    }
+//
+////                    when{
+////                        !list.isNullOrEmpty() -> {
+////                            val result: Resource<List<FavoritEvent?>> = Resource.Success(list)
+////                            result
+////                        }
+////                        !isConnectNet -> {
+////                            Log.d(TAG, "findEvent: not connect data local")
+////                            isConnectNet = true
+////                            Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi), List(5) { null })
+////                        }
+////                        isEmptyList -> Resource.Empty(List(2) { null })
+////                        else -> {
+////                            isConnectNet = true
+////                            Log.d(TAG, "findEvent: local loading")
+////                            Resource.Loading()
+////                        }
+////                    }
+//
+//                    liveData {
+//                        if (!list.isNullOrEmpty()) {
+//                            emit(Resource.Success(list))
+//                            Log.d(TAG, "findEvent: local succes")
+//                        } else if (!isConnectNet) {
+//                            Log.d(TAG, "findEvent: local eror connect")
+//                            emit(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi), List(5) { null }))
+//                        } else {
+//                            Log.d(TAG, "findEvent: local loading")
+//                            emit(Resource.Loading())
+//                        }
+//                    }
+//                }
+
             }
         }
     }
+
+
+
+//    fun findEvent(active: Int): LiveData<Resource<List<FavoritEvent?>>> = liveData {
+//        emit(Resource.Loading())
+//
+//        try {
+//            val response = apiService.getEventActive(active)
+//            if (response.isSuccessful) {
+//                val events = response.body()?.listEvents.orEmpty()
+//
+//                if (events.isNotEmpty()) {
+//                    val newList = events.map { event ->
+//                        FavoritEvent(
+//                            event.id,
+//                            event.name,
+//                            event.imageLogo,
+//                            event.mediaCover,
+//                            event.summary,
+//                            event.category,
+//                            event.ownerName,
+//                            event.cityName,
+//                            event.beginTime,
+//                            event.quota,
+//                            event.registrants,
+//                            event.link,
+//                            favoritDao.isEventFavorit(event.id ?: 0),
+//                            active,
+//                            0
+//                        )
+//                    }
+//
+//                    favoritDao.deleteAllByActive(active)
+//                    favoritDao.insert(newList)
+//                    Log.d(TAG, "findEvent: success")
+//                }
+//
+//            } else {
+//                val errorMsg = errorHandling(response.code())
+//                when (active) {
+//                    FINISHED -> emit(Resource.Error(errorMsg, List(5) { null }))
+//                    UPCOMING -> emit(Resource.Error(errorMsg))
+//                }
+//                return@liveData
+//            }
+//        } catch (e: IOException) {
+//            emit(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi), List(5) { null }))
+//            return@liveData
+//        } catch (e: Exception) {
+//            emit(Resource.Error(resourceProvider.getString(R.string.error_takterduga)))
+//            return@liveData
+//        } finally {
+//            // kalau semua aman, ambil dari db dulu
+//            val localData = when (active) {
+//                UPCOMING -> favoritDao.getEventUpcoming()
+//                FINISHED -> favoritDao.getEventFinished()
+//                else -> favoritDao.getEventAll()
+//            }
+//
+//            emitSource(localData.map { list ->
+//                if (list.isNullOrEmpty()) Resource.Empty(List(2) { null })
+//                else Resource.Success(list)
+//            })
+//        }
+//    }
+
+
 
 //    fun findDetailEvent(id: Int?, callback: (Resource<Event?>) -> Unit) {
 //        callback(Resource.Loading())

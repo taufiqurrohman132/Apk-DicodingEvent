@@ -175,7 +175,7 @@ class FinishedFragment : Fragment() {
             },
             onBookmarkClick = { favorit ->
                 Log.d(UpcomingFragment.TAG, "onViewCreated: isbookmark ${favorit.isBookmarked}")
-                finishedViewModel.onFavoritClicked(favorit, !favorit.isBookmarked)
+                finishedViewModel.onFavoritClicked(favorit, !favorit.isBookmarked, System.currentTimeMillis())
             }
         )
         binding.rvFinished.adapter = adapterFinished
@@ -209,7 +209,7 @@ class FinishedFragment : Fragment() {
                         binding.finishedSimmmer.stopShimmer()
                         binding.finishedSimmmer.visibility = View.INVISIBLE
                         binding.finishedLottieError.visibility = View.INVISIBLE
-                        if (!finishedViewModel.isFinishedSuccess)
+                        if (!finishedViewModel.isFinishedSuccess && !finishedViewModel.hasLocalData.value)
                             binding.finishedLottieErrorKoneksi.visibility = View.VISIBLE
                     }
                     is Resource.Empty -> {

@@ -10,9 +10,15 @@ import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.ui.home.HomeFragment
+import com.example.dicodingeventaplication.utils.DataStatehelper
 import com.example.dicodingeventaplication.utils.FavoritHelper
 import com.example.dicodingeventaplication.utils.SingleEvent
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class UpcomingViewModel(
@@ -20,6 +26,9 @@ class UpcomingViewModel(
 ) : ViewModel() {
     private val _resultEvenItemUpcome = MediatorLiveData<Resource<List<FavoritEvent?>>?>()
     val resultEventItemUpcome: LiveData<Resource<List<FavoritEvent?>>?> = _resultEvenItemUpcome
+
+    private val _hasLocalDataUpcome = MutableStateFlow(false)
+    val hasLocalDataUpcome: StateFlow<Boolean> = _hasLocalDataUpcome.asStateFlow()
 
     private val _dialogNotifError = MutableLiveData<SingleEvent<String?>>()
     val dialogNotifError: LiveData<SingleEvent<String?>> = _dialogNotifError
@@ -35,6 +44,11 @@ class UpcomingViewModel(
 
     init {
         findEventUpcome()
+
+        DataStatehelper.getHasLocaUpcomelState()
+            .onEach {
+                _hasLocalDataUpcome.value = it
+            }.launchIn(viewModelScope)
     }
 
     fun findEventUpcome(){
@@ -47,6 +61,10 @@ class UpcomingViewModel(
             _resultEvenItemUpcome.addSource(sourse) { event ->
                 if (event is Resource.Error || event is Resource.ErrorConection){
                     _dialogNotifError.value = SingleEvent(event.message)
+                } else if (event is Resource.Success){
+                    viewModelScope.launch {
+                        DataStatehelper.setHasLocalDataUpcome(true)
+                    }
                 }
                 _resultEvenItemUpcome.value = event
                 Log.d(UpcomingFragment.TAG, "findEventUpcome: event is $event")
@@ -89,8 +107,8 @@ class UpcomingViewModel(
     }
 
     // Favorit
-    fun onFavoritClicked(favorit: FavoritEvent, isBookmarked: Boolean) {
-        FavoritHelper.togleFavorit(viewModelScope, repository, favorit, isBookmarked)
+    fun onFavoritClicked(favorit: FavoritEvent, isBookmarked: Boolean, createAt: Long) {
+        FavoritHelper.togleFavorit(viewModelScope, repository, favorit, isBookmarked, createAt)
     }
 //
 //    fun saveFavorit(favorit: FavoritEvent){
