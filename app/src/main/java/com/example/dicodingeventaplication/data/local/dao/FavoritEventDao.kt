@@ -46,4 +46,12 @@ interface FavoritEventDao {
     // ubah state favorit
     @Query("UPDATE favorit SET bookmarked = :isFavorit WHERE id = :id")
     suspend fun updateFavoritState(id: Int?, isFavorit: Boolean)
+
+    // cek ada data
+    @Query("SELECT EXISTS(SELECT 1 FROM favorit WHERE isActive = :isActive LIMIT 1)")
+    suspend fun hasDataByActiveStatus(isActive: Int): Boolean
+
+    @Query("SELECT COUNT(*) FROM favorit WHERE isActive = :isActive")
+    suspend fun countDataByActiveStatus(isActive: Int): Int
+
 }

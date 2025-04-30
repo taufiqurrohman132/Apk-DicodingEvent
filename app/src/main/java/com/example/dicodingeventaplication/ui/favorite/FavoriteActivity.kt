@@ -13,8 +13,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.SettingPreferences
-import com.example.dicodingeventaplication.dataStore
+import com.example.dicodingeventaplication.data.local.datastore.SettingPreferences
+import com.example.dicodingeventaplication.data.local.datastore.dataStore
 import com.example.dicodingeventaplication.databinding.ActivityFavoriteBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
@@ -88,14 +88,6 @@ class FavoriteActivity : AppCompatActivity() {
 
         binding.rvFavorite.adapter = adapter
 
-        // ketika rv di scrol
-//        binding.rvFavorite.addOnScrollListener(object : OnScrollListener(){
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                updateButtonEdit()
-//                Log.d("TAG", "onScrolled: rv")
-//            }
-//        })
         binding.favoritBtnEdit.setOnClickListener{
             if (adapter.swipeLayouts.any { it.isRightOpen }){
                 adapter.swipeLayouts.forEach { swipeLayout ->

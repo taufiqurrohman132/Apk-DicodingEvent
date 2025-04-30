@@ -57,24 +57,6 @@ class DetailEventViewModel(private val repository: DicodingEventRepository) : Vi
                     }
                 }
             }
-//            repository.findDetailEvent(id){ eventData ->
-//                _eventData.value = when(eventData){
-//                    is Resource.Error -> {
-//                        _dialogNotifError.value = SingleEvent(eventData.message)
-//                        eventData
-//                    }
-//                    is Resource.ErrorConection -> {
-//                        _dialogNotifError.value = SingleEvent(eventData.message)
-//                        eventData
-//                    }
-//                    is Resource.Empty ->{
-//                        _snackBarEmpty.value = SingleEvent(eventData.message)
-//                        eventData
-//                    }
-//                    else ->{eventData}
-//                }
-//                _eventData.value = eventData
-//            }
 
             _isRefresing.value = false
             _isReload.value = false

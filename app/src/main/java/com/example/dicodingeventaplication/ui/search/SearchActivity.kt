@@ -17,9 +17,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.SettingPreferences
+import com.example.dicodingeventaplication.data.local.datastore.SettingPreferences
 import com.example.dicodingeventaplication.utils.Resource
-import com.example.dicodingeventaplication.dataStore
+import com.example.dicodingeventaplication.data.local.datastore.dataStore
 import com.example.dicodingeventaplication.databinding.ActivitySearchBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.ui.search.filterDialog.FilterDialogFragment
@@ -40,13 +40,6 @@ class SearchActivity : AppCompatActivity(), DialogListener {
         )[NetworkViewModel::class.java]
     }
 
-//    private val repository: DicodingEventRepository by lazy {
-//        DicodingEventRepository(this)
-//    }
-//
-//    private val searchViewModel: SearchViewModel by lazy {
-//        ViewModelProvider(this, EventViewModelFactory(repository))[SearchViewModel::class.java]// pengganti get
-//    }
 
     private val factory: EventViewModelFactory by lazy {
         EventViewModelFactory.getInstance(this)

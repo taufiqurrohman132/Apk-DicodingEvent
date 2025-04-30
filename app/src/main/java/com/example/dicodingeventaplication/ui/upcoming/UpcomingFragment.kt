@@ -95,6 +95,10 @@ class UpcomingFragment : Fragment() {
                 Log.d(TAG, "onViewCreated: is refresh")
                 upcomingViewModel.startReload()
                 upcomingViewModel.findEventUpcome()
+            }else{
+                if (!upcomingViewModel.isUpcomingSuccess) {
+                    upcomingViewModel.findEventUpcome()
+                }
             }
         }
 
@@ -224,18 +228,6 @@ class UpcomingFragment : Fragment() {
             upcomingViewModel.findEventUpcome()
         }
     }
-//
-//    private fun startDailyReminderEvent(){
-//        val periodicRequest = PeriodicWorkRequestBuilder<EventWorker>(
-//            1, TimeUnit.DAYS
-//        ).build()
-//
-//        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-//            "percobaan",
-//            ExistingPeriodicWorkPolicy.REPLACE,
-//            periodicRequest
-//        )
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

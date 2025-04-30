@@ -46,12 +46,4 @@ object FavoritHelper {
         }
     }
 
-//    fun updateAll(
-//        event: FavoritEvent,
-//
-
-//    )
-
-//    fun getFavoritLiveData(): LiveData<List<FavoritEvent>> =
-//        .getFavorit()
 }

@@ -82,21 +82,6 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
             delay(1000)
             Log.d(TAG, "findEvent heder berjalan di thread: ${Thread.currentThread().name}")
 
-//            repository.findEvent(HomeFragment.FINISHED) { event ->
-//                _headerEvent.value = when(event){
-//                    is Resource.ErrorConection -> {
-//                        _dialogNotifError.value = SingleEvent(event.message)
-//                        event
-//                    }
-//                    is Resource.Error ->{
-//                        _dialogNotifError.value = SingleEvent(event.message)
-//                        event
-//                    }
-//                    else -> event
-//                }
-//                _isRefreshing.value = false
-//                _isReload.value = false
-//            }
             val source = repository.findEvent(HomeFragment.FINISHED)
             _headerEvent.removeSource(source)
             _headerEvent.addSource(source){ event ->
@@ -111,12 +96,6 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
                 _isRefreshing.value = false
                 _isReload.value = false
             }
-//            if (isHasLocalData){
-//                Log.d("statehelper", "findEventheader: finis state helper")
-//                DataStatehelper.setHasLocalData( true)
-//                isHasLocalData = false
-//            }
-
             findEventUpcome()
         }
     }
@@ -135,14 +114,6 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
                     }
                 _resultEvenItemFinished.value = event
             }
-        //          { event ->
-//                _resultEvenItemFinished.value = event
-//            }
-//            if (isHasLocalData){
-//                Log.d("statehelper", "findEventUpcome: finis state helper")
-//                DataStatehelper.setHasLocalData( true)
-//                isHasLocalData = false
-//            }
 
         }
 
@@ -151,29 +122,6 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
             delay(500)
             Log.d(TAG, "findEvent upcome berjalan di thread: ${Thread.currentThread().name}")
 
-//            repository.findEvent(HomeFragment.UPCOMING) { event ->
-//                _resultEvenItemUpcome.value= when(event) {
-//                    is Resource.Success -> {
-//                        val itemFromApi = event.data ?: emptyList()
-//                        if (itemFromApi.size in 1..4){
-//                            Resource.Success(event.data!! + listOf(null))// jika kosong, tambahkan list kosong
-//                        } else {
-//                            event
-//                        }
-//                    }
-//                    is Resource.Error -> {
-//                        event
-//                    }
-//                    is Resource.ErrorConection -> {
-//                        event
-//                    }
-//                    is Resource.Empty -> {
-//                        Resource.Success(listOf(null, null))// jika kosong, tambahkan list kosong
-//                    }
-//                    else -> event
-//                }
-//                Log.d(TAG, "viewmodel upcome: $event")
-//            }
             val source = repository.findEvent(HomeFragment.UPCOMING)
             _resultEvenItemUpcome.removeSource(source)
             _resultEvenItemUpcome.addSource(source){ event ->
@@ -197,11 +145,6 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
                 }
                 Log.d(TAG, "viewmodel upcome: $event")
             }
-//            if (isHasLocalData){
-//                Log.d("statehelper", "findEventUpcome: upcome state helper")
-//                DataStatehelper.setHasLocalData( true)
-//                isHasLocalData = false
-//            }
             findEventFinished()
         }
     }

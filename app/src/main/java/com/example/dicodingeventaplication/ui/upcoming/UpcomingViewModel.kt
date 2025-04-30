@@ -76,19 +76,6 @@ class UpcomingViewModel(
             _isReload.value = false
         }
     }
-//            repository.findEvent(HomeFragment.UPCOMING) { event ->
-//                _resultEvenItemUpcome.value = when(event){
-//                    is Resource.Error -> {
-//                        _dialogNotifError.value = SingleEvent(event.message)
-//                        event
-//                    }
-//                    is Resource.ErrorConection -> {
-//                        _dialogNotifError.value = SingleEvent(event.message)
-//                        event
-//                    }
-//                    else-> event
-//                }
-//            }
 
     fun startReload(){
         _isReload.value = true
@@ -110,16 +97,4 @@ class UpcomingViewModel(
     fun onFavoritClicked(favorit: FavoritEvent, isBookmarked: Boolean, createAt: Long) {
         FavoritHelper.togleFavorit(viewModelScope, repository, favorit, isBookmarked, createAt)
     }
-//
-//    fun saveFavorit(favorit: FavoritEvent){
-//        viewModelScope.launch {
-//            repository.setFavoritBookmark(favorit, true)
-//        }
-//    }
-//
-//    fun deleteFavorit(favorit: FavoritEvent){
-//        viewModelScope.launch {
-//            repository.setFavoritBookmark(favorit, false)
-//        }
-//    }
 }

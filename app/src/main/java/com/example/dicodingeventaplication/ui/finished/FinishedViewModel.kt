@@ -23,8 +23,8 @@ import kotlinx.coroutines.launch
 
 class FinishedViewModel(private val repository: DicodingEventRepository) : ViewModel() {
 
-    private val _resultEvenItemFinished = MediatorLiveData<Resource<List<FavoritEvent?>>>()
-    val resultEventItemFinished: LiveData<Resource<List<FavoritEvent?>>> = _resultEvenItemFinished
+    private val _resultEvenItemFinished = MediatorLiveData<Resource<List<FavoritEvent?>>?>()
+    val resultEventItemFinished: LiveData<Resource<List<FavoritEvent?>>?> = _resultEvenItemFinished
 
     private val _hasLocalData = MutableStateFlow(false)
     val hasLocalData: StateFlow<Boolean> = _hasLocalData.asStateFlow()
@@ -61,20 +61,6 @@ class FinishedViewModel(private val repository: DicodingEventRepository) : ViewM
         viewModelScope.launch {
             delay(500)
 
-//            repository.findEvent(HomeFragment.FINISHED)
-//            { event ->
-//                _resultEvenItemFinished.value = when(event){
-//                    is Resource.Error -> {
-//                        _dialogNotifError.value = SingleEvent(event.message)
-//                        event
-//                    }
-//                    is Resource.ErrorConection -> {
-//                        _dialogNotifError.value = SingleEvent(event.message)
-//                        event
-//                    }
-//                    else -> event
-//                }
-//            }
             val sourse = repository.findEvent(HomeFragment.FINISHED)
             _resultEvenItemFinished.removeSource(sourse)
             _resultEvenItemFinished.addSource(sourse) { event ->

@@ -45,13 +45,6 @@ class NotificationHelper(private val context: Context) {
             }
         }
 
-//        val pendingIntent = PendingIntent.getActivity(
-//            context,
-//            0,
-//            intent,
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-//        )
-
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification: NotificationCompat.Builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_apps)

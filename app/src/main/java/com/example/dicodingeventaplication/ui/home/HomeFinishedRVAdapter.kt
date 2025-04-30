@@ -58,35 +58,6 @@ class HomeFinishedRVAdapter(
                     .thumbnail(0.50f)
                     .into(item.imgItemVer)
 
-//                Glide.with(context)
-//                    .load(eventsItem.imgLogo)
-//                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-//                    .listener(object : RequestListener<Drawable> {
-//                        override fun onLoadFailed(
-//                            e: GlideException?,
-//                            model: Any?,
-//                            target: Target<Drawable>,
-//                            isFirstResource: Boolean
-//                        ): Boolean {
-//                            item.progressBar.visibility = View.INVISIBLE
-//                            return false
-//                        }
-//
-//                        override fun onResourceReady(
-//                            resource: Drawable,
-//                            model: Any,
-//                            target: Target<Drawable>?,
-//                            dataSource: DataSource,
-//                            isFirstResource: Boolean
-//                        ): Boolean {
-//                            item.progressBar.visibility = View.INVISIBLE
-//                            return false
-//                        }
-//
-//                    })
-//                    .into(item.imgItemVer)
-
-
                 item.dragItem.setOnClickListener {
                     onItemClick(eventsItem)
                 }

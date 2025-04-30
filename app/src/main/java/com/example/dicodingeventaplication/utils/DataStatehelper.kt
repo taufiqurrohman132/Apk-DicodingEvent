@@ -3,8 +3,8 @@ package com.example.dicodingeventaplication.utils
 import android.util.Log
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import com.example.dicodingeventaplication.MyApp
-import com.example.dicodingeventaplication.dataStore
+import com.example.dicodingeventaplication.app.MyApp
+import com.example.dicodingeventaplication.data.local.datastore.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

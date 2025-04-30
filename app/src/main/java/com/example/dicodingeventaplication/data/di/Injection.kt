@@ -17,7 +17,6 @@ object Injection {
         val apiService = ApiConfig.getApiService()
         val database = FavoritEventRoomDatabase.getInstance(context)
         val dao = database.favoritEventDao()
-//        val appExecutors = AppExecutors()
         return DicodingEventRepository.getInstance(resourceProvider,sharedPrefHelper, apiService, dao)
     }
 }

@@ -43,21 +43,6 @@ class DetailEventActivity : AppCompatActivity() {
         )[NetworkViewModel::class.java]
     }
 
-//    private val itemId: Int by lazy {
-//        intent.getIntExtra(EXTRA_ID, 0)
-//    }
-//
-//    private val event: FavoritEvent by lazy {
-//        intent.getParcelableExtra<FavoritEvent>(EXTRA_EVENT)
-//    }
-
-//    private val detailRepository: DicodingEventRepository by lazy {
-//        DicodingEventRepository(this)
-//    }
-//    private val viewModel: DetailEventViewModel by lazy {
-//        ViewModelProvider(this, EventViewModelFactory(detailRepository, itemId))[DetailEventViewModel::class.java]
-//    }
-
     private val factory: EventViewModelFactory by lazy {
         EventViewModelFactory.getInstance(this)
     }

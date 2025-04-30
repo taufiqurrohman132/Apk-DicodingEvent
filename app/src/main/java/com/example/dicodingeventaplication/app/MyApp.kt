@@ -1,7 +1,9 @@
-package com.example.dicodingeventaplication
+package com.example.dicodingeventaplication.app
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.dicodingeventaplication.data.local.datastore.SettingPreferences
+import com.example.dicodingeventaplication.data.local.datastore.dataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 

@@ -110,6 +110,17 @@ class HomeFragment : Fragment() {
                     homeViewModel.startReload()
                     homeViewModel.findEventFinished()
                 }
+            }else{
+                Log.d(TAG, "onViewCreated: status upcome ${homeViewModel.isUpcomingSuccess}")
+                if (!homeViewModel.isHeaderSuccess) {
+                    homeViewModel.findImageHeader()
+                }
+                if (!homeViewModel.isUpcomingSuccess) {
+                    homeViewModel.findEventUpcome()
+                }
+                if (!homeViewModel.isFinishedSuccess) {
+                    homeViewModel.findEventFinished()
+                }
             }
         }
 

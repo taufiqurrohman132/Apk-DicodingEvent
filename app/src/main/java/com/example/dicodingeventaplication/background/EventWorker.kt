@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication
+package com.example.dicodingeventaplication.background
 
 import android.content.Context
 import android.util.Log
@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.dicodingeventaplication.data.di.Injection
+import com.example.dicodingeventaplication.data.local.datastore.dataStore
 import com.example.dicodingeventaplication.utils.NotificationHelper
 import com.example.dicodingeventaplication.utils.TimeUtils
 import kotlinx.coroutines.flow.first
@@ -21,8 +22,8 @@ class EventWorker(
     companion object{
         private const val TAG = "work"
         const val NOTIFICATION_ID = 1
-        const val CHANNEL_ID = "channel_03"
-        const val CHANNEL_NAME = "event channel 03"
+        const val CHANNEL_ID = "channel_04"
+        const val CHANNEL_NAME = "event channel 04"
     }
 
     override suspend fun doWork(): Result {

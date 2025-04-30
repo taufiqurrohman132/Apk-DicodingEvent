@@ -51,14 +51,6 @@ class FinishedFragment : Fragment() {
         )[NetworkViewModel::class.java]
     }
 
-//    private val finishedRepository: DicodingEventRepository by lazy {
-//        DicodingEventRepository( requireContext())
-//    }
-//
-//    private val finishedViewModel: FinishedViewModel by lazy {
-//        ViewModelProvider(this, EventViewModelFactory(finishedRepository))[FinishedViewModel::class.java]
-//    }
-
     private val factory: EventViewModelFactory by lazy {
         EventViewModelFactory.getInstance(requireActivity())
     }
@@ -103,6 +95,10 @@ class FinishedFragment : Fragment() {
                 Log.d(TAG, "onViewCreated: refres otomatis")
                 finishedViewModel.startReload()
                 finishedViewModel.findEventFinished()
+            }else{
+                if (!finishedViewModel.isFinishedSuccess) {
+                    finishedViewModel.findEventFinished()
+                }
             }
         }
 

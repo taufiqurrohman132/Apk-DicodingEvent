@@ -17,8 +17,6 @@ import kotlinx.coroutines.launch
 
 
 class SearchViewModel(private val repository: DicodingEventRepository) : ViewModel() {
-//    private var cacheResult: List<EventItem>? = null
-//    private var lastQuery: String? = null
 
     private val _searchResultEvenItem = MutableLiveData<Resource<List<EventItem>>>(
         Resource.Success(
@@ -34,10 +32,6 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
 
     private val _activeQuery = MutableLiveData<Int>().apply { value = -1 } // default
     val activeQuery: LiveData<Int> get() =  _activeQuery
-
-//    val isDarkModeFlow: Flow<Boolean> = appli
-//    private val _detailEvent = MutableLiveData<FavoritEvent>()
-//    val detailEvent: LiveData<FavoritEvent> = _detailEvent
 
     var isSearchSuccess = false
 
