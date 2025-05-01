@@ -88,6 +88,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="8dp"
+                    android:outlineSpotShadowColor="@color/black"
+                    android:outlineAmbientShadowColor="@color/black"
                     android:layout_marginHorizontal="16dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="8dp"

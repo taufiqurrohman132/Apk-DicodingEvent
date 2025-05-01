@@ -13,11 +13,10 @@
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:background="@color/baground"
-
         android:elevation="8dp"
         app:elevation="8dp"
-        android:outlineAmbientShadowColor="@color/bottom_nav_icon"
-        android:outlineSpotShadowColor="@color/bottom_nav_icon"
+        android:outlineAmbientShadowColor="@color/black"
+        android:outlineSpotShadowColor="@color/black"
         app:compatShadowEnabled="true"
         app:labelVisibilityMode="selected"
         app:itemIconSize="24dp"
