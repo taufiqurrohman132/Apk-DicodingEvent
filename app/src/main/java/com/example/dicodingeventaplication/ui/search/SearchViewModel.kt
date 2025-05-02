@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
@@ -101,7 +101,7 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
         }
     }
 
-    fun getDetailFromSearch(eventItem: EventItem, onResult: (FavoritEvent) -> Unit){
+    fun getDetailFromSearch(eventItem: EventItem, onResult: (EventEntity) -> Unit){
         viewModelScope.launch {
             val value = repository.getDetailFromSearch(eventItem)
             onResult(value)

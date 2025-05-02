@@ -5,16 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.data.local.dao.FavoritEventDao
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.dao.EventDao
+import com.example.dicodingeventaplication.data.local.dao.FavoritEventDao2
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
+import com.example.dicodingeventaplication.data.local.entity.FavoritEventEntity
 import com.example.dicodingeventaplication.data.remote.model.DetailEventResponse
 import com.example.dicodingeventaplication.data.remote.model.Event
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.data.remote.model.EventResponse
 import com.example.dicodingeventaplication.data.remote.network.ApiService
-//import com.example.dicodingeventaplication.utils.AppExecutors
-//import com.example.dicodingeventaplication.utils.AppExecutors
 import com.example.dicodingeventaplication.utils.ResourceProvider
 import com.example.dicodingeventaplication.utils.SharedPrefHelper
 import okio.IOException
@@ -25,7 +25,8 @@ DicodingEventRepository private constructor(
     private val resourceProvider: ResourceProvider,
     private val sharedPrefHelper: SharedPrefHelper,
     private val apiService: ApiService,
-    private val favoritDao: FavoritEventDao,
+    private val eventDao: EventDao,
+    private val favoritDao: FavoritEventDao2,
 ) {
 
     // variable chache
@@ -48,31 +49,41 @@ DicodingEventRepository private constructor(
             resourceProvider: ResourceProvider,
             sharedPrefHelper: SharedPrefHelper,
             apiService: ApiService,
-            favoritDao: FavoritEventDao,
+            eventDao: EventDao,
+            favoritDao: FavoritEventDao2,
         ): DicodingEventRepository =
             instance ?: synchronized(this){
                 instance ?: DicodingEventRepository(
                     resourceProvider,
                     sharedPrefHelper,
                     apiService,
+                    eventDao,
                     favoritDao,
                 )
             }.also { instance = it }
     }
 
     // FAVORIT
-    suspend fun setFavoritBookmark(favorit: FavoritEvent, bookmarkState: Boolean, createAt: Long){
-        val updateEvent = favorit.copy(isBookmarked = bookmarkState, createAt = createAt)
-        favoritDao.updateFavorit(updateEvent)
+    suspend fun setFavoritBookmark(eventEntity: EventEntity, bookmarkState: Boolean, createAt: Long){
+        val updateEvent = eventEntity.copy(isBookmarked = bookmarkState, createAt = createAt)
+        eventDao.updateEvent(updateEvent)
     }
 
-    fun getFavoritBookmark(): LiveData<List<FavoritEvent>> {
-        return favoritDao.getBookmarkedEvent()
-    }
+    fun getAllFavorit(): LiveData<List<FavoritEventEntity>> =
+        favoritDao.getAllFavorites()
+
+    suspend fun insertFavorit(favorit: FavoritEventEntity) =
+        favoritDao.insertFavorite(favorit)
+
+    suspend fun deleteFavorit(favorit: FavoritEventEntity) =
+        favoritDao.deleteFavorite(favorit)
+
+    suspend fun getDetailFromFavorit(favorit: FavoritEventEntity) =
+        eventDao.getById(favorit.id)
+
 
     suspend fun getDetailFromSearch(eventItem: EventItem) =
-        favoritDao.getById(eventItem.id)
-
+        eventDao.getById(eventItem.id)
 
     // ambil history dari shered
     fun getSearchHistory(): List<EventItem> =
@@ -134,7 +145,7 @@ DicodingEventRepository private constructor(
     }
 
 
-    fun findEvent(active: Int): LiveData<Resource<List<FavoritEvent?>>?> = liveData {
+    fun findEvent(active: Int): LiveData<Resource<List<EventEntity?>>?> = liveData {
         emit(Resource.Loading())
         var errorHappened = false
         var isConnectNet = true
@@ -145,12 +156,13 @@ DicodingEventRepository private constructor(
 
                 val responseBody = response.body()
                 val events = responseBody?.listEvents
+                errorHappened = false
 
                 if (!events.isNullOrEmpty()) {
                     val newList = events.map { event ->
-                        val isFavorit = favoritDao.isEventFavorit(event.id ?: 0)
-                        FavoritEvent(
-                            event.id,
+                        val isFavorit = eventDao.isEventFavorit(event.id ?: 0)
+                        EventEntity(
+                            event.id ?: 0,
                             event.name,
                             event.imageLogo,
                             event.mediaCover,
@@ -159,6 +171,7 @@ DicodingEventRepository private constructor(
                             event.ownerName,
                             event.cityName,
                             event.beginTime,
+                            event.endTime,
                             event.quota,
                             event.registrants,
                             event.link,
@@ -168,13 +181,13 @@ DicodingEventRepository private constructor(
                         )
                     }
 
-                    favoritDao.deleteAllByActive(active)
-                    favoritDao.insert(newList)
+                    eventDao.deleteAllByActive(active)
+                    eventDao.insert(newList)
 
                     Log.d(TAG, "findEvent: success")
                 } else {
                     emit(Resource.Empty(List(2) { null }))
-                    if (!favoritDao.hasDataByActiveStatus(active)){
+                    if (!eventDao.hasDataByActiveStatus(active)){
                         Log.d(TAG, "findEvent: is not data active $active")
                         return@liveData
                     }
@@ -186,7 +199,7 @@ DicodingEventRepository private constructor(
                     FINISHED -> emit(Resource.Error(errorMsg, List(5) { null }))
                     UPCOMING -> emit(Resource.Error(errorMsg))
                 }
-                if (!favoritDao.hasDataByActiveStatus(active)){
+                if (!eventDao.hasDataByActiveStatus(active)){
                     Log.d(TAG, "findEvent: is not data active $active")
                     return@liveData
                 }
@@ -195,7 +208,7 @@ DicodingEventRepository private constructor(
             Log.d(TAG, "findEvent: eror connect")
             isConnectNet = false
             emit(Resource.ErrorConection(resourceProvider.getString(R.string.error_koneksi), List(5) { null }))
-            if (!favoritDao.hasDataByActiveStatus(active)){
+            if (!eventDao.hasDataByActiveStatus(active)){
                 Log.d(TAG, "findEvent: is not data active $active")
                 return@liveData
             }
@@ -208,29 +221,30 @@ DicodingEventRepository private constructor(
                 UPCOMING -> emit(Resource.Error(message))
             }
             Log.e(TAG, "findEvent: terjadi eror $e")
-            if (!favoritDao.hasDataByActiveStatus(active)){
+            if (!eventDao.hasDataByActiveStatus(active)){
                 Log.d(TAG, "findEvent: is not data active $active")
                 return@liveData
             }
         } finally {
         }
         if (!errorHappened) {
-            val raaSource: LiveData<List<FavoritEvent>?> = when (active) {
-                UPCOMING -> favoritDao.getEventUpcoming()
-                FINISHED -> favoritDao.getEventFinished()
-                else -> favoritDao.getEventAll()
+            val raaSource: LiveData<List<EventEntity>?> = when (active) {
+                UPCOMING -> eventDao.getEventUpcoming()
+                FINISHED -> eventDao.getEventFinished()
+                else -> eventDao.getEventAll()
             }
 
-            val source: LiveData<Resource<List<FavoritEvent?>>?> = raaSource.map { list ->
+            val source: LiveData<Resource<List<EventEntity?>>?> = raaSource.map { list ->
+                isConnectNet = true
+                errorHappened = false
+
                 when {
                     !list.isNullOrEmpty() -> {
                         Log.d(TAG, "findEvent: local succes")
-                        isConnectNet = true
                         Resource.Success(list)
                     }
 
                     !isConnectNet -> {
-                        isConnectNet = true
                         Log.d(TAG, "findEvent: local eror conect")
                         Resource.ErrorConection(
                             resourceProvider.getString(R.string.error_koneksi),
@@ -238,7 +252,6 @@ DicodingEventRepository private constructor(
                     }
 
                     else -> {
-                        isConnectNet = true
                         Log.d(TAG, "findEvent: local loading")
                         Resource.Loading()
                     }
@@ -289,14 +302,15 @@ DicodingEventRepository private constructor(
         }
     }
 
-    suspend fun setFavoritState(id: Int?) {
-        val item = favoritDao.getById(id)
+    suspend fun setFavoritState(id: Int?): Boolean {
+        val item = eventDao.getById(id)
         val newBookmark = !item.isBookmarked
-        favoritDao.updateFavoritState(id, newBookmark)
+        eventDao.updateFavoritState(id, newBookmark)
+        return newBookmark
     }
 
-    fun observeFavoritById(id: Int?): LiveData<FavoritEvent> = liveData{
-        emitSource(favoritDao.observeById(id))
+    fun observeFavoritById(id: Int?): LiveData<EventEntity> = liveData{
+        emitSource(eventDao.observeById(id))
     }
 
     private fun errorHandling(code: Int): String {

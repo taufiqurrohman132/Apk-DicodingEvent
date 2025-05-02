@@ -30,7 +30,7 @@ import com.example.dicodingeventaplication.ui.search.SearchActivity
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.ui.favorite.FavoriteActivity
 import com.example.dicodingeventaplication.ui.upcoming.UpcomingFragment
 import com.example.dicodingeventaplication.utils.FavoritHelper
@@ -38,7 +38,7 @@ import kotlin.math.abs
 
 class HomeFragment : Fragment() {
 
-    private var eventHeader: FavoritEvent? = null
+    private var eventHeader: EventEntity? = null
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -393,7 +393,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun getImageHeader(eventData: List<FavoritEvent?>?): FavoritEvent? {
+    private fun getImageHeader(eventData: List<EventEntity?>?): EventEntity? {
         val event = eventData?.let {
             if (it.size > 6) it[6] else null
         }

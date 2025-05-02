@@ -12,20 +12,20 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.databinding.ItemHomeFinishedBinding
 import java.util.concurrent.Executors
 
 class HomeFinishedRVAdapter(
     private val context: Context,
-    private val onItemClick: (FavoritEvent) -> Unit
-) : ListAdapter<FavoritEvent, HomeFinishedRVAdapter.FinishedViewHolder>(
-    AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<FavoritEvent>() {
-        override fun areItemsTheSame(oldItem: FavoritEvent, newItem: FavoritEvent): Boolean {
+    private val onItemClick: (EventEntity) -> Unit
+) : ListAdapter<EventEntity, HomeFinishedRVAdapter.FinishedViewHolder>(
+    AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<EventEntity>() {
+        override fun areItemsTheSame(oldItem: EventEntity, newItem: EventEntity): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: FavoritEvent, newItem: FavoritEvent): Boolean {
+        override fun areContentsTheSame(oldItem: EventEntity, newItem: EventEntity): Boolean {
             return oldItem == newItem
         }
 
@@ -37,7 +37,7 @@ class HomeFinishedRVAdapter(
 
     inner class FinishedViewHolder(private val item: ItemHomeFinishedBinding) : ViewHolder(item.root) {
         // inisialisasi data
-        fun bind(eventsItem: FavoritEvent?){
+        fun bind(eventsItem: EventEntity?){
             item.tvHomeFinishedError.isVisible = eventsItem == null
             item.itemHomeFinishedItem.isVisible = eventsItem != null
 

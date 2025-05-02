@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.utils.TimeUtils
 import com.example.dicodingeventaplication.databinding.ItemHomeCorouselBinding
 import com.example.dicodingeventaplication.utils.FavoritHelper
@@ -18,15 +18,15 @@ import java.util.concurrent.Executors
 
 class HomeCorouselRVAdaptor(
     private val context: Context,
-    private val onItemClick: (FavoritEvent) -> Unit,
-    private val onBookmarkClick: (FavoritEvent) -> Unit
-) : ListAdapter<FavoritEvent, HomeCorouselRVAdaptor.ItemViewHolder>(
-    AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<FavoritEvent>() {
-        override fun areItemsTheSame(oldItem: FavoritEvent, newItem: FavoritEvent): Boolean {
+    private val onItemClick: (EventEntity) -> Unit,
+    private val onBookmarkClick: (EventEntity) -> Unit
+) : ListAdapter<EventEntity, HomeCorouselRVAdaptor.ItemViewHolder>(
+    AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<EventEntity>() {
+        override fun areItemsTheSame(oldItem: EventEntity, newItem: EventEntity): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: FavoritEvent, newItem: FavoritEvent): Boolean {
+        override fun areContentsTheSame(oldItem: EventEntity, newItem: EventEntity): Boolean {
             return oldItem == newItem
         }
 
@@ -36,7 +36,7 @@ class HomeCorouselRVAdaptor(
 ){
     inner class ItemViewHolder( val item: ItemHomeCorouselBinding) : ViewHolder(item.root) {
         // inisialisasi data
-        fun bind(eventsItem: FavoritEvent?){
+        fun bind(eventsItem: EventEntity?){
             item.itemCorousel.isVisible = eventsItem != null
             item.itemCorouselLottieEmpty.isVisible = eventsItem == null
 

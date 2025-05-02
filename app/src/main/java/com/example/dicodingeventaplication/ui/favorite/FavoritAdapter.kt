@@ -1,6 +1,7 @@
 package com.example.dicodingeventaplication.ui.favorite
 
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,36 +11,26 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.FavoritEventEntity
 import com.example.dicodingeventaplication.databinding.ItemHomeFinishedBinding
+import com.example.dicodingeventaplication.utils.TimeUtils
 import com.zerobranch.layout.SwipeLayout
 import com.zerobranch.layout.SwipeLayout.SwipeActionsListener
 
-//import com.example.dicodingeventaplication.ui.home.HomeFinishedRVAdapter.Companion.TAG
-
 class FavoritAdapter(
     private val context: Context,
-    private val onItemClick: (FavoritEvent) -> Unit,
-    private val onDelete: (FavoritEvent) -> Unit,
+    private val onItemClick: (FavoritEventEntity) -> Unit,
+    private val onDelete: (FavoritEventEntity) -> Unit,
     private val onSwipeChanged: () -> Unit
-) : ListAdapter<FavoritEvent, FavoritAdapter.ItemViewHolder>(DIFF_CALLBACK) {
+) : ListAdapter<FavoritEventEntity, FavoritAdapter.ItemViewHolder>(DIFF_CALLBACK) {
     val swipeLayouts = mutableListOf<SwipeLayout>()
     var isAllOpenItem = false
 
     inner class ItemViewHolder( val binding: ItemHomeFinishedBinding) : ViewHolder(binding.root) {
-        fun bind(favorit: FavoritEvent?){
-//            binding.tvJudulItemVer.text = favorit.name
-//            Glide.with(context)
-//                .load(favorit.imgLogo)
-//                .into(binding.imgItemVer)
-//
-//            itemView.setOnClickListener {
-//                onItemClick(favorit)
-//            }
-
+        fun bind(favorit: FavoritEventEntity?){
             if (favorit != null){
-                binding.tvOwnerItemVer.text = favorit.ownerName
-                binding.tvJudulItemVer.text = favorit.name
+                binding.tvOwnerItemVer.text = favorit.owner
+                binding.tvJudulItemVer.text = favorit.title
                 binding.tvWaktuItemVer.text = favorit.formatYear
                 binding.tvSummaryItemVer.text = favorit.summary
                 binding.homeTvStatusItemVer.text = context.resources.getString(R.string.finished)
@@ -60,27 +51,36 @@ class FavoritAdapter(
                     onDelete(favorit)
                 }
 
+                // event status
+                val eventIsFinished = TimeUtils.isEventFinished(favorit.endTime.toString())
+                val (statusText, statusColor) = if (eventIsFinished) {
+                    R.string.finished to Color.RED
+                } else {
+                    R.string.upcoming to Color.GREEN
+                }
 
-            } else {
-//                item.tvHomeFinishedError.text = errorMessage
-//                Log.d(TAG, "bind: $errorMessage")
+                binding.homeTvStatusItemVer.apply {
+                    text = resources.getString(statusText)
+                    setTextColor(statusColor)
+                }
+
 
             }
         }
     }
 
     companion object{
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<FavoritEvent>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<FavoritEventEntity>() {
             override fun areItemsTheSame(
-                oldItem: FavoritEvent,
-                newItem: FavoritEvent
+                oldItem: FavoritEventEntity,
+                newItem: FavoritEventEntity
             ): Boolean {
                 return oldItem.id == newItem.id && oldItem.isBookmarked == newItem.isBookmarked
             }
 
             override fun areContentsTheSame(
-                oldItem: FavoritEvent,
-                newItem: FavoritEvent
+                oldItem: FavoritEventEntity,
+                newItem: FavoritEventEntity
             ): Boolean {
                 return oldItem == newItem
             }

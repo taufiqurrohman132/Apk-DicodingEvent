@@ -7,41 +7,40 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "favorit")
-data class FavoritEvent(
+@Entity(tableName = "favoritEvent")
+data class FavoritEventEntity(
     @PrimaryKey(autoGenerate = false)
-    var id: Int? = null,
-    var name: String? = null,
-    var imgLogo: String? = null,
-    var imgCover: String? = null,
-    var summary: String? = null,
-    var category: String? = null,
-    var ownerName: String? = null,
-    var cityName: String? = null,
-    var beginTime: String? = null,
-    var quota: Int? = null,
-    var registranst: Int? = null,
-    var url: String? = null,
+    @ColumnInfo(name = "id")
+    var id: Int = 0,
 
+    @ColumnInfo(name = "title")
+    var title: String? = null,
+
+    @ColumnInfo(name = "imgLogo")
+    var imgLogo: String? = null,
+
+    @ColumnInfo(name = "summary")
+    var summary: String? = null,
+
+    @ColumnInfo(name = "beginTime")
+    var beginTime: String? = null,
+
+    @ColumnInfo(name = "endTime")
+    var endTime: String? = null,
+
+    @ColumnInfo(name = "owner")
+    var owner: String? = null,
 
     @field:ColumnInfo(name = "bookmarked")
     var isBookmarked: Boolean,
 
-    @field:ColumnInfo(name = "isActive")
-    var isActive: Int,
+    @ColumnInfo(name = "status")
+    var status: Int? = null,
 
     @field:ColumnInfo(name = "createAt")
     var createAt: Long? = null
-
-
-) : Parcelable {
+) : Parcelable{
     val formatYear: String?
         get() = beginTime?.split(" ")?.getOrNull(0)
-
-    val formateDate: String?
-        get() = formatYear?.split("-")?.getOrNull(2)
-
-    val formatMount: String?
-        get() = formatYear?.split("-")?.getOrNull(1)
 
 }

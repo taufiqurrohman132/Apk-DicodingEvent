@@ -6,9 +6,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.data.remote.model.Event
+import com.example.dicodingeventaplication.utils.FavoritHelper
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.utils.SingleEvent
 import kotlinx.coroutines.delay
@@ -76,14 +77,13 @@ class DetailEventViewModel(private val repository: DicodingEventRepository) : Vi
     }
 
     // favorit
-    fun onFavoritClicked(favoritEvent: FavoritEvent){
-//        FavoritHelper.togleFavorit(viewModelScope, repository, favoritEvent, isBookmark)
+    fun onFavoritClicked(favoritEvent: EventEntity, createAt: Long){
         viewModelScope.launch {
-            repository.setFavoritState(favoritEvent.id)
-//            _isFavoritState.value = isBookmark
+            val newBookmarked = repository.setFavoritState(favoritEvent.id)
+            FavoritHelper.togleFavorit(viewModelScope, repository, favoritEvent, newBookmarked, createAt)
         }
     }
 
-    fun getFavoritById(id: Int): LiveData<FavoritEvent> =
+    fun getFavoritById(id: Int): LiveData<EventEntity> =
         repository.observeFavoritById(id)
 }

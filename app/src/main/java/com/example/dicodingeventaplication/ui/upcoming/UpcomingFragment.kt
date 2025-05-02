@@ -131,9 +131,9 @@ class UpcomingFragment : Fragment() {
                 intent.putExtra(DetailEventActivity.EXTRA_EVENT, event)
                 startActivity(intent)
             },
-            onBookmarkClick = {favorit ->
-                Log.d(TAG, "onViewCreated: isbookmark ${favorit.isBookmarked}")
-                upcomingViewModel.onFavoritClicked(favorit, !favorit.isBookmarked, System.currentTimeMillis())
+            onBookmarkClick = {event ->
+                Log.d(TAG, "onViewCreated: isbookmark ${event.isBookmarked}")
+                upcomingViewModel.onFavoritClicked(event, !event.isBookmarked, System.currentTimeMillis())
             }
         )
         binding.rvUpcoming.adapter = adapterUpcoming

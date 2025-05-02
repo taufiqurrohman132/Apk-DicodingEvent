@@ -12,7 +12,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 
 class NotificationHelper(private val context: Context) {
@@ -20,7 +20,7 @@ class NotificationHelper(private val context: Context) {
     @SuppressLint("ObsoleteSdkInt")
     fun showNotification(
         calculateDateEvent: String,
-        eventData: FavoritEvent,
+        eventData: EventEntity,
         name: String,
         beginTime: String,
         channelId: String,
@@ -29,7 +29,10 @@ class NotificationHelper(private val context: Context) {
     ){
         Log.d("notif", "showNotification: jalan")
         val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_apps)
-        val title = "[H-$calculateDateEvent] $name"
+        val title = if (calculateDateEvent.toInt() == 0) {
+            "[Hari Ini] $name"
+        }else
+            "[H-$calculateDateEvent] $name"
 
         val intent = Intent(context, DetailEventActivity::class.java).apply {
             putExtra(DetailEventActivity.EXTRA_EVENT, eventData)

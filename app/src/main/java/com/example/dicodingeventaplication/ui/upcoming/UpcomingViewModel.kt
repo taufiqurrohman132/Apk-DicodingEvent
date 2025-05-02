@@ -6,7 +6,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.ui.home.HomeFragment
@@ -24,8 +24,8 @@ import kotlinx.coroutines.launch
 class UpcomingViewModel(
     private val repository: DicodingEventRepository,
 ) : ViewModel() {
-    private val _resultEvenItemUpcome = MediatorLiveData<Resource<List<FavoritEvent?>>?>()
-    val resultEventItemUpcome: LiveData<Resource<List<FavoritEvent?>>?> = _resultEvenItemUpcome
+    private val _resultEvenItemUpcome = MediatorLiveData<Resource<List<EventEntity?>>?>()
+    val resultEventItemUpcome: LiveData<Resource<List<EventEntity?>>?> = _resultEvenItemUpcome
 
     private val _hasLocalDataUpcome = MutableStateFlow(false)
     val hasLocalDataUpcome: StateFlow<Boolean> = _hasLocalDataUpcome.asStateFlow()
@@ -94,7 +94,7 @@ class UpcomingViewModel(
     }
 
     // Favorit
-    fun onFavoritClicked(favorit: FavoritEvent, isBookmarked: Boolean, createAt: Long) {
-        FavoritHelper.togleFavorit(viewModelScope, repository, favorit, isBookmarked, createAt)
+    fun onFavoritClicked(event: EventEntity, isBookmarked: Boolean, createAt: Long) {
+        FavoritHelper.togleFavorit(viewModelScope, repository, event, isBookmarked, createAt)
     }
 }

@@ -24,7 +24,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
 import com.example.dicodingeventaplication.viewmodel.NetworkViewModel
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.data.remote.model.Event
 import com.example.dicodingeventaplication.databinding.ActivityDetailEventBinding
 import com.example.dicodingeventaplication.utils.DialogUtils
@@ -81,7 +81,7 @@ class DetailEventActivity : AppCompatActivity() {
         binding = ActivityDetailEventBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val event = intent.getParcelableExtra<FavoritEvent>(EXTRA_EVENT)
+        val event = intent.getParcelableExtra<EventEntity>(EXTRA_EVENT)
         var isLaunch = true
 
         binding.detailSimmmerDes.startShimmer()
@@ -292,7 +292,7 @@ class DetailEventActivity : AppCompatActivity() {
 
         binding.detailBtnAddFavorit.setOnClickListener {
             if (event != null) {
-                viewModel.onFavoritClicked(event)
+                viewModel.onFavoritClicked(event, System.currentTimeMillis())
                 Log.d(TAG, "onCreate: add favorit clicked event is ${event.isBookmarked}")
             }else{
                 Log.d(TAG, "onCreate: add favorit event null")
@@ -351,16 +351,17 @@ class DetailEventActivity : AppCompatActivity() {
 
             // event status
             val eventIsFinished = TimeUtils.isEventFinished(eventsItem.endTime.toString())
-            binding.detailTvStatusValue.text = when(eventIsFinished){
-                true -> {
-                    binding.detailTvStatusValue.setTextColor(Color.RED)
-                    resources.getString(R.string.finished)
-                }
-                false -> {
-                    binding.detailTvStatusValue.setTextColor(Color.GREEN)
-                    resources.getString(R.string.upcoming)
-                }
+            val (statusText, statusColor) = if (eventIsFinished) {
+                R.string.finished to Color.RED
+            } else {
+                R.string.upcoming to Color.GREEN
             }
+
+            binding.detailTvStatusValue.apply {
+                text = resources.getString(statusText)
+                setTextColor(statusColor)
+            }
+
 
             binding.detailTvCategoryValue.text = eventsItem.category
             binding.detailTvLocationValue.text = eventsItem.cityName

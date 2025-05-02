@@ -6,7 +6,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
 import com.example.dicodingeventaplication.ui.home.HomeFragment.Companion.TAG
@@ -24,14 +24,14 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel() {
 
-    private val _resultEvenItemFinished = MediatorLiveData<Resource<List<FavoritEvent?>>?>()
-    val resultEventItemFinished: LiveData<Resource<List<FavoritEvent?>>?> = _resultEvenItemFinished
+    private val _resultEvenItemFinished = MediatorLiveData<Resource<List<EventEntity?>>?>()
+    val resultEventItemFinished: LiveData<Resource<List<EventEntity?>>?> = _resultEvenItemFinished
 
-    private val _resultEvenItemUpcome = MediatorLiveData<Resource<List<FavoritEvent?>>?>()
-    val resultEventItemUpcome: LiveData<Resource<List<FavoritEvent?>>?> = _resultEvenItemUpcome
+    private val _resultEvenItemUpcome = MediatorLiveData<Resource<List<EventEntity?>>?>()
+    val resultEventItemUpcome: LiveData<Resource<List<EventEntity?>>?> = _resultEvenItemUpcome
 
-    private val _headerEvent = MediatorLiveData<Resource<List<FavoritEvent?>>?>()
-    val headerEvent: LiveData<Resource<List<FavoritEvent?>>?> = _headerEvent
+    private val _headerEvent = MediatorLiveData<Resource<List<EventEntity?>>?>()
+    val headerEvent: LiveData<Resource<List<EventEntity?>>?> = _headerEvent
 
     private val _hasLocalDataFinish = MutableStateFlow(false)
     val hasLocalDataFinish: StateFlow<Boolean> = _hasLocalDataFinish.asStateFlow()
@@ -150,7 +150,7 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
     }
 
     // Favorit
-    fun onFavoritClicked(favorit: FavoritEvent, isBookmarked: Boolean, createAt: Long) {
+    fun onFavoritClicked(favorit: EventEntity, isBookmarked: Boolean, createAt: Long) {
         FavoritHelper.togleFavorit(viewModelScope, repository, favorit, isBookmarked, createAt)
     }
 

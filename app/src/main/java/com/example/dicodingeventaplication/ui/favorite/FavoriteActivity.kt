@@ -74,8 +74,10 @@ class FavoriteActivity : AppCompatActivity() {
         adapter = FavoritAdapter(this,
             onItemClick = { event ->
                 val intent = Intent(this, DetailEventActivity::class.java)
-                intent.putExtra(DetailEventActivity.EXTRA_EVENT, event)
-                startActivity(intent)
+                favoritViewModel.getDetailFromFavorit(event){ eventEntity ->
+                    intent.putExtra(DetailEventActivity.EXTRA_EVENT, eventEntity)
+                    startActivity(intent)
+                }
             },
             onDelete = { event ->
                 favoritViewModel.deleteFavorit(event)
@@ -104,7 +106,7 @@ class FavoriteActivity : AppCompatActivity() {
         }
 
         // observe favorit
-        favoritViewModel.getFavoritBookmark().observe(this){
+        favoritViewModel.getAllFavorit().observe(this){
             adapter.submitList(it)
             binding.favoriteSize.text = getString(R.string.favorit_size, it.size.toString())
 
