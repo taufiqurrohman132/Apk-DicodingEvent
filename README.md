@@ -88,4 +88,4 @@ Aplikasi Android yang menampilkan daftar event terkini dan terlengkap. Dibangun 
 
 1. Clone repository ini:
    ```bash
-   git clone https://github.com/namakamu/moneytrack.git 
+   git clone https://github.com/taufiqurrohman132/Apk-DicodingEvent.git
