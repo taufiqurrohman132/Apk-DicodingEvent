@@ -15,6 +15,7 @@ Aplikasi Android yang menampilkan daftar event terkini dan terlengkap. Dibangun 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/fec3a5a7-488a-4652-bc8f-2a96b088abbe" width="30%" />
   <img src="https://github.com/user-attachments/assets/8da93911-79d9-4878-8df1-4164e7af8b84" width="30%" />
+  <img src="https://github.com/user-attachments/assets/288d5223-69ab-4e53-8de3-13d0b3676bdb" width="30%" />
 </p>
 
 ---
