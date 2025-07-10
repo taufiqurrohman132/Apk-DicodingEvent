@@ -17,22 +17,24 @@ class UpcomingRVAdapter(
     private val onItemClick: (EventEntity) -> Unit,
     private val onBookmarkClick: (EventEntity) -> Unit
 ) : ListAdapter<EventEntity, UpcomingRVAdapter.ItemViewHolder>(DIFF_CALLBACK) {
-    inner class ItemViewHolder(val item: ItemUpcomingBinding) : ViewHolder(item.root) {
+    inner class ItemViewHolder(val binding: ItemUpcomingBinding) : ViewHolder(binding.root) {
         // inisialize data
         fun bind(eventItem: EventEntity ){
-            item.upcomeTvTgl.text = eventItem.formateDate
-            item.upcomeTvBulan.text = TimeUtils.getMount(eventItem.formatMount)
-            item.upcomingTvJudulItem.text = eventItem.name
-            item.upcomingTvSummaryItem.text = eventItem.summary
-            item.upcomingTvOwnerItem.text = eventItem.ownerName
-            item.upcomingTvSisakuotaItem.text = (eventItem.quota?.minus(
-                eventItem.registranst ?: 0
-            )).toString()
+            binding.apply {
+                upcomeTvTgl.text = eventItem.formateDate
+                upcomeTvBulan.text = TimeUtils.getMount(eventItem.formatMount)
+                upcomingTvJudulItem.text = eventItem.name
+                upcomingTvSummaryItem.text = eventItem.summary
+                upcomingTvOwnerItem.text = eventItem.ownerName
+                upcomingTvSisakuotaItem.text = (eventItem.quota?.minus(
+                    eventItem.registranst ?: 0
+                )).toString()
+            }
 
             Glide.with(context)
                 .load(eventItem.imgLogo)
                 .into(
-                    item.upcomingImgitem
+                    binding.upcomingImgitem
                 )
 
             itemView.setOnClickListener {
@@ -50,7 +52,7 @@ class UpcomingRVAdapter(
         val event = getItem(position)
         holder.bind(event)
 
-        val ivBookmark = holder.item.upcomingBtnFavorit
+        val ivBookmark = holder.binding.upcomingBtnFavorit
         FavoritHelper.updateIcon(event, ivBookmark)
 
         ivBookmark.setOnClickListener {

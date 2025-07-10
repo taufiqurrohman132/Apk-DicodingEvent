@@ -79,7 +79,7 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
         Log.d(TAG, "findImageHeader dipanggil")
 
         job = viewModelScope.launch {
-            delay(1000)
+//            delay(1000)
             Log.d(TAG, "findEvent heder berjalan di thread: ${Thread.currentThread().name}")
 
             val source = repository.findEvent(HomeFragment.FINISHED)
@@ -102,7 +102,7 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
 
     fun findEventFinished() =
         viewModelScope.launch {
-            delay(500)
+//            delay(500)
             Log.d(TAG, "findEvent finish berjalan di thread: ${Thread.currentThread().name}")
 
             val source = repository.findEvent(HomeFragment.FINISHED)
@@ -119,7 +119,7 @@ class HomeViewModel(private val repository: DicodingEventRepository) : ViewModel
 
     fun findEventUpcome(){
         viewModelScope.launch {
-            delay(500)
+//            delay(500)
             Log.d(TAG, "findEvent upcome berjalan di thread: ${Thread.currentThread().name}")
 
             val source = repository.findEvent(HomeFragment.UPCOMING)

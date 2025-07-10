@@ -84,10 +84,12 @@ class DetailEventActivity : AppCompatActivity() {
         val event = intent.getParcelableExtra<EventEntity>(EXTRA_EVENT)
         var isLaunch = true
 
-        binding.detailSimmmerDes.startShimmer()
-        binding.detailSimmmerHeader.startShimmer()
-        binding.detailSimmmerDes.visibility = View.VISIBLE
-        binding.detailSimmmerHeader.visibility = View.VISIBLE
+        binding.apply {
+            detailSimmmerDes.startShimmer()
+            detailSimmmerHeader.startShimmer()
+            detailSimmmerDes.visibility = View.VISIBLE
+            detailSimmmerHeader.visibility = View.VISIBLE
+        }
 
         //buat status bar custom
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -139,47 +141,53 @@ class DetailEventActivity : AppCompatActivity() {
                 when(eventData){
                     is Resource.Success ->{
                         setEventData(eventData.data)
-                        binding.detailSimmmerDes.stopShimmer()
-                        binding.detailSimmmerHeader.stopShimmer()
-                        binding.detailSimmmerDes.visibility = View.INVISIBLE
-                        binding.detailSimmmerHeader.visibility = View.INVISIBLE
-                        binding.detailLottieErrorKoneksi.visibility = View.INVISIBLE
-                        binding.detailLottieError.visibility = View.INVISIBLE
+                        binding.apply {
+                            detailSimmmerDes.stopShimmer()
+                            detailSimmmerHeader.stopShimmer()
+                            detailSimmmerDes.visibility = View.INVISIBLE
+                            detailSimmmerHeader.visibility = View.INVISIBLE
+                            detailLottieErrorKoneksi.visibility = View.INVISIBLE
+                            detailLottieError.visibility = View.INVISIBLE
 
-                        binding.detaiTvEror.visibility = View.INVISIBLE
+                            detaiTvEror.visibility = View.INVISIBLE
 
-                        binding.detailLayout.visibility = View.VISIBLE
-                        binding.detailImgHeader.foreground = ResourcesCompat.getDrawable(this.resources, R.drawable.gradient_img, null)
+                            detailLayout.visibility = View.VISIBLE
+                            detailImgHeader.foreground = ResourcesCompat.getDrawable(this@DetailEventActivity.resources, R.drawable.gradient_img, null)
+                        }
                         url = eventData.data?.link
 
                         viewModel.markUpcomingSuccess()
                     }
                     is Resource.Error ->{
-                        binding.detailSimmmerDes.stopShimmer()
-                        binding.detailSimmmerHeader.stopShimmer()
-                        binding.detailSimmmerDes.visibility = View.INVISIBLE
-                        binding.detailSimmmerHeader.visibility = View.INVISIBLE
-                        binding.detailLottieErrorKoneksi.visibility = View.INVISIBLE
+                        binding.apply {
+                            detailSimmmerDes.stopShimmer()
+                            detailSimmmerHeader.stopShimmer()
+                            detailSimmmerDes.visibility = View.INVISIBLE
+                            detailSimmmerHeader.visibility = View.INVISIBLE
+                            detailLottieErrorKoneksi.visibility = View.INVISIBLE
 
-                        binding.detaiTvEror.visibility = View.VISIBLE
-                        binding.detaiTvEror.text = eventData.message
+                            detaiTvEror.visibility = View.VISIBLE
+                            detaiTvEror.text = eventData.message
 
-                        binding.detailLottieError.visibility = View.VISIBLE
-                        binding.detailLayout.visibility = View.GONE
-                        binding.detailImgHeader.foreground = null
+                            detailLottieError.visibility = View.VISIBLE
+                            detailLayout.visibility = View.GONE
+                            detailImgHeader.foreground = null
+                        }
 
                     }
                     is Resource.ErrorConection ->{
-                        binding.detailSimmmerDes.stopShimmer()
-                        binding.detailSimmmerHeader.stopShimmer()
-                        binding.detailSimmmerDes.visibility = View.INVISIBLE
-                        binding.detailSimmmerHeader.visibility = View.INVISIBLE
-                        binding.detailLottieError.visibility = View.INVISIBLE
+                        binding.apply {
+                            detailSimmmerDes.stopShimmer()
+                            detailSimmmerHeader.stopShimmer()
+                            detailSimmmerDes.visibility = View.INVISIBLE
+                            detailSimmmerHeader.visibility = View.INVISIBLE
+                            detailLottieError.visibility = View.INVISIBLE
 
-                        if (!viewModel.isDetailSuccess){
-                            binding.detaiTvEror.visibility = View.VISIBLE
-                            binding.detailLottieErrorKoneksi.visibility = View.VISIBLE
-                            binding.detaiTvEror.text = eventData.message
+                            if (!viewModel.isDetailSuccess){
+                                detaiTvEror.visibility = View.VISIBLE
+                                detailLottieErrorKoneksi.visibility = View.VISIBLE
+                                detaiTvEror.text = eventData.message
+                            }
                         }
                     }
                     else ->{
@@ -197,14 +205,16 @@ class DetailEventActivity : AppCompatActivity() {
 
         viewModel.isReload.observe(this){ isReload ->
             if (!viewModel.isDetailSuccess && isReload){
-                binding.detailSimmmerHeader.startShimmer()
-                binding.detailSimmmerDes.startShimmer()
-                binding.detailSimmmerHeader.visibility = View.VISIBLE
-                binding.detailSimmmerDes.visibility = View.VISIBLE
-                binding.detailLayout.visibility = View.INVISIBLE
-                binding.detaiTvEror.visibility = View.INVISIBLE
-                binding.detailLottieError.visibility = View.INVISIBLE
-                binding.detailLottieErrorKoneksi.visibility = View.INVISIBLE
+                binding.apply {
+                    detailSimmmerHeader.startShimmer()
+                    detailSimmmerDes.startShimmer()
+                    detailSimmmerHeader.visibility = View.VISIBLE
+                    detailSimmmerDes.visibility = View.VISIBLE
+                    detailLayout.visibility = View.INVISIBLE
+                    detaiTvEror.visibility = View.INVISIBLE
+                    detailLottieError.visibility = View.INVISIBLE
+                    detailLottieErrorKoneksi.visibility = View.INVISIBLE
+                }
             }
         }
 
@@ -245,23 +255,25 @@ class DetailEventActivity : AppCompatActivity() {
         Log.d(TAG, "item = $event")
 
         // swip
-        binding.detailSwipRefresh.setColorSchemeColors(ContextCompat.getColor(this, R.color.biru_tua))
-        binding.detailSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this, R.color.icon))
-        binding.detailSwipRefresh.setProgressViewOffset(true, 0, 200)
+        binding.apply {
+            detailSwipRefresh.setColorSchemeColors(ContextCompat.getColor(this@DetailEventActivity, R.color.biru_tua))
+            detailSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this@DetailEventActivity, R.color.icon))
+            detailSwipRefresh.setProgressViewOffset(true, 0, 200)
 
-        binding.detailSwipRefresh.setOnRefreshListener {
-            viewModel.startRefreshing()
-            viewModel.startReload()
-            viewModel.findDetailEvent(event?.id ?: 0)
-        }
+            detailSwipRefresh.setOnRefreshListener {
+                viewModel.startRefreshing()
+                viewModel.startReload()
+                viewModel.findDetailEvent(event?.id ?: 0)
+            }
 
-        binding.detailBtnLottieErorKoneksi.setOnClickListener {
-            viewModel.startReload()
-            viewModel.findDetailEvent(event?.id ?: 0)
-        }
+            detailBtnLottieErorKoneksi.setOnClickListener {
+                viewModel.startReload()
+                viewModel.findDetailEvent(event?.id ?: 0)
+            }
 
-        binding.detailBtnBack.setOnClickListener {
-            finish()
+            detailBtnBack.setOnClickListener {
+                finish()
+            }
         }
 
         binding.detailBtnRegisterNow.setOnClickListener {
@@ -323,20 +335,21 @@ class DetailEventActivity : AppCompatActivity() {
             remainingQuota = eventsItem.quota?.minus(eventsItem.registrants) ?: 0
 
         if (eventsItem != null){
-            binding.detailTvOwnerValue.text= eventsItem.ownerName
-            binding.detailTvJudul.text = eventsItem.name
-            binding.detailTvTanggal.text = eventsItem.formatYear
-            binding.detailTvJam.text = resources.getString(R.string.time_value, eventsItem.formatBeginTime, eventsItem.formatEndTime)
-            binding.detailTvSisakuotaValue.text = remainingQuota.toString()
+            binding.apply {
+                detailTvOwnerValue.text= eventsItem.ownerName
+                detailTvJudul.text = eventsItem.name
+                detailTvTanggal.text = eventsItem.formatYear
+                detailTvJam.text = resources.getString(R.string.time_value, eventsItem.formatBeginTime, eventsItem.formatEndTime)
+                detailTvSisakuotaValue.text = remainingQuota.toString()
+            }
 
             // remaining quota
             binding.detailProgres.max = eventsItem.quota ?: 0
-//            // Set progress ke 0 untuk awal animasi
+            // Set progress ke 0 untuk awal animasi
             Log.d(TAG, "setEventData: detail progres  ${binding.detailProgres.progress}")
 
             // jalankan animasi dari 0 ke jumlah registrants
             val targetProgress = eventsItem.registrants ?: 0
-//            val before
             // biar tidak inisial ulang progres
             if (targetProgress != previewsProgress){
                 Log.d(TAG, "setEventData: progress regris ")
@@ -362,19 +375,20 @@ class DetailEventActivity : AppCompatActivity() {
                 setTextColor(statusColor)
             }
 
+            binding.apply {
+                detailTvCategoryValue.text = eventsItem.category
+                detailTvLocationValue.text = eventsItem.cityName
+                detailTvKuotaValue.text = eventsItem.quota.toString()
+                detailTvPendaftarValue.text = eventsItem.registrants.toString()
 
-            binding.detailTvCategoryValue.text = eventsItem.category
-            binding.detailTvLocationValue.text = eventsItem.cityName
-            binding.detailTvKuotaValue.text = eventsItem.quota.toString()
-            binding.detailTvPendaftarValue.text = eventsItem.registrants.toString()
-
-            binding.detailTvSummaryValue.text = eventsItem.summary
-            val htmlDescription = cleanHtml(eventsItem.description ?: "")
-            binding.detailTvDescriptionValue.text = HtmlCompat.fromHtml(
-                htmlDescription,
-                HtmlCompat.FROM_HTML_MODE_LEGACY
-            )
-            binding.detailTvDescriptionValue.movementMethod = LinkMovementMethod.getInstance() // kink bisa di klik
+                detailTvSummaryValue.text = eventsItem.summary
+                val htmlDescription = cleanHtml(eventsItem.description ?: "")
+                detailTvDescriptionValue.text = HtmlCompat.fromHtml(
+                    htmlDescription,
+                    HtmlCompat.FROM_HTML_MODE_LEGACY
+                )
+                detailTvDescriptionValue.movementMethod = LinkMovementMethod.getInstance() // kink bisa di klik
+            }
 
             Glide.with(this)
                 .load(eventsItem.mediaCover)

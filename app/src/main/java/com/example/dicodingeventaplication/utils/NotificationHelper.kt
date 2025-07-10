@@ -68,5 +68,4 @@ class NotificationHelper(private val context: Context) {
 
         notificationManager.notify(notificationId, notification.build())
     }
-
 }

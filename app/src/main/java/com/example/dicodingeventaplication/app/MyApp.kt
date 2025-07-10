@@ -18,20 +18,7 @@ class MyApp : Application() {
         super.onCreate()
         instance = this
         themeState()
-//        startDailyReminderEvent()
     }
-
-//    private fun startDailyReminderEvent(){
-//        val periodicRequest = PeriodicWorkRequestBuilder<EventWorker>(
-//            15, TimeUnit.MINUTES
-//        ).build()
-//
-//        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-//            "upcoming_event_check",
-//            ExistingPeriodicWorkPolicy.KEEP,
-//            periodicRequest
-//        )
-//    }
 
     private fun themeState(){
         val preferences = SettingPreferences.getInstance(dataStore)

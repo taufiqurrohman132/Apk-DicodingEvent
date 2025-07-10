@@ -34,24 +34,28 @@ class HomeCorouselRVAdaptor(
         .setBackgroundThreadExecutor(Executors.newSingleThreadExecutor()) // jalankan di bg tred
         .build()
 ){
-    inner class ItemViewHolder( val item: ItemHomeCorouselBinding) : ViewHolder(item.root) {
+    inner class ItemViewHolder( val binding: ItemHomeCorouselBinding) : ViewHolder(binding.root) {
         // inisialisasi data
         fun bind(eventsItem: EventEntity?){
-            item.itemCorousel.isVisible = eventsItem != null
-            item.itemCorouselLottieEmpty.isVisible = eventsItem == null
+            binding.apply {
+                itemCorousel.isVisible = eventsItem != null
+                itemCorouselLottieEmpty.isVisible = eventsItem == null
+            }
 
             if (eventsItem != null){
-                item.tvOwnerItem.text= eventsItem.ownerName
-                item.tvHeaderItem.text = eventsItem.name
-                item.tvDes1Item.text = eventsItem.summary
-                item.homeTvBulan.text = TimeUtils.getMount(eventsItem.formatMount)//getMount(eventsItem).uppercase()
-                item.homeTvTgl.text = eventsItem.formateDate // tgl
+                binding.apply {
+                    tvOwnerItem.text= eventsItem.ownerName
+                    tvHeaderItem.text = eventsItem.name
+                    tvDes1Item.text = eventsItem.summary
+                    homeTvBulan.text = TimeUtils.getMount(eventsItem.formatMount)//getMount(eventsItem).uppercase()
+                    homeTvTgl.text = eventsItem.formateDate // tgl
+                }
                 Glide.with(context)
                     .load(eventsItem.imgLogo)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .override(400, 400)
                     .thumbnail(0.50f)
-                    .into(item.imgItemHori)
+                    .into(binding.imgItemHori)
 
                 itemView.setOnClickListener {
                     onItemClick(eventsItem)
@@ -70,7 +74,7 @@ class HomeCorouselRVAdaptor(
 
         holder.bind(event)
 
-        val ivBookmark = holder.item.ivFavorit
+        val ivBookmark = holder.binding.ivFavorit
         FavoritHelper.updateIcon(event, ivBookmark)
 
         ivBookmark.setOnClickListener {

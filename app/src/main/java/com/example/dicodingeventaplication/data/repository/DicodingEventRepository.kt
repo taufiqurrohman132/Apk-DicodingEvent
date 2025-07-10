@@ -6,7 +6,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.example.dicodingeventaplication.R
 import com.example.dicodingeventaplication.data.local.dao.EventDao
-import com.example.dicodingeventaplication.data.local.dao.FavoritEventDao2
+import com.example.dicodingeventaplication.data.local.dao.FavoritEventDao
 import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.data.local.entity.FavoritEventEntity
 import com.example.dicodingeventaplication.data.remote.model.DetailEventResponse
@@ -20,13 +20,12 @@ import com.example.dicodingeventaplication.utils.SharedPrefHelper
 import okio.IOException
 import kotlin.concurrent.Volatile
 
-class
-DicodingEventRepository private constructor(
+class DicodingEventRepository private constructor(
     private val resourceProvider: ResourceProvider,
     private val sharedPrefHelper: SharedPrefHelper,
     private val apiService: ApiService,
     private val eventDao: EventDao,
-    private val favoritDao: FavoritEventDao2,
+    private val favoritDao: FavoritEventDao,
 ) {
 
     // variable chache
@@ -50,7 +49,7 @@ DicodingEventRepository private constructor(
             sharedPrefHelper: SharedPrefHelper,
             apiService: ApiService,
             eventDao: EventDao,
-            favoritDao: FavoritEventDao2,
+            favoritDao: FavoritEventDao,
         ): DicodingEventRepository =
             instance ?: synchronized(this){
                 instance ?: DicodingEventRepository(
@@ -145,6 +144,7 @@ DicodingEventRepository private constructor(
     }
 
 
+    val startTime = System.currentTimeMillis()
     fun findEvent(active: Int): LiveData<Resource<List<EventEntity?>>?> = liveData {
         emit(Resource.Loading())
         var errorHappened = false
@@ -183,6 +183,11 @@ DicodingEventRepository private constructor(
 
                     eventDao.deleteAllByActive(active)
                     eventDao.insert(newList)
+
+                    val endTime = System.currentTimeMillis()
+                    Log.d("Performance", "API Load time: ${endTime - startTime} ms")
+
+
 
                     Log.d(TAG, "findEvent: success")
                 } else {

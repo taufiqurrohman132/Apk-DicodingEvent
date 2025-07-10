@@ -35,20 +35,24 @@ class HomeFinishedRVAdapter(
 ) {
     private var errorMessage: String? = null
 
-    inner class FinishedViewHolder(private val item: ItemHomeFinishedBinding) : ViewHolder(item.root) {
+    inner class FinishedViewHolder(private val binding: ItemHomeFinishedBinding) : ViewHolder(binding.root) {
         // inisialisasi data
         fun bind(eventsItem: EventEntity?){
-            item.tvHomeFinishedError.isVisible = eventsItem == null
-            item.itemHomeFinishedItem.isVisible = eventsItem != null
+            binding.apply {
+                tvHomeFinishedError.isVisible = eventsItem == null
+                itemHomeFinishedItem.isVisible = eventsItem != null
+                swipLayout.isEnabledSwipe = false
+            }
 
-            item.swipLayout.isEnabledSwipe = false
 
             if (eventsItem != null){
-                item.tvOwnerItemVer.text = eventsItem.ownerName
-                item.tvJudulItemVer.text = eventsItem.name
-                item.tvWaktuItemVer.text = eventsItem.formatYear
-                item.tvSummaryItemVer.text = eventsItem.summary
-                item.homeTvStatusItemVer.text = context.resources.getString(R.string.finished)
+                binding.apply {
+                    tvOwnerItemVer.text = eventsItem.ownerName
+                    tvJudulItemVer.text = eventsItem.name
+                    tvWaktuItemVer.text = eventsItem.formatYear
+                    tvSummaryItemVer.text = eventsItem.summary
+                    homeTvStatusItemVer.text = context.resources.getString(R.string.finished)
+                }
 
                 Glide.with(context)
                     .load(eventsItem.imgLogo)
@@ -56,13 +60,13 @@ class HomeFinishedRVAdapter(
                     .placeholder(R.drawable.placeholder_view_vector)
                     .override(200, 200)
                     .thumbnail(0.50f)
-                    .into(item.imgItemVer)
+                    .into(binding.imgItemVer)
 
-                item.dragItem.setOnClickListener {
+                binding.dragItem.setOnClickListener {
                     onItemClick(eventsItem)
                 }
             } else {
-                item.tvHomeFinishedError.text = errorMessage
+                binding.tvHomeFinishedError.text = errorMessage
                 Log.d(TAG, "bind: $errorMessage")
             }
         }

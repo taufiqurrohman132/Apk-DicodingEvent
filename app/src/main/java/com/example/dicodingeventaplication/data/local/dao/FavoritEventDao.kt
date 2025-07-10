@@ -9,7 +9,7 @@ import androidx.room.Query
 import com.example.dicodingeventaplication.data.local.entity.FavoritEventEntity
 
 @Dao
-interface FavoritEventDao2 {
+interface FavoritEventDao {
     @Query("SELECT * FROM favoritEvent ORDER BY createAt DESC")
     fun getAllFavorites(): LiveData<List<FavoritEventEntity>>
 

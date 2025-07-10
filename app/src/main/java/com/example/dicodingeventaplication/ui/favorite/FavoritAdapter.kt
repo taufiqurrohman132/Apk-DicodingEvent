@@ -29,11 +29,13 @@ class FavoritAdapter(
     inner class ItemViewHolder( val binding: ItemHomeFinishedBinding) : ViewHolder(binding.root) {
         fun bind(favorit: FavoritEventEntity?){
             if (favorit != null){
-                binding.tvOwnerItemVer.text = favorit.owner
-                binding.tvJudulItemVer.text = favorit.title
-                binding.tvWaktuItemVer.text = favorit.formatYear
-                binding.tvSummaryItemVer.text = favorit.summary
-                binding.homeTvStatusItemVer.text = context.resources.getString(R.string.finished)
+                binding.apply {
+                    tvOwnerItemVer.text = favorit.owner
+                    tvJudulItemVer.text = favorit.title
+                    tvWaktuItemVer.text = favorit.formatYear
+                    tvSummaryItemVer.text = favorit.summary
+                    homeTvStatusItemVer.text = context.resources.getString(R.string.finished)
+                }
 
                 Glide.with(context)
                     .load(favorit.imgLogo)

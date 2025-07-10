@@ -185,35 +185,43 @@ class FinishedFragment : Fragment() {
                     is Resource.Success -> {
 
                         adapterFinished.submitList(event.data)
-                        binding.finishedSimmmer.stopShimmer()
-                        binding.finishedSimmmer.visibility = View.INVISIBLE
-                        binding.finishedLottieError.visibility = View.INVISIBLE
-                        binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
+                        binding.apply {
+                            finishedSimmmer.stopShimmer()
+                            finishedSimmmer.visibility = View.INVISIBLE
+                            finishedLottieError.visibility = View.INVISIBLE
+                            finishedLottieErrorKoneksi.visibility = View.INVISIBLE
 
+                            finishedTotalEvent.text = adapterFinished.currentList.size.toString()
+                        }
                         finishedViewModel.markFinishedSuccess()
-                        binding.finishedTotalEvent.text = adapterFinished.currentList.size.toString()
                     }
                     is Resource.Error -> {
                         adapterFinished.submitList(emptyList())
-                        binding.finishedSimmmer.stopShimmer()
-                        binding.finishedSimmmer.visibility = View.INVISIBLE
-                        binding.finishedLottieError.visibility = View.VISIBLE
-                        binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
+                        binding.apply {
+                            finishedSimmmer.stopShimmer()
+                            finishedSimmmer.visibility = View.INVISIBLE
+                            finishedLottieError.visibility = View.VISIBLE
+                            finishedLottieErrorKoneksi.visibility = View.INVISIBLE
+                        }
 
                     }
                     is Resource.ErrorConection -> {
-                        binding.finishedSimmmer.stopShimmer()
-                        binding.finishedSimmmer.visibility = View.INVISIBLE
-                        binding.finishedLottieError.visibility = View.INVISIBLE
-                        if (!finishedViewModel.isFinishedSuccess && !finishedViewModel.hasLocalData.value)
-                            binding.finishedLottieErrorKoneksi.visibility = View.VISIBLE
+                        binding.apply {
+                            finishedSimmmer.stopShimmer()
+                            finishedSimmmer.visibility = View.INVISIBLE
+                            finishedLottieError.visibility = View.INVISIBLE
+                            if (!finishedViewModel.isFinishedSuccess && !finishedViewModel.hasLocalData.value)
+                                finishedLottieErrorKoneksi.visibility = View.VISIBLE
+                        }
                     }
                     is Resource.Empty -> {
                         adapterFinished.submitList(emptyList())
-                        binding.finishedSimmmer.stopShimmer()
-                        binding.finishedSimmmer.visibility = View.INVISIBLE
-                        binding.finishedLottieError.visibility = View.INVISIBLE
-                        binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
+                        binding.apply {
+                            finishedSimmmer.stopShimmer()
+                            finishedSimmmer.visibility = View.INVISIBLE
+                            finishedLottieError.visibility = View.INVISIBLE
+                            finishedLottieErrorKoneksi.visibility = View.INVISIBLE
+                        }
                     }
 
                     else -> {}
@@ -233,11 +241,13 @@ class FinishedFragment : Fragment() {
                 Log.d(TAG, "onViewCreated: isrefresh")
                 adapterFinished.submitList(emptyList()){
                     // mulai simer
-                    binding.finishedLottieError.visibility = View.INVISIBLE
-                    binding.finishedLottieErrorKoneksi.visibility = View.INVISIBLE
+                    binding.apply {
+                        finishedLottieError.visibility = View.INVISIBLE
+                        finishedLottieErrorKoneksi.visibility = View.INVISIBLE
 
-                    binding.finishedSimmmer.startShimmer()
-                    binding.finishedSimmmer.visibility = View.VISIBLE
+                        finishedSimmmer.startShimmer()
+                        finishedSimmmer.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -256,9 +266,11 @@ class FinishedFragment : Fragment() {
         }
 
         // swip
-        binding.finishedSwipRefresh.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.biru_tua))
-        binding.finishedSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(requireContext(), R.color.icon))
-        binding.finishedSwipRefresh.setProgressViewOffset(true, 0, 200)
+        binding.apply {
+            finishedSwipRefresh.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.biru_tua))
+            finishedSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(requireContext(), R.color.icon))
+            finishedSwipRefresh.setProgressViewOffset(true, 0, 200)
+        }
 
         binding.finishedSwipRefresh.setOnRefreshListener {
             finishedViewModel.startRefreshing()
@@ -311,15 +323,18 @@ class FinishedFragment : Fragment() {
 
                 if (!newText.isNullOrBlank()){
                     Log.d(TAG, "onQueryTextChange: newteks not null ${newText.isNotEmpty()}")
-                    binding.finishedSearch.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.biru_tua))
-                    binding.finishedRvSearch.visibility = View.VISIBLE
+                    binding.apply {
+                        finishedSearch.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.biru_tua))
+                        finishedRvSearch.visibility = View.VISIBLE
+                    }
 
                     finishedViewModel.searchEvent(newText)
                 }else{
                     adapterSearch.submitList(emptyList())
-
-                    binding.finishedRvSearch.visibility = View.INVISIBLE
-                    binding.finishedSearch.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.biru_tua_trans60))
+                    binding.apply {
+                        finishedRvSearch.visibility = View.INVISIBLE
+                        finishedSearch.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.biru_tua_trans60))
+                    }
                 }
                 return true
             }
@@ -335,8 +350,10 @@ class FinishedFragment : Fragment() {
                     }
                     is Resource.Empty ->{
                         adapterSearch.submitList(emptyList())
-                        binding.finishedSearchLottieNotResultLottie.playAnimation()
-                        binding.finishedSearchLottieNotResult.visibility = View.VISIBLE
+                        binding.apply {
+                            finishedSearchLottieNotResultLottie.playAnimation()
+                            finishedSearchLottieNotResult.visibility = View.VISIBLE
+                        }
                     }
                     else -> {}
                 }
@@ -347,10 +364,12 @@ class FinishedFragment : Fragment() {
         binding.finishedBtnCancelSearch.setOnClickListener {
             binding.finishedSearch.visibility = View.GONE
             adapterSearch.submitList(emptyList())
-            binding.rvFinished.isNestedScrollingEnabled = true
-            binding.finishedSearchLottieNotResult.visibility = View.INVISIBLE
+            binding.apply {
+                rvFinished.isNestedScrollingEnabled = true
+                finishedSearchLottieNotResult.visibility = View.INVISIBLE
 
-            binding.finishedSv.setQuery("", false)
+                finishedSv.setQuery("", false)
+            }
             finishedViewModel.isSearching =  false
 
             if (!isCollapseSearch){
@@ -380,7 +399,7 @@ class FinishedFragment : Fragment() {
         backPressedCallback.remove()
         _binding = null
     }
-
+    
     companion object{
         private const val SCROLL_POSITION = "scrol_position"
         const val TAG = "upcomingfrag"

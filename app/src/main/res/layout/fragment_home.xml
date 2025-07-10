@@ -46,7 +46,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.00"
                 app:tint="@color/icon" />
-
             <ImageButton
                 android:id="@+id/btn_favorit"
                 style="@style/Button.Back"
@@ -68,12 +67,12 @@
                 style="@style/Text.Subjudul16"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingHorizontal="16dp"
                 android:text="@string/hello_home"
                 android:textAlignment="center"
                 android:textColor="@color/icon"
-                android:paddingHorizontal="16dp"
-                android:maxLines="1"
-                android:ellipsize="end"
                 app:layout_constraintBottom_toTopOf="@id/icon_halo"
                 app:layout_constraintEnd_toStartOf="@id/btn_favorit"
                 app:layout_constraintStart_toEndOf="@id/btn_notification"
@@ -165,11 +164,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_img_utama"
                 app:layout_constraintVertical_bias="0.00">
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/header_home"
-                    >
+                    android:background="@color/header_home">
+
                     <ImageView
                         android:id="@+id/imgpop_header_home"
                         android:layout_width="match_parent"
@@ -182,48 +182,47 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:layout_gravity="center"
-                        android:visibility="invisible"
+                        android:background="@color/black_trans80"
                         android:src="@drawable/ic_refresh"
                         android:tint="@color/icon"
-                        app:shapeAppearanceOverlay="@style/Circular"
-                        android:background="@color/black_trans80"/>
+                        android:visibility="invisible"
+                        app:shapeAppearanceOverlay="@style/Circular" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
                         android:gravity="center_vertical"
-                        >
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/home.header_tv_name"
+                            style="@style/Text.JudulBerita18"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:lines="2"
-                            android:ellipsize="end"
-                            android:layout_marginBottom="4dp"
-                            style="@style/Text.JudulBerita18"
-                            android:textStyle="bold"
-                            android:text=""
-                            android:textColor="@color/icon"
                             android:layout_marginStart="16dp"
                             android:layout_marginEnd="100dp"
-                            />
+                            android:layout_marginBottom="4dp"
+                            android:ellipsize="end"
+                            android:lines="2"
+                            android:text=""
+                            android:textColor="@color/icon"
+                            android:textStyle="bold" />
+
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/home.header_btn_favorit"
-                            android:layout_height="wrap_content"
+                            style="@style/Text.Konten14"
                             android:layout_width="wrap_content"
-                            android:visibility="invisible"
+                            android:layout_height="wrap_content"
                             android:layout_marginHorizontal="16dp"
+                            android:layout_marginTop="4dp"
+                            android:backgroundTint="@color/white_trans_60"
                             android:contentDescription="@string/faforit"
+                            android:paddingHorizontal="16dp"
                             android:text="@string/favorit_now"
                             android:textColor="@color/biru_tua"
                             android:textStyle="bold"
-                            android:layout_marginTop="4dp"
-                            style="@style/Text.Konten14"
-                            app:cornerRadius="16dp"
-                            android:paddingHorizontal="16dp"
-                            android:backgroundTint="@color/white_trans_60"/>
+                            android:visibility="invisible"
+                            app:cornerRadius="16dp" />
                     </LinearLayout>
 
                 </FrameLayout>
@@ -234,16 +233,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:elevation="4dp"
-                android:visibility="invisible"
                 android:indeterminate="true"
+                android:visibility="invisible"
                 app:indicatorColor="@color/black"
                 app:indicatorSize="60dp"
-                app:trackThickness="2dp"
                 app:layout_constraintBottom_toBottomOf="@id/img_header_home"
                 app:layout_constraintEnd_toEndOf="@id/img_header_home"
                 app:layout_constraintStart_toStartOf="@id/img_header_home"
                 app:layout_constraintTop_toTopOf="@id/img_header_home"
-                app:trackColor="@color/white_trans_60" />
+                app:trackColor="@color/white_trans_60"
+                app:trackThickness="2dp" />
 
             <TextView
                 android:id="@+id/tv_img_corousel"
@@ -291,11 +290,11 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingTop="10dp"
-                    android:paddingBottom="16dp"
-                    android:orientation="horizontal">
+                    android:paddingBottom="16dp">
 
                     <include layout="@layout/simmer_home_upcome" />
 
@@ -326,16 +325,16 @@
                 android:id="@+id/home.lottie_error_corousel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:visibility="invisible"
-                android:gravity="center_horizontal"
                 app:layout_constraintBottom_toTopOf="@id/tv_home_finished"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_img_corousel"
-                app:layout_constraintVertical_bias="0.5"
-                >
+                app:layout_constraintVertical_bias="0.5">
+
                 <com.airbnb.lottie.LottieAnimationView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -378,12 +377,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:elevation="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_home_finished"
                 app:shimmer_auto_start="true"
-                android:elevation="4dp"
                 app:shimmer_direction="left_to_right"
                 app:shimmer_duration="2000"
                 app:shimmer_repeat_count="3">
@@ -391,16 +390,20 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="16dp"
                     android:background="@color/white"
                     android:elevation="4dp"
+                    android:gravity="center_vertical"
                     android:orientation="vertical"
-                    >
+                    android:paddingHorizontal="16dp">
+
                     <include layout="@layout/simmer_home_finished" />
+
                     <include layout="@layout/simmer_home_finished" />
+
                     <include layout="@layout/simmer_home_finished" />
+
                     <include layout="@layout/simmer_home_finished" />
+
                     <include layout="@layout/simmer_home_finished" />
                 </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>

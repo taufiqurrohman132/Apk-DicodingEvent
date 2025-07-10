@@ -142,9 +142,11 @@ class HomeFragment : Fragment() {
         val linearLayout = LinearLayoutManager(requireActivity()).apply {
             initialPrefetchItemCount = 4 // load 4 item sebelum muncul di layar
         }
-        binding.rvHomeFinished.layoutManager = linearLayout
-        binding.rvHomeFinished.isScrollContainer = false
-        binding.rvHomeFinished.setItemViewCacheSize(3)
+        binding.apply {
+            rvHomeFinished.layoutManager = linearLayout
+            rvHomeFinished.isScrollContainer = false
+            rvHomeFinished.setItemViewCacheSize(3)
+        }
 
         val adapterFinished = HomeFinishedRVAdapter(requireActivity()) { event ->
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
@@ -164,14 +166,18 @@ class HomeFragment : Fragment() {
             when(event){
                 is Resource.Loading -> {
                     if (!homeViewModel.isHeaderSuccess) {
-                        binding.homeProgres.visibility = View.VISIBLE
-                        binding.homeHeaderRefresh.visibility = View.INVISIBLE
+                        binding.apply {
+                            homeProgres.visibility = View.VISIBLE
+                            homeHeaderRefresh.visibility = View.INVISIBLE
+                        }
                     }
                 }
                 is Resource.Success -> {
-                    binding.homeHeaderRefresh.visibility = View.INVISIBLE
-                    binding.homeHeaderBtnFavorit.visibility = View.VISIBLE
-                    binding.imgpopHeaderHome.foreground = ContextCompat.getDrawable(requireContext(), R.drawable.gradient_top_left)
+                    binding.apply {
+                        homeHeaderRefresh.visibility = View.INVISIBLE
+                        homeHeaderBtnFavorit.visibility = View.VISIBLE
+                        imgpopHeaderHome.foreground = ContextCompat.getDrawable(requireContext(), R.drawable.gradient_top_left)
+                    }
 
                     eventHeader = getImageHeader(event.data)
                     homeViewModel.isHeaderSuccess()
@@ -182,10 +188,12 @@ class HomeFragment : Fragment() {
                 is Resource.Error -> {
                     binding.homeProgres.isVisible = false
                     if (!homeViewModel.hasLocalDataFinish.value){
-                        binding.imgpopHeaderHome.setImageResource(0)
-                        binding.homeHeaderRefresh.visibility = View.VISIBLE
-                        binding.homeHeaderBtnFavorit.visibility = View.INVISIBLE
-                        binding.imgpopHeaderHome.foreground = null
+                        binding.apply {
+                            imgpopHeaderHome.setImageResource(0)
+                            homeHeaderRefresh.visibility = View.VISIBLE
+                            homeHeaderBtnFavorit.visibility = View.INVISIBLE
+                            imgpopHeaderHome.foreground = null
+                        }
                     }
 //                    binding.homeHeaderRefresh.isVisible = true
                 }
@@ -210,10 +218,12 @@ class HomeFragment : Fragment() {
                     is Resource.Success -> {
                         adapterCorousel.submitList(event.data?.take(5)?.toList()){
                             binding.vpItemCorousel.post {
-                                binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
-                                binding.homeUpcomingSimmmer.stopShimmer()
-                                binding.homeLottieCorousel.visibility = View.INVISIBLE
-                                binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
+                                binding.apply {
+                                    homeUpcomingSimmmer.visibility = View.INVISIBLE
+                                    homeUpcomingSimmmer.stopShimmer()
+                                    homeLottieCorousel.visibility = View.INVISIBLE
+                                    homeLottieErrorCorousel.visibility = View.INVISIBLE
+                                }
                             }
                         }
                         homeViewModel.isUpcomingSuccess()
@@ -221,20 +231,23 @@ class HomeFragment : Fragment() {
                     is Resource.Error -> {
                         adapterCorousel.submitList(emptyList()){
                             binding.vpItemCorousel.post {
-                                binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
-                                binding.homeLottieCorousel.visibility = View.INVISIBLE
-                                binding.homeUpcomingSimmmer.stopShimmer()
-                                if (!homeViewModel.hasLocalDataFinish.value)
-                                    binding.homeLottieErrorCorousel.visibility = View.VISIBLE
+                                binding.apply {
+                                    homeUpcomingSimmmer.visibility = View.INVISIBLE
+                                    homeLottieCorousel.visibility = View.INVISIBLE
+                                    homeUpcomingSimmmer.stopShimmer()
+                                    if (!homeViewModel.hasLocalDataFinish.value)
+                                        homeLottieErrorCorousel.visibility = View.VISIBLE
+                                }
                             }
                         }
                     }
                     is Resource.ErrorConection -> {
                         Log.d(TAG, "corousel currrent list = ${adapterCorousel.currentList.isEmpty()}")
-
-                        binding.homeUpcomingSimmmer.visibility = View.INVISIBLE
-                        binding.homeUpcomingSimmmer.stopShimmer()
-                        binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
+                        binding.apply {
+                            homeUpcomingSimmmer.visibility = View.INVISIBLE
+                            homeUpcomingSimmmer.stopShimmer()
+                            homeLottieErrorCorousel.visibility = View.INVISIBLE
+                        }
 
                         if (adapterCorousel.currentList.isEmpty() && !homeViewModel.isUpcomingSuccess && !homeViewModel.hasLocalDataUpcome.value){
                             binding.homeLottieCorousel.visibility = View.VISIBLE
@@ -264,8 +277,10 @@ class HomeFragment : Fragment() {
                     is Resource.Success -> {
                         adapterFinished.submitList(event.data?.toList()){
                             binding.rvHomeFinished.post {
-                                binding.homeFinishedSimmmer.visibility = View.INVISIBLE
-                                binding.homeFinishedSimmmer.stopShimmer()
+                                binding.apply {
+                                    homeFinishedSimmmer.visibility = View.INVISIBLE
+                                    homeFinishedSimmmer.stopShimmer()
+                                }
                             }
                         }
                         homeViewModel.isFinishedSuccess()
@@ -275,8 +290,10 @@ class HomeFragment : Fragment() {
                         adapterFinished.setError(event.message)
                         adapterFinished.submitList(event.data?.toList()){
                             binding.rvHomeFinished.post {
-                                binding.homeFinishedSimmmer.visibility = View.INVISIBLE
-                                binding.homeFinishedSimmmer.stopShimmer()
+                                binding.apply {
+                                    homeFinishedSimmmer.visibility = View.INVISIBLE
+                                    homeFinishedSimmmer.stopShimmer()
+                                }
                             }
                         }
                     }
@@ -284,14 +301,18 @@ class HomeFragment : Fragment() {
                         adapterFinished.setError(event.message)
                         adapterFinished.submitList(event.data?.toList()){
                             binding.rvHomeFinished.post {
-                                binding.homeFinishedSimmmer.visibility = View.INVISIBLE
-                                binding.homeFinishedSimmmer.stopShimmer()
+                                binding.apply {
+                                    homeFinishedSimmmer.visibility = View.INVISIBLE
+                                    homeFinishedSimmmer.stopShimmer()
+                                }
                             }
                         }
                     }
                     is Resource.Empty -> {
-                        binding.homeFinishedSimmmer.visibility = View.INVISIBLE
-                        binding.homeFinishedSimmmer.stopShimmer()
+                        binding.apply {
+                            homeFinishedSimmmer.visibility = View.INVISIBLE
+                            homeFinishedSimmmer.stopShimmer()
+                        }
                     }
 
                     else -> {}
@@ -311,23 +332,27 @@ class HomeFragment : Fragment() {
                 Log.d(TAG, "onViewCreated: stat simmer")
                 Log.d(TAG, "onViewCreated: finished current list ${adapterFinished.currentList}")
                 Log.d(TAG, "onViewCreated: finished current list ${ adapterFinished.currentList.any { it == null }}")
-                binding.homeHeaderRefresh.isVisible = !isReload
-                binding.homeProgres.isVisible = isReload
+                binding.apply {
+                    homeHeaderRefresh.isVisible = !isReload
+                    homeProgres.isVisible = isReload
+                }
 
                 adapterCorousel.submitList(emptyList())
                 adapterFinished.submitList(emptyList()){
                     // mulai simmer
-                    binding.homeHeaderBtnFavorit.visibility = View.INVISIBLE
-                    binding.homeHeaderTvName.text = ""
-                    binding.imgpopHeaderHome.foreground = null
+                    binding.apply {
+                        homeHeaderBtnFavorit.visibility = View.INVISIBLE
+                        homeHeaderTvName.text = ""
+                        imgpopHeaderHome.foreground = null
 
-                    binding.homeLottieCorousel.visibility = View.INVISIBLE
-                    binding.homeLottieErrorCorousel.visibility = View.INVISIBLE
+                        homeLottieCorousel.visibility = View.INVISIBLE
+                        homeLottieErrorCorousel.visibility = View.INVISIBLE
 
-                    binding.homeUpcomingSimmmer.startShimmer()
-                    binding.homeFinishedSimmmer.startShimmer()
-                    binding.homeUpcomingSimmmer.visibility = View.VISIBLE
-                    binding.homeFinishedSimmmer.visibility = View.VISIBLE
+                        homeUpcomingSimmmer.startShimmer()
+                        homeFinishedSimmmer.startShimmer()
+                        homeUpcomingSimmmer.visibility = View.VISIBLE
+                        homeFinishedSimmmer.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -339,9 +364,11 @@ class HomeFragment : Fragment() {
         }
 
         // swip refres
-        binding.homeSwipRefresh.setColorSchemeColors(resources.getColor(R.color.biru_tua))
-        binding.homeSwipRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.icon))
-        binding.homeSwipRefresh.setProgressViewOffset(true, 0, 200)
+        binding.apply {
+            homeSwipRefresh.setColorSchemeColors(resources.getColor(R.color.biru_tua))
+            homeSwipRefresh.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.icon))
+            homeSwipRefresh.setProgressViewOffset(true, 0, 200)
+        }
 
         binding.homeSwipRefresh.setOnRefreshListener {
             homeViewModel.startRefreshing()

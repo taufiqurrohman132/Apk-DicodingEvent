@@ -172,16 +172,18 @@ class SearchActivity : AppCompatActivity(), DialogListener {
                 Log.d(TAG, "query Data: onchange")
                 Log.d(TAG, "query Data: newteks $newText")
                 if (newText.isNullOrBlank()){
-                    binding.searchHeaderResult.visibility = View.INVISIBLE
-                    binding.searchSimmer.visibility = View.INVISIBLE
+                    binding.apply {
+                        searchHeaderResult.visibility = View.INVISIBLE
+                        searchSimmer.visibility = View.INVISIBLE
 
-                    binding.searchLottieEror.visibility = View.INVISIBLE
-                    binding.searchLottieNotResult.visibility = View.INVISIBLE
-                    binding.searchLottieNotInternet.visibility = View.INVISIBLE
+                        searchLottieEror.visibility = View.INVISIBLE
+                        searchLottieNotResult.visibility = View.INVISIBLE
+                        searchLottieNotInternet.visibility = View.INVISIBLE
 
-                    if (adapterHistory.currentList.isNotEmpty()){
-                        binding.searchHeadarHistory.visibility = View.VISIBLE
-                        binding.rvSearchHistory.visibility = View.VISIBLE
+                        if (adapterHistory.currentList.isNotEmpty()){
+                            searchHeadarHistory.visibility = View.VISIBLE
+                            rvSearchHistory.visibility = View.VISIBLE
+                        }
                     }
 
                     adapterHistory.submitList(this@SearchActivity.searchViewModel.listHistory.value ?: emptyList())
@@ -190,10 +192,12 @@ class SearchActivity : AppCompatActivity(), DialogListener {
                 }else{
                     queryIsSubmit = false
 
-                    binding.searchHeaderResult.visibility = View.VISIBLE
+                    binding.apply {
+                        searchHeaderResult.visibility = View.VISIBLE
 
-                    binding.searchHeadarHistory.visibility = View.INVISIBLE
-                    binding.rvSearchHistory.visibility = View.INVISIBLE
+                        searchHeadarHistory.visibility = View.INVISIBLE
+                        rvSearchHistory.visibility = View.INVISIBLE
+                    }
 
                     this@SearchActivity.searchViewModel.searchEvent(newText, activeQuery)
                 }
@@ -209,33 +213,39 @@ class SearchActivity : AppCompatActivity(), DialogListener {
                 when(event){
                     is Resource.Loading -> {
                         // mulai simmer
-                        binding.rvSearchResult.visibility = View.INVISIBLE
-                        binding.searchSimmer.startShimmer()
-                        binding.searchSimmer.visibility = View.VISIBLE
+                        binding.apply {
+                            rvSearchResult.visibility = View.INVISIBLE
+                            searchSimmer.startShimmer()
+                            searchSimmer.visibility = View.VISIBLE
 
-                        binding.searchLottieEror.visibility = View.INVISIBLE
-                        binding.searchLottieNotResult.visibility = View.INVISIBLE
-                        binding.searchLottieNotInternet.visibility = View.INVISIBLE
+                            searchLottieEror.visibility = View.INVISIBLE
+                            searchLottieNotResult.visibility = View.INVISIBLE
+                            searchLottieNotInternet.visibility = View.INVISIBLE
+                        }
 
                         Log.d(TAG, "onCreate: reaouse loading")
                     }
                     is Resource.Success -> {
-                        binding.rvSearchResult.visibility = View.VISIBLE
                         adapterResult.submitList(event.data ?: emptyList())
-                        binding.searchSimmer.stopShimmer()
-                        binding.searchSimmer.visibility = View.INVISIBLE
-                        Log.d(TAG, "onCreate: reaouse sukses")
+                        binding.apply {
+                            rvSearchResult.visibility = View.VISIBLE
+                            searchSimmer.stopShimmer()
+                            searchSimmer.visibility = View.INVISIBLE
 
-                        binding.searchLottieEror.visibility = View.INVISIBLE
-                        binding.searchLottieNotResult.visibility = View.INVISIBLE
-                        binding.searchLottieNotInternet.visibility = View.INVISIBLE
+                            searchLottieEror.visibility = View.INVISIBLE
+                            searchLottieNotResult.visibility = View.INVISIBLE
+                            searchLottieNotInternet.visibility = View.INVISIBLE
+                        }
+                        Log.d(TAG, "onCreate: reaouse sukses")
 
                         this@SearchActivity.searchViewModel.isSearchSuccess = true
                     }
                     is Resource.Error -> {
-                        binding.searchSimmer.stopShimmer()
-                        binding.searchSimmer.visibility = View.INVISIBLE
-                        binding.rvSearchResult.visibility = View.INVISIBLE
+                        binding.apply {
+                            searchSimmer.stopShimmer()
+                            searchSimmer.visibility = View.INVISIBLE
+                            rvSearchResult.visibility = View.INVISIBLE
+                        }
                         Log.d(TAG, "onCreate: reaouse rerror")
 
                         if (queryIsSubmit) {
@@ -243,17 +253,21 @@ class SearchActivity : AppCompatActivity(), DialogListener {
                             queryIsSubmit = false
                         }
 
-                        binding.searchLottieNotResult.visibility = View.INVISIBLE
-                        binding.searchLottieNotInternet.visibility = View.INVISIBLE
+                        binding.apply {
+                            searchLottieNotResult.visibility = View.INVISIBLE
+                            searchLottieNotInternet.visibility = View.INVISIBLE
 
-                        if (adapterResult.currentList.isEmpty()){
-                            binding.searchLottieEror.visibility = View.VISIBLE
-                            binding.searchLottieErorLottie.playAnimation()
+                            if (adapterResult.currentList.isEmpty()){
+                                searchLottieEror.visibility = View.VISIBLE
+                                searchLottieErorLottie.playAnimation()
+                            }
                         }
                     }
                     is Resource.ErrorConection -> {
-                        binding.searchSimmer.stopShimmer()
-                        binding.searchSimmer.visibility = View.INVISIBLE
+                        binding.apply {
+                            searchSimmer.stopShimmer()
+                            searchSimmer.visibility = View.INVISIBLE
+                        }
 
                         if (queryIsSubmit) {
                             DialogUtils.showPopUpErrorDialog(this@SearchActivity, event.message)
@@ -261,27 +275,31 @@ class SearchActivity : AppCompatActivity(), DialogListener {
                         }
 
                         Log.d(TAG, "onCreate: reaouse rerror konect")
-                        binding.searchLottieEror.visibility = View.INVISIBLE
-                        binding.searchLottieNotResult.visibility = View.INVISIBLE
-                        if (adapterResult.currentList.isEmpty()){
-                            binding.searchLottieNotInternet.visibility = View.VISIBLE
-                            binding.searchLottieNotInternetLottie.playAnimation()
+                        binding.apply {
+                            searchLottieEror.visibility = View.INVISIBLE
+                            searchLottieNotResult.visibility = View.INVISIBLE
+                            if (adapterResult.currentList.isEmpty()){
+                                searchLottieNotInternet.visibility = View.VISIBLE
+                                searchLottieNotInternetLottie.playAnimation()
+                            }
                         }
 
                         this@SearchActivity.searchViewModel.isSearchSuccess = false
                         Log.d(TAG, "onCreate: eror conect ${adapterResult.currentList}")
                     }
                     is Resource.Empty -> {
-                        binding.rvSearchResult.visibility = View.INVISIBLE
-                        binding.searchSimmer.stopShimmer()
-                        binding.searchSimmer.visibility = View.INVISIBLE
+                        binding.apply {
+                            rvSearchResult.visibility = View.INVISIBLE
+                            searchSimmer.stopShimmer()
+                            searchSimmer.visibility = View.INVISIBLE
+
+                            searchLottieEror.visibility = View.INVISIBLE
+                            searchLottieNotResult.visibility = View.VISIBLE
+                            searchLottieNotInternet.visibility = View.INVISIBLE
+
+                            searchLottieNotResultLottie.playAnimation()
+                        }
                         Log.d(TAG, "onCreate: reaouse empty")
-
-                        binding.searchLottieEror.visibility = View.INVISIBLE
-                        binding.searchLottieNotResult.visibility = View.VISIBLE
-                        binding.searchLottieNotInternet.visibility = View.INVISIBLE
-
-                        binding.searchLottieNotResultLottie.playAnimation()
                     }
 
                 }

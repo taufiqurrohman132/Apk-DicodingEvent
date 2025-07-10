@@ -24,7 +24,6 @@ import kotlinx.coroutines.launch
 class FavoriteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFavoriteBinding
     private lateinit var adapter: FavoritAdapter
-//    private val viewModel: FavoritViewModel by viewModels()
 
     private val factory: EventViewModelFactory by lazy {
         EventViewModelFactory.getInstance(this)
@@ -49,7 +48,6 @@ class FavoriteActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         savedScrollState = savedInstanceState.getParcelable(SCROLL_POSITION)
-//        binding.rvFavorite.layoutManager?.onRestoreInstanceState(rvPosition)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
