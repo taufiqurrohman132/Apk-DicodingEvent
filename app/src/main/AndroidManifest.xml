@@ -8,11 +8,15 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
-        android:name=".MyApp"
+        android:name=".app.MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+<<<<<<< HEAD
         android:icon="@mipmap/ic_apps_mipmap"
+=======
+        android:icon="@mipmap/ic_apps"
+>>>>>>> recovery-branch
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_apps_round"
         android:supportsRtl="true"

@@ -13,8 +13,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.SettingPreferences
-import com.example.dicodingeventaplication.dataStore
+import com.example.dicodingeventaplication.data.local.datastore.SettingPreferences
+import com.example.dicodingeventaplication.data.local.datastore.dataStore
 import com.example.dicodingeventaplication.databinding.ActivityFavoriteBinding
 import com.example.dicodingeventaplication.ui.detailEvent.DetailEventActivity
 import com.example.dicodingeventaplication.viewmodel.EventViewModelFactory
@@ -24,7 +24,6 @@ import kotlinx.coroutines.launch
 class FavoriteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFavoriteBinding
     private lateinit var adapter: FavoritAdapter
-//    private val viewModel: FavoritViewModel by viewModels()
 
     private val factory: EventViewModelFactory by lazy {
         EventViewModelFactory.getInstance(this)
@@ -49,7 +48,6 @@ class FavoriteActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         savedScrollState = savedInstanceState.getParcelable(SCROLL_POSITION)
-//        binding.rvFavorite.layoutManager?.onRestoreInstanceState(rvPosition)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,8 +72,10 @@ class FavoriteActivity : AppCompatActivity() {
         adapter = FavoritAdapter(this,
             onItemClick = { event ->
                 val intent = Intent(this, DetailEventActivity::class.java)
-                intent.putExtra(DetailEventActivity.EXTRA_EVENT, event)
-                startActivity(intent)
+                favoritViewModel.getDetailFromFavorit(event){ eventEntity ->
+                    intent.putExtra(DetailEventActivity.EXTRA_EVENT, eventEntity)
+                    startActivity(intent)
+                }
             },
             onDelete = { event ->
                 favoritViewModel.deleteFavorit(event)
@@ -88,14 +88,6 @@ class FavoriteActivity : AppCompatActivity() {
 
         binding.rvFavorite.adapter = adapter
 
-        // ketika rv di scrol
-//        binding.rvFavorite.addOnScrollListener(object : OnScrollListener(){
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                updateButtonEdit()
-//                Log.d("TAG", "onScrolled: rv")
-//            }
-//        })
         binding.favoritBtnEdit.setOnClickListener{
             if (adapter.swipeLayouts.any { it.isRightOpen }){
                 adapter.swipeLayouts.forEach { swipeLayout ->
@@ -112,7 +104,7 @@ class FavoriteActivity : AppCompatActivity() {
         }
 
         // observe favorit
-        favoritViewModel.getFavoritBookmark().observe(this){
+        favoritViewModel.getAllFavorit().observe(this){
             adapter.submitList(it)
             binding.favoriteSize.text = getString(R.string.favorit_size, it.size.toString())
 

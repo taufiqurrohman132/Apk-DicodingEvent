@@ -1,4 +1,4 @@
-package com.example.dicodingeventaplication
+package com.example.dicodingeventaplication.data.local.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -15,7 +15,6 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 class SettingPreferences private constructor(private val dataStore: DataStore<Preferences>){
     private val themeKey = booleanPreferencesKey("theme_setting")
     private val notificationKey = booleanPreferencesKey("notification_settings")
-//    private val searchResultKey = stringPreferencesKey("search_result")
 
     // theme
     fun getThemeSetting(): Flow<Boolean>{
@@ -43,21 +42,11 @@ class SettingPreferences private constructor(private val dataStore: DataStore<Pr
         }
     }
 
-    // searc result
-//    suspend fun saveSearchResult(result: List<EventItem>){
-//        val gson = Gson()
-//        val json = gson.toJson(result)
-//
-//        dataStore.edit { preferences ->
-//            preferences[searchResultKey] = json
-//        }
-//    }
-
     companion object{
         @Volatile
         private var INSTANCE: SettingPreferences? = null
 
-        fun getInstance(dataStore: DataStore<Preferences>): SettingPreferences{
+        fun getInstance(dataStore: DataStore<Preferences>): SettingPreferences {
             return INSTANCE ?: synchronized(this){
                 val instances = SettingPreferences(dataStore)
                 INSTANCE = instances

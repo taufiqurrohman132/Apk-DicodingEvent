@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.utils.Resource
 import com.example.dicodingeventaplication.data.remote.model.EventItem
 import com.example.dicodingeventaplication.data.repository.DicodingEventRepository
@@ -17,8 +17,6 @@ import kotlinx.coroutines.launch
 
 
 class SearchViewModel(private val repository: DicodingEventRepository) : ViewModel() {
-//    private var cacheResult: List<EventItem>? = null
-//    private var lastQuery: String? = null
 
     private val _searchResultEvenItem = MutableLiveData<Resource<List<EventItem>>>(
         Resource.Success(
@@ -34,10 +32,6 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
 
     private val _activeQuery = MutableLiveData<Int>().apply { value = -1 } // default
     val activeQuery: LiveData<Int> get() =  _activeQuery
-
-//    val isDarkModeFlow: Flow<Boolean> = appli
-//    private val _detailEvent = MutableLiveData<FavoritEvent>()
-//    val detailEvent: LiveData<FavoritEvent> = _detailEvent
 
     var isSearchSuccess = false
 
@@ -107,7 +101,7 @@ class SearchViewModel(private val repository: DicodingEventRepository) : ViewMod
         }
     }
 
-    fun getDetailFromSearch(eventItem: EventItem, onResult: (FavoritEvent) -> Unit){
+    fun getDetailFromSearch(eventItem: EventItem, onResult: (EventEntity) -> Unit){
         viewModelScope.launch {
             val value = repository.getDetailFromSearch(eventItem)
             onResult(value)

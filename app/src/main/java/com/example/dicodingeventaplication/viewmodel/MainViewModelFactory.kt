@@ -2,7 +2,7 @@ package com.example.dicodingeventaplication.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.dicodingeventaplication.SettingPreferences
+import com.example.dicodingeventaplication.data.local.datastore.SettingPreferences
 import com.example.dicodingeventaplication.ui.main.MainViewModel
 
 class MainViewModelFactory(private val pref: SettingPreferences) : ViewModelProvider.NewInstanceFactory() {

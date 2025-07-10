@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.utils.TimeUtils
 import com.example.dicodingeventaplication.databinding.ItemHomeCorouselBinding
 import com.example.dicodingeventaplication.utils.FavoritHelper
@@ -18,15 +18,15 @@ import java.util.concurrent.Executors
 
 class HomeCorouselRVAdaptor(
     private val context: Context,
-    private val onItemClick: (FavoritEvent) -> Unit,
-    private val onBookmarkClick: (FavoritEvent) -> Unit
-) : ListAdapter<FavoritEvent, HomeCorouselRVAdaptor.ItemViewHolder>(
-    AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<FavoritEvent>() {
-        override fun areItemsTheSame(oldItem: FavoritEvent, newItem: FavoritEvent): Boolean {
+    private val onItemClick: (EventEntity) -> Unit,
+    private val onBookmarkClick: (EventEntity) -> Unit
+) : ListAdapter<EventEntity, HomeCorouselRVAdaptor.ItemViewHolder>(
+    AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<EventEntity>() {
+        override fun areItemsTheSame(oldItem: EventEntity, newItem: EventEntity): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: FavoritEvent, newItem: FavoritEvent): Boolean {
+        override fun areContentsTheSame(oldItem: EventEntity, newItem: EventEntity): Boolean {
             return oldItem == newItem
         }
 
@@ -34,24 +34,28 @@ class HomeCorouselRVAdaptor(
         .setBackgroundThreadExecutor(Executors.newSingleThreadExecutor()) // jalankan di bg tred
         .build()
 ){
-    inner class ItemViewHolder( val item: ItemHomeCorouselBinding) : ViewHolder(item.root) {
+    inner class ItemViewHolder( val binding: ItemHomeCorouselBinding) : ViewHolder(binding.root) {
         // inisialisasi data
-        fun bind(eventsItem: FavoritEvent?){
-            item.itemCorousel.isVisible = eventsItem != null
-            item.itemCorouselLottieEmpty.isVisible = eventsItem == null
+        fun bind(eventsItem: EventEntity?){
+            binding.apply {
+                itemCorousel.isVisible = eventsItem != null
+                itemCorouselLottieEmpty.isVisible = eventsItem == null
+            }
 
             if (eventsItem != null){
-                item.tvOwnerItem.text= eventsItem.ownerName
-                item.tvHeaderItem.text = eventsItem.name
-                item.tvDes1Item.text = eventsItem.summary
-                item.homeTvBulan.text = TimeUtils.getMount(eventsItem.formatMount)//getMount(eventsItem).uppercase()
-                item.homeTvTgl.text = eventsItem.formateDate // tgl
+                binding.apply {
+                    tvOwnerItem.text= eventsItem.ownerName
+                    tvHeaderItem.text = eventsItem.name
+                    tvDes1Item.text = eventsItem.summary
+                    homeTvBulan.text = TimeUtils.getMount(eventsItem.formatMount)//getMount(eventsItem).uppercase()
+                    homeTvTgl.text = eventsItem.formateDate // tgl
+                }
                 Glide.with(context)
                     .load(eventsItem.imgLogo)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .override(400, 400)
                     .thumbnail(0.50f)
-                    .into(item.imgItemHori)
+                    .into(binding.imgItemHori)
 
                 itemView.setOnClickListener {
                     onItemClick(eventsItem)
@@ -70,7 +74,7 @@ class HomeCorouselRVAdaptor(
 
         holder.bind(event)
 
-        val ivBookmark = holder.item.ivFavorit
+        val ivBookmark = holder.binding.ivFavorit
         FavoritHelper.updateIcon(event, ivBookmark)
 
         ivBookmark.setOnClickListener {

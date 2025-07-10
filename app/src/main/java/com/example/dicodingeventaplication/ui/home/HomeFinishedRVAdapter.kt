@@ -12,20 +12,20 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.data.local.entity.FavoritEvent
+import com.example.dicodingeventaplication.data.local.entity.EventEntity
 import com.example.dicodingeventaplication.databinding.ItemHomeFinishedBinding
 import java.util.concurrent.Executors
 
 class HomeFinishedRVAdapter(
     private val context: Context,
-    private val onItemClick: (FavoritEvent) -> Unit
-) : ListAdapter<FavoritEvent, HomeFinishedRVAdapter.FinishedViewHolder>(
-    AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<FavoritEvent>() {
-        override fun areItemsTheSame(oldItem: FavoritEvent, newItem: FavoritEvent): Boolean {
+    private val onItemClick: (EventEntity) -> Unit
+) : ListAdapter<EventEntity, HomeFinishedRVAdapter.FinishedViewHolder>(
+    AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<EventEntity>() {
+        override fun areItemsTheSame(oldItem: EventEntity, newItem: EventEntity): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: FavoritEvent, newItem: FavoritEvent): Boolean {
+        override fun areContentsTheSame(oldItem: EventEntity, newItem: EventEntity): Boolean {
             return oldItem == newItem
         }
 
@@ -35,20 +35,24 @@ class HomeFinishedRVAdapter(
 ) {
     private var errorMessage: String? = null
 
-    inner class FinishedViewHolder(private val item: ItemHomeFinishedBinding) : ViewHolder(item.root) {
+    inner class FinishedViewHolder(private val binding: ItemHomeFinishedBinding) : ViewHolder(binding.root) {
         // inisialisasi data
-        fun bind(eventsItem: FavoritEvent?){
-            item.tvHomeFinishedError.isVisible = eventsItem == null
-            item.itemHomeFinishedItem.isVisible = eventsItem != null
+        fun bind(eventsItem: EventEntity?){
+            binding.apply {
+                tvHomeFinishedError.isVisible = eventsItem == null
+                itemHomeFinishedItem.isVisible = eventsItem != null
+                swipLayout.isEnabledSwipe = false
+            }
 
-            item.swipLayout.isEnabledSwipe = false
 
             if (eventsItem != null){
-                item.tvOwnerItemVer.text = eventsItem.ownerName
-                item.tvJudulItemVer.text = eventsItem.name
-                item.tvWaktuItemVer.text = eventsItem.formatYear
-                item.tvSummaryItemVer.text = eventsItem.summary
-                item.homeTvStatusItemVer.text = context.resources.getString(R.string.finished)
+                binding.apply {
+                    tvOwnerItemVer.text = eventsItem.ownerName
+                    tvJudulItemVer.text = eventsItem.name
+                    tvWaktuItemVer.text = eventsItem.formatYear
+                    tvSummaryItemVer.text = eventsItem.summary
+                    homeTvStatusItemVer.text = context.resources.getString(R.string.finished)
+                }
 
                 Glide.with(context)
                     .load(eventsItem.imgLogo)
@@ -56,42 +60,13 @@ class HomeFinishedRVAdapter(
                     .placeholder(R.drawable.placeholder_view_vector)
                     .override(200, 200)
                     .thumbnail(0.50f)
-                    .into(item.imgItemVer)
+                    .into(binding.imgItemVer)
 
-//                Glide.with(context)
-//                    .load(eventsItem.imgLogo)
-//                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-//                    .listener(object : RequestListener<Drawable> {
-//                        override fun onLoadFailed(
-//                            e: GlideException?,
-//                            model: Any?,
-//                            target: Target<Drawable>,
-//                            isFirstResource: Boolean
-//                        ): Boolean {
-//                            item.progressBar.visibility = View.INVISIBLE
-//                            return false
-//                        }
-//
-//                        override fun onResourceReady(
-//                            resource: Drawable,
-//                            model: Any,
-//                            target: Target<Drawable>?,
-//                            dataSource: DataSource,
-//                            isFirstResource: Boolean
-//                        ): Boolean {
-//                            item.progressBar.visibility = View.INVISIBLE
-//                            return false
-//                        }
-//
-//                    })
-//                    .into(item.imgItemVer)
-
-
-                item.dragItem.setOnClickListener {
+                binding.dragItem.setOnClickListener {
                     onItemClick(eventsItem)
                 }
             } else {
-                item.tvHomeFinishedError.text = errorMessage
+                binding.tvHomeFinishedError.text = errorMessage
                 Log.d(TAG, "bind: $errorMessage")
             }
         }

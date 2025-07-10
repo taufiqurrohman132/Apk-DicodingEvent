@@ -29,19 +29,15 @@ class EventViewModelFactory(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        if (modelClass.isAssignableFrom(SearchViewModel::class.java)){
-            return SearchViewModel(repository) as T
-        }else if (modelClass.isAssignableFrom(HomeViewModel::class.java)){
-            return HomeViewModel(repository) as T
-        }else if (modelClass.isAssignableFrom(UpcomingViewModel::class.java)){
-            return UpcomingViewModel(repository) as T
-        } else if (modelClass.isAssignableFrom(FinishedViewModel::class.java)){
-            return FinishedViewModel(repository) as T
-        } else if (modelClass.isAssignableFrom(DetailEventViewModel::class.java)){
-            return DetailEventViewModel(repository) as T
-        }else if (modelClass.isAssignableFrom(FavoritViewModel::class.java)){
-            return FavoritViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknwon Viewmodel Class")
+        return when (modelClass) {
+            SearchViewModel::class.java -> SearchViewModel(repository)
+            HomeViewModel::class.java -> HomeViewModel(repository)
+            UpcomingViewModel::class.java -> UpcomingViewModel(repository)
+            FinishedViewModel::class.java -> FinishedViewModel(repository)
+            DetailEventViewModel::class.java -> DetailEventViewModel(repository)
+            FavoritViewModel::class.java -> FavoritViewModel(repository)
+            else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+        } as T
+
     }
 }

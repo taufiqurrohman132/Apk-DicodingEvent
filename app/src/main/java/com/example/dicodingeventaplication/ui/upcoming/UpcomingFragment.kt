@@ -95,6 +95,10 @@ class UpcomingFragment : Fragment() {
                 Log.d(TAG, "onViewCreated: is refresh")
                 upcomingViewModel.startReload()
                 upcomingViewModel.findEventUpcome()
+            }else{
+                if (!upcomingViewModel.isUpcomingSuccess) {
+                    upcomingViewModel.findEventUpcome()
+                }
             }
         }
 
@@ -127,9 +131,9 @@ class UpcomingFragment : Fragment() {
                 intent.putExtra(DetailEventActivity.EXTRA_EVENT, event)
                 startActivity(intent)
             },
-            onBookmarkClick = {favorit ->
-                Log.d(TAG, "onViewCreated: isbookmark ${favorit.isBookmarked}")
-                upcomingViewModel.onFavoritClicked(favorit, !favorit.isBookmarked)
+            onBookmarkClick = {event ->
+                Log.d(TAG, "onViewCreated: isbookmark ${event.isBookmarked}")
+                upcomingViewModel.onFavoritClicked(event, !event.isBookmarked, System.currentTimeMillis())
             }
         )
         binding.rvUpcoming.adapter = adapterUpcoming
@@ -142,38 +146,46 @@ class UpcomingFragment : Fragment() {
                     }
                     is Resource.Success -> {
                         adapterUpcoming.submitList(eventList.data)
-                        binding.upcomingSimmmer.stopShimmer()
-                        binding.upcomingSimmmer.visibility = View.INVISIBLE
-                        binding.upcomingLottieEmpty.visibility = View.INVISIBLE
-                        binding.upcomingLottieError.visibility = View.INVISIBLE
-                        binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
+                        binding.apply {
+                            upcomingSimmmer.stopShimmer()
+                            upcomingSimmmer.visibility = View.INVISIBLE
+                            upcomingLottieEmpty.visibility = View.INVISIBLE
+                            upcomingLottieError.visibility = View.INVISIBLE
+                            upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
+                        }
                         upcomingViewModel.markUpcomingSuccess()
                     }
                     is Resource.Error -> {
                         adapterUpcoming.submitList(emptyList())
-                        binding.upcomingSimmmer.stopShimmer()
-                        binding.upcomingSimmmer.visibility = View.INVISIBLE
-                        binding.upcomingLottieEmpty.visibility = View.INVISIBLE
-                        binding.upcomingLottieError.visibility = View.VISIBLE
-                        binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
+                        binding.apply {
+                            upcomingSimmmer.stopShimmer()
+                            upcomingSimmmer.visibility = View.INVISIBLE
+                            upcomingLottieEmpty.visibility = View.INVISIBLE
+                            upcomingLottieError.visibility = View.VISIBLE
+                            upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
+                        }
                     }
                     is Resource.ErrorConection -> {
-                        binding.upcomingSimmmer.stopShimmer()
-                        binding.upcomingSimmmer.visibility = View.INVISIBLE
-                        binding.upcomingLottieError.visibility = View.INVISIBLE
-                        if (!upcomingViewModel.isUpcomingSuccess && (!upcomingViewModel.isUpcomingEmpty))
-                            binding.upcomingLottieErrorKoneksi.visibility = View.VISIBLE
-                        else if (!upcomingViewModel.isUpcomingSuccess)
-                            binding.upcomingLottieEmpty.visibility = View.VISIBLE
+                        binding.apply {
+                            upcomingSimmmer.stopShimmer()
+                            upcomingSimmmer.visibility = View.INVISIBLE
+                            upcomingLottieError.visibility = View.INVISIBLE
+                            if (!upcomingViewModel.isUpcomingSuccess && !upcomingViewModel.isUpcomingEmpty && !upcomingViewModel.hasLocalDataUpcome.value)
+                                upcomingLottieErrorKoneksi.visibility = View.VISIBLE
+                            else if (!upcomingViewModel.isUpcomingSuccess && !upcomingViewModel.hasLocalDataUpcome.value)
+                                upcomingLottieEmpty.visibility = View.VISIBLE
+                        }
                     }
                     is Resource.Empty -> {
                         adapterUpcoming.submitList(emptyList())
-                        binding.upcomingSimmmer.stopShimmer()
-                        binding.upcomingSimmmer.visibility = View.INVISIBLE
-                        binding.upcomingLottieEmpty.visibility = View.VISIBLE
-                        binding.upcomingLottieError.visibility = View.INVISIBLE
-                        binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
-                        upcomingViewModel.markUpcomingEmpty()
+                        binding.apply {
+                            upcomingSimmmer.stopShimmer()
+                            upcomingSimmmer.visibility = View.INVISIBLE
+                            upcomingLottieEmpty.visibility = View.VISIBLE
+                            upcomingLottieError.visibility = View.INVISIBLE
+                            upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
+                            upcomingViewModel.markUpcomingEmpty()
+                        }
                     }
                     else ->{}
                 }
@@ -191,11 +203,13 @@ class UpcomingFragment : Fragment() {
 
                 adapterUpcoming.submitList(emptyList())
                 // mulai simer
-                binding.upcomingLottieError.visibility = View.INVISIBLE
-                binding.upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
+                binding.apply {
+                    upcomingLottieError.visibility = View.INVISIBLE
+                    upcomingLottieErrorKoneksi.visibility = View.INVISIBLE
 
-                binding.upcomingSimmmer.startShimmer()
-                binding.upcomingSimmmer.visibility = View.VISIBLE
+                    upcomingSimmmer.startShimmer()
+                    upcomingSimmmer.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -214,9 +228,11 @@ class UpcomingFragment : Fragment() {
         }
 
         // swip
-        binding.upcomingSwipRefresh.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.biru_tua))
-        binding.upcomingSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(requireContext(), R.color.icon))
-        binding.upcomingSwipRefresh.setProgressViewOffset(true, 0, 200)
+        binding.apply {
+            upcomingSwipRefresh.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.biru_tua))
+            upcomingSwipRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(requireContext(), R.color.icon))
+            upcomingSwipRefresh.setProgressViewOffset(true, 0, 200)
+        }
 
         binding.upcomingSwipRefresh.setOnRefreshListener {
             upcomingViewModel.startRefreshing()
@@ -224,18 +240,6 @@ class UpcomingFragment : Fragment() {
             upcomingViewModel.findEventUpcome()
         }
     }
-//
-//    private fun startDailyReminderEvent(){
-//        val periodicRequest = PeriodicWorkRequestBuilder<EventWorker>(
-//            1, TimeUnit.DAYS
-//        ).build()
-//
-//        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-//            "percobaan",
-//            ExistingPeriodicWorkPolicy.REPLACE,
-//            periodicRequest
-//        )
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

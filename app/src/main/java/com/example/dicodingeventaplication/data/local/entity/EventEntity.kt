@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "favorit")
-data class FavoritEvent(
+@Entity(tableName = "event")
+data class EventEntity(
     @PrimaryKey(autoGenerate = false)
-    var id: Int? = null,
+    var id: Int = 0,
     var name: String? = null,
     var imgLogo: String? = null,
     var imgCover: String? = null,
@@ -19,6 +19,7 @@ data class FavoritEvent(
     var ownerName: String? = null,
     var cityName: String? = null,
     var beginTime: String? = null,
+    var endTime: String? = null,
     var quota: Int? = null,
     var registranst: Int? = null,
     var url: String? = null,
@@ -28,7 +29,12 @@ data class FavoritEvent(
     var isBookmarked: Boolean,
 
     @field:ColumnInfo(name = "isActive")
-    var isActive: Int
+    var isActive: Int,
+
+    @field:ColumnInfo(name = "createAt")
+    var createAt: Long? = null
+
+
 ) : Parcelable {
     val formatYear: String?
         get() = beginTime?.split(" ")?.getOrNull(0)

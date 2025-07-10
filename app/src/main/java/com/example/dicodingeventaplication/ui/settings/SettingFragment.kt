@@ -15,10 +15,10 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.dicodingeventaplication.EventWorker
+import com.example.dicodingeventaplication.background.EventWorker
 import com.example.dicodingeventaplication.R
-import com.example.dicodingeventaplication.SettingPreferences
-import com.example.dicodingeventaplication.dataStore
+import com.example.dicodingeventaplication.data.local.datastore.SettingPreferences
+import com.example.dicodingeventaplication.data.local.datastore.dataStore
 import com.example.dicodingeventaplication.databinding.FragmentSettingBinding
 import com.example.dicodingeventaplication.ui.main.MainViewModel
 import com.example.dicodingeventaplication.viewmodel.MainViewModelFactory
