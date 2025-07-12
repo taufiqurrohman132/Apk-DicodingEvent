@@ -1,4 +1,4 @@
-# 📱 EventApp – Aplikasi Event Modern dengan Kotlin
+# EventApp – Aplikasi Event Modern dengan Kotlin
 
 Aplikasi Android yang menampilkan daftar event terkini dan terlengkap. Dibangun dengan arsitektur modern, fitur lengkap, dan UI yang ramah pengguna. Cocok sebagai showcase untuk posisi **Mobile Developer (Android - Kotlin)**.
 
