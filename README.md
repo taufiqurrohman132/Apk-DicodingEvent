@@ -8,7 +8,13 @@ Aplikasi Android yang menyajikan berbagai event dari API Dicoding dengan fitur l
 
 | Fitur | Cuplikan |
 |------|----------|
-| Home | ![home](./screenshots/home.png) |
+| [Home](https://github.com/user-attachments/assets/3b10caeb-b6c4-403e-8dae-e385034266a5) | ![home](./screenshots/home.png) |
+
+
+<img width="1419" height="2796" alt="Image" src="https://github.com/user-attachments/assets/3b10caeb-b6c4-403e-8dae-e385034266a5" />
+<img width="1857" height="3096" alt="Image" src="https://github.com/user-attachments/assets/bd31e099-e10f-4535-b3f3-174fd71d0af6" />
+<img width="1857" height="3096" alt="Image" src="https://github.com/user-attachments/assets/f5dcc37e-e4d5-47ff-adc5-637f054ec055" />
+<img width="1419" height="2796" alt="Image" src="https://github.com/user-attachments/assets/b70957d8-8945-4f19-b6e5-ce4e8c222eea" />
 
 ---
 
