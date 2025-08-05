@@ -31,19 +31,14 @@ Aplikasi Android yang menyajikan berbagai event dari API Dicoding dengan fitur l
   <tr>
     <td align="center" valign="top">
       <strong>Home</strong><br>
-      <img src="https://github.com/user-attachments/assets/3b10caeb-b6c4-403e-8dae-e385034266a5" width="250"/>
+      <img src="https://github.com/user-attachments/assets/16a7e3b8-11e2-4ad1-b30e-18b56d149aad" width="250"/>
     </td>
     <td align="center" valign="top">
       <strong>Detail</strong><br>
-      <img src="https://github.com/user-attachments/assets/bd31e099-e10f-4535-b3f3-174fd71d0af6" width="250"/>
-    </td>
-    <td align="center" valign="top">
-      <strong>Favorit</strong><br>
-      <img src="https://github.com/user-attachments/assets/f5dcc37e-e4d5-47ff-adc5-637f054ec055" width="250"/>
+      <img src="https://github.com/user-attachments/assets/43b1f039-494c-4598-8230-d2715deaa1ef" width="250"/>
     </td>
   </tr>
 </table>
-
 
 ---
 
