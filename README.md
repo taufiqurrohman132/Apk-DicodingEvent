@@ -14,22 +14,36 @@ Aplikasi Android yang menyajikan berbagai event dari API Dicoding dengan fitur l
 
 ## Daftar Fitur
 
-- Navigasi dengan Bottom Navigation (Event Aktif, Event Selesai, Favorit)
-- Menampilkan daftar event dari API (gambar, nama, penyelenggara, waktu, kuota, deskripsi, link)
-- Halaman detail event lengkap
-- Fitur tambah/hapus favorit dengan penyimpanan lokal (Room)
-- Halaman daftar event favorit
-- Fitur ganti tema terang/gelap (dengan DataStore)
-- Fitur pencarian event berdasarkan kata kunci
-- Halaman Home dengan carousel event aktif dan selesai (opsional)
-- Notifikasi pengingat harian event terdekat (opsional, dengan WorkManager)
-- Arsitektur MVVM + Repository + ViewModel + LiveData
-- Dukungan rotasi layar tanpa reload data
-- Indikator loading saat fetch API
-- Error handling saat koneksi gagal atau data kosong
-- Peringatan kode (warning) minimal saat diinspeksi (kurang dari 10)
+<table>
+  <tr>
+    <td valign="top" width="50%">
+      <ul>
+        <li>Bottom Navigation (Aktif, Selesai, Favorit)</li>
+        <li>List event dari API</li>
+        <li>Halaman detail event</li>
+        <li>Tambah/hapus favorit (Room)</li>
+        <li>Halaman daftar favorit</li>
+        <li>Tema terang/gelap (DataStore)</li>
+        <li>Pencarian event</li>
+      </ul>
+    </td>
+    <td valign="top" width="50%">
+      <ul>
+        <li>Home dengan carousel event (opsional)</li>
+        <li>Notifikasi harian event terdekat (opsional)</li>
+        <li>Arsitektur MVVM + ViewModel</li>
+        <li>Repository Pattern</li>
+        <li>Data tetap saat rotasi layar</li>
+        <li>Indikator loading API</li>
+        <li>Error handling koneksi/data</li>
+        <li>Inspect Code warning < 10</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+         
 ---
-
+         
 ## Teknologi & Arsitektur
 
 | Komponen | Teknologi |
